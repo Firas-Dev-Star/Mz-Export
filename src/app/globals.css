@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 217 33% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 217 33% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 33% 12%;
+
+    /* Bleu marine MZ EXPORT */
+    --primary: 215 52% 15%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 32% 96%;
+    --secondary-foreground: 215 52% 15%;
+
+    --muted: 214 32% 96%;
+    --muted-foreground: 215 16% 45%;
+
+    --accent: 214 95% 93%;
+    --accent-foreground: 215 52% 15%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 25% 89%;
+    --input: 214 25% 89%;
+    --ring: 215 52% 25%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'tnum' 0;
+  }
+  /* Chiffres alignes dans les tableaux de montants */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* --- Impression : on ne garde que la facture --- */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: #fff;
+  }
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}

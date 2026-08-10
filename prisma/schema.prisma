@@ -1,0 +1,645 @@
+// MZ EXPORT - Gestion Commerciale
+// Schema Prisma - PostgreSQL
+// Tous les montants monetaires utilisent Decimal (jamais de float JS).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  MANAGER
+  USER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  CONFIRMED
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  CASH
+  CHEQUE
+  OTHER
+}
+
+/// NONE  : facture sans TVA (export exonere) -> aucune ligne TVA affichee
+/// ZERO  : TVA applicable au taux 0 % -> ligne TVA affichee a 0
+/// RATE  : TVA appliquee au taux defini sur la facture
+enum VatMode {
+  NONE
+  ZERO
+  RATE
+}
+
+// ---------------------------------------------------------------------------
+// Utilisateurs & securite
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  passwordHash String
+  role         Role       @default(USER)
+  isActive     Boolean    @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  invoices         Invoice[]         @relation("InvoiceCreatedBy")
+  payments         Payment[]         @relation("PaymentCreatedBy")
+  purchases        Purchase[]        @relation("PurchaseCreatedBy")
+  purchasePayments PurchasePayment[] @relation("PurchasePaymentCreatedBy")
+  stockMovements   StockMovement[]
+  auditLogs        AuditLog[]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  userEmail String
+  action    String
+  entity    String
+  entityId  String?
+  reference String?
+  details   Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Parametres societe (table a ligne unique, id = "company")
+// ---------------------------------------------------------------------------
+
+model Company {
+  id        String @id @default("company")
+  name      String
+  legalForm String @default("")
+
+  capital         Decimal @default(0) @db.Decimal(18, 3)
+  capitalCurrency String  @default("TND")
+
+  taxId         String @default("") // Matricule fiscal
+  tradeRegister String @default("") // Registre de commerce
+  activity      String @default("")
+
+  addressLine1 String @default("")
+  addressLine2 String @default("")
+  postalCode   String @default("")
+  city         String @default("")
+  country      String @default("Tunisie")
+
+  phone   String @default("")
+  phone2  String @default("")
+  fax     String @default("")
+  email   String @default("")
+  website String @default("")
+
+  bankName    String @default("")
+  bankAgency  String @default("")
+  bankAccount String @default("")
+  iban        String @default("")
+  swift       String @default("")
+
+  logoPath String @default("")
+
+  // Valeurs par defaut appliquees aux nouvelles factures
+  defaultCurrency     String  @default("EUR")
+  defaultVatMode      VatMode @default(NONE)
+  defaultVatRate      Decimal @default(0) @db.Decimal(6, 3)
+  defaultStampDuty    Decimal @default(0) @db.Decimal(18, 2)
+  defaultStampLabel   String  @default("Timbre fiscal")
+  defaultPaymentTerms String  @default("")
+  defaultIncoterm     String  @default("")
+  defaultOrigin       String  @default("")
+
+  headerNote     String @default("")
+  paymentNotice  String @default("")
+  legalMentions  String @default("")
+  footerText     String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_settings")
+}
+
+// ---------------------------------------------------------------------------
+// Devises
+// ---------------------------------------------------------------------------
+
+model Currency {
+  code      String @id // EUR, TND
+  name      String
+  symbol    String
+  decimals  Int    @default(2)
+  isActive  Boolean @default(true)
+
+  customers        Customer[]
+  invoices         Invoice[]
+  payments         Payment[]
+  suppliers        Supplier[]
+  purchases        Purchase[]
+  purchasePayments PurchasePayment[]
+
+  @@map("currencies")
+}
+
+// ---------------------------------------------------------------------------
+// Numerotation des documents (sequence atomique)
+// ---------------------------------------------------------------------------
+
+model InvoiceSequence {
+  id           String  @id @default(cuid())
+  key          String  @unique // "SALE"
+  label        String
+  prefix       String  @default("FAC-V-")
+  suffix       String  @default("")
+  padding      Int     @default(4)
+  nextNumber   Int     @default(1)
+  resetYearly  Boolean @default(false)
+  year         Int?
+  includeYear  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoice_sequences")
+}
+
+// ---------------------------------------------------------------------------
+// Clients
+// ---------------------------------------------------------------------------
+
+model Customer {
+  id            String  @id @default(cuid())
+  code          String  @unique
+  companyName   String // Raison sociale
+  firstName     String  @default("")
+  lastName      String  @default("")
+  contactName   String  @default("")
+  contactPhone  String  @default("")
+  contactEmail  String  @default("")
+
+  addressLine1 String @default("")
+  addressLine2 String @default("")
+  postalCode   String @default("")
+  city         String @default("")
+  country      String @default("")
+
+  phone String @default("")
+  email String @default("")
+
+  taxId    String @default("") // Matricule fiscal
+  siret    String @default("")
+  vatNumber String @default("") // TVA intracommunautaire
+
+  paymentTerms String @default("")
+  currencyCode String @default("EUR")
+
+  // Adresse de livraison par defaut (reprise sur la facture)
+  deliveryAddress String @default("")
+  deliveryCountry String @default("")
+
+  notes    String  @default("")
+  isDemo   Boolean @default(false)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  currency Currency  @relation(fields: [currencyCode], references: [code])
+  invoices Invoice[]
+
+  @@index([companyName])
+  @@map("customers")
+}
+
+// ---------------------------------------------------------------------------
+// Produits
+// ---------------------------------------------------------------------------
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  reference   String  @unique
+  sku         String  @default("")
+  designation String
+  description String  @default("")
+  unit        String  @default("PCS")
+
+  categoryId String?
+
+  salePriceEur     Decimal @db.Decimal(18, 4)
+  purchasePriceTnd Decimal @default(0) @db.Decimal(18, 4)
+
+  /// Le produit est-il suivi en stock ? (false pour un service / une prestation)
+  trackStock    Boolean @default(true)
+  stockQuantity Decimal @default(0) @db.Decimal(18, 3)
+  minStock      Decimal @default(0) @db.Decimal(18, 3)
+
+  vatMode VatMode @default(NONE)
+  vatRate Decimal @default(0) @db.Decimal(6, 3)
+
+  // Donnees export
+  ngp             String  @default("") // Code douanier
+  originCountry   String  @default("")
+  unitWeightKg    Decimal @default(0) @db.Decimal(12, 3)
+  lengthCm        Decimal @default(0) @db.Decimal(10, 2)
+  widthCm         Decimal @default(0) @db.Decimal(10, 2)
+  heightCm        Decimal @default(0) @db.Decimal(10, 2)
+  unitsPerPackage Int     @default(0)
+
+  isDemo   Boolean @default(false)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  items          InvoiceItem[]
+  purchaseItems  PurchaseItem[]
+  stockMovements StockMovement[]
+
+  @@index([designation])
+  @@map("products")
+}
+
+// ---------------------------------------------------------------------------
+// Factures de vente (export, EUR)
+// ---------------------------------------------------------------------------
+
+model Invoice {
+  id     String        @id @default(cuid())
+  number String        @unique
+  status InvoiceStatus @default(DRAFT)
+
+  customerId String
+  date       DateTime  @db.Date
+  dueDate    DateTime? @db.Date
+
+  currencyCode String @default("EUR")
+
+  paymentTerms String @default("")
+
+  // Livraison
+  deliveryAddress String @default("")
+  deliveryCountry String @default("")
+
+  // Informations export
+  ngp              String  @default("")
+  originCountry    String  @default("")
+  packageCount     Int     @default(0)
+  packageType      String  @default("")
+  packageDimensions String @default("")
+  grossWeightKg    Decimal @default(0) @db.Decimal(12, 3)
+  netWeightKg      Decimal @default(0) @db.Decimal(12, 3)
+  incoterm         String  @default("")
+  transportMode    String  @default("")
+  departurePort    String  @default("")
+  destination      String  @default("")
+  orderReference   String  @default("")
+
+  // Montants (devise = currencyCode)
+  goodsTotal    Decimal @default(0) @db.Decimal(18, 2)
+  discountTotal Decimal @default(0) @db.Decimal(18, 2)
+
+  /// true  : les frais (transport / transit / ...) sont DEJA compris dans le prix
+  ///         unitaire des lignes -> ils ne sont pas re-additionnes, ils servent
+  ///         uniquement a produire la mention "CE PRIX S'APPLIQUE : ...".
+  ///         C'est le fonctionnement de la facture MZ EXPORT n 49.
+  /// false : les frais sont ajoutes au total marchandise.
+  feesIncluded Boolean @default(true)
+
+  shippingLabel  String  @default("Transport")
+  shippingAmount Decimal @default(0) @db.Decimal(18, 2)
+  transitLabel   String  @default("Transit")
+  transitAmount  Decimal @default(0) @db.Decimal(18, 2)
+  insuranceLabel String  @default("Assurance")
+  insuranceAmount Decimal @default(0) @db.Decimal(18, 2)
+  otherFeesLabel String  @default("Autres frais")
+  otherFeesAmount Decimal @default(0) @db.Decimal(18, 2)
+
+  vatMode VatMode @default(NONE)
+  vatRate Decimal @default(0) @db.Decimal(6, 3)
+
+  /// Timbre fiscal ajoute APRES la TVA (net a payer = TTC + timbre).
+  stampDutyLabel  String  @default("Timbre fiscal")
+  stampDutyAmount Decimal @default(0) @db.Decimal(18, 2)
+
+  totalHt   Decimal @default(0) @db.Decimal(18, 2)
+  vatAmount Decimal @default(0) @db.Decimal(18, 2)
+  totalTtc  Decimal @default(0) @db.Decimal(18, 2)
+  netToPay  Decimal @default(0) @db.Decimal(18, 2)
+
+  paidAmount Decimal @default(0) @db.Decimal(18, 2)
+  balanceDue Decimal @default(0) @db.Decimal(18, 2)
+
+  amountInWords     String @default("")
+  priceBreakdownNote String @default("")
+  notes             String @default("")
+
+  createdById String?
+  confirmedAt DateTime?
+  cancelledAt DateTime?
+
+  isDemo Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customer  Customer      @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  currency  Currency      @relation(fields: [currencyCode], references: [code])
+  createdBy User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  items     InvoiceItem[]
+  payments  Payment[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([date])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id        String @id @default(cuid())
+  invoiceId String
+  productId String?
+
+  position    Int     @default(0)
+  reference   String  @default("")
+  designation String
+  description String  @default("")
+  unit        String  @default("")
+
+  quantity        Decimal @db.Decimal(18, 3)
+  unitPrice       Decimal @db.Decimal(18, 4)
+  discountPercent Decimal @default(0) @db.Decimal(6, 3)
+  lineTotal       Decimal @default(0) @db.Decimal(18, 2)
+
+  ngp           String @default("")
+  originCountry String @default("")
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@map("invoice_items")
+}
+
+// ---------------------------------------------------------------------------
+// Paiements
+// ---------------------------------------------------------------------------
+
+model Payment {
+  id        String        @id @default(cuid())
+  invoiceId String
+  amount    Decimal       @db.Decimal(18, 2)
+  currencyCode String     @default("EUR")
+  date      DateTime      @db.Date
+  method    PaymentMethod @default(BANK_TRANSFER)
+  reference String        @default("")
+  note      String        @default("")
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  currency  Currency @relation(fields: [currencyCode], references: [code])
+  createdBy User?    @relation("PaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@index([date])
+  @@map("payments")
+}
+
+// ---------------------------------------------------------------------------
+// Fournisseurs (achats en TND)
+// ---------------------------------------------------------------------------
+
+model Supplier {
+  id          String @id @default(cuid())
+  code        String @unique
+  companyName String
+  contactName String @default("")
+
+  addressLine1 String @default("")
+  addressLine2 String @default("")
+  postalCode   String @default("")
+  city         String @default("")
+  country      String @default("Tunisie")
+
+  phone String @default("")
+  email String @default("")
+
+  taxId         String @default("")
+  tradeRegister String @default("")
+
+  paymentTerms String @default("")
+  currencyCode String @default("TND")
+
+  notes    String  @default("")
+  isDemo   Boolean @default(false)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  currency  Currency   @relation(fields: [currencyCode], references: [code])
+  purchases Purchase[]
+
+  @@index([companyName])
+  @@map("suppliers")
+}
+
+// ---------------------------------------------------------------------------
+// Factures d'achat (TND)
+// ---------------------------------------------------------------------------
+
+model Purchase {
+  id     String        @id @default(cuid())
+  number String        @unique
+  status InvoiceStatus @default(DRAFT)
+
+  /// Numero de la facture emise par le fournisseur
+  supplierReference String @default("")
+
+  supplierId String
+  date       DateTime  @db.Date
+  dueDate    DateTime? @db.Date
+
+  currencyCode String @default("TND")
+  paymentTerms String @default("")
+
+  itemsTotal    Decimal @default(0) @db.Decimal(18, 3)
+  discountTotal Decimal @default(0) @db.Decimal(18, 3)
+
+  shippingLabel  String  @default("Transport")
+  shippingAmount Decimal @default(0) @db.Decimal(18, 3)
+  otherFeesLabel String  @default("Autres frais")
+  otherFeesAmount Decimal @default(0) @db.Decimal(18, 3)
+
+  vatMode VatMode @default(RATE)
+  vatRate Decimal @default(19) @db.Decimal(6, 3)
+
+  stampDutyLabel  String  @default("Timbre fiscal")
+  stampDutyAmount Decimal @default(0) @db.Decimal(18, 3)
+
+  totalHt   Decimal @default(0) @db.Decimal(18, 3)
+  vatAmount Decimal @default(0) @db.Decimal(18, 3)
+  totalTtc  Decimal @default(0) @db.Decimal(18, 3)
+  netToPay  Decimal @default(0) @db.Decimal(18, 3)
+
+  paidAmount Decimal @default(0) @db.Decimal(18, 3)
+  balanceDue Decimal @default(0) @db.Decimal(18, 3)
+
+  notes String @default("")
+
+  createdById String?
+  confirmedAt DateTime?
+  cancelledAt DateTime?
+
+  isDemo Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  supplier  Supplier          @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  currency  Currency          @relation(fields: [currencyCode], references: [code])
+  createdBy User?             @relation("PurchaseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  items     PurchaseItem[]
+  payments  PurchasePayment[]
+
+  @@index([supplierId])
+  @@index([status])
+  @@index([date])
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id         String  @id @default(cuid())
+  purchaseId String
+  productId  String?
+
+  position    Int    @default(0)
+  reference   String @default("")
+  designation String
+  description String @default("")
+  unit        String @default("")
+
+  quantity        Decimal @db.Decimal(18, 3)
+  unitPrice       Decimal @db.Decimal(18, 4)
+  discountPercent Decimal @default(0) @db.Decimal(6, 3)
+  lineTotal       Decimal @default(0) @db.Decimal(18, 3)
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([purchaseId])
+  @@map("purchase_items")
+}
+
+model PurchasePayment {
+  id           String        @id @default(cuid())
+  purchaseId   String
+  amount       Decimal       @db.Decimal(18, 3)
+  currencyCode String        @default("TND")
+  date         DateTime      @db.Date
+  method       PaymentMethod @default(BANK_TRANSFER)
+  reference    String        @default("")
+  note         String        @default("")
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  purchase  Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  currency  Currency @relation(fields: [currencyCode], references: [code])
+  createdBy User?    @relation("PurchasePaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([purchaseId])
+  @@index([date])
+  @@map("purchase_payments")
+}
+
+// ---------------------------------------------------------------------------
+// Mouvements de stock
+// ---------------------------------------------------------------------------
+
+/// Le signe applique au stock est deduit du type (cf. src/lib/stock.ts) :
+/// entrees  -> PURCHASE_IN, ADJUST_IN, CUSTOMER_RETURN
+/// sorties  -> SALE_OUT, ADJUST_OUT, SUPPLIER_RETURN
+enum StockMovementType {
+  PURCHASE_IN
+  SALE_OUT
+  ADJUST_IN
+  ADJUST_OUT
+  CUSTOMER_RETURN
+  SUPPLIER_RETURN
+}
+
+enum StockReferenceType {
+  PURCHASE
+  INVOICE
+  MANUAL
+}
+
+model StockMovement {
+  id        String            @id @default(cuid())
+  productId String
+  type      StockMovementType
+  /// Toujours positif : le sens est porte par `type`.
+  quantity  Decimal           @db.Decimal(18, 3)
+  /// Stock du produit APRES application du mouvement (piste d'audit).
+  stockAfter Decimal          @db.Decimal(18, 3)
+
+  referenceType StockReferenceType @default(MANUAL)
+  referenceId   String?
+  reference     String             @default("")
+
+  date   DateTime @db.Date
+  note   String   @default("")
+  userId String?
+
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([date])
+  @@index([type])
+  @@index([referenceType, referenceId])
+  @@map("stock_movements")
+}
