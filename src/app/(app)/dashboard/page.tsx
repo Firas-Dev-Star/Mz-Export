@@ -16,6 +16,7 @@ import {
   Warehouse,
 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
+import { ConsolidatedPanel } from '@/components/shared/consolidated-panel'
 import { MoneyList } from '@/components/shared/money-list'
 import { CustomerShareChart, MonthlySalesChart } from '@/components/shared/sales-chart'
 import { StatCard } from '@/components/shared/stat-card'
@@ -27,14 +28,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { requireUser } from '@/lib/auth'
 import { formatDate, formatMoney } from '@/lib/format'
 import { dec } from '@/lib/money'
+import { prisma } from '@/lib/prisma'
 import { getDashboardData } from '@/services/dashboard.service'
+import { getCurrentRates } from '@/services/exchange.service'
 
 export const metadata = { title: 'Tableau de bord — MZ EXPORT' }
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   await requireUser()
-  const data = await getDashboardData()
+  // Trois requetes independantes : lancees en parallele plutot qu'en cascade.
+  const [data, currentRates, currencies] = await Promise.all([
+    getDashboardData(),
+    getCurrentRates(),
+    prisma.currency.findMany({
+      where: { isActive: true, code: { not: 'TND' } },
+      orderBy: { code: 'asc' },
+      select: { code: true, name: true },
+    }),
+  ])
 
   const mainCurrency = data.revenue[0]?.currencyCode ?? 'EUR'
 
@@ -53,8 +65,15 @@ export default async function DashboardPage() {
         }
       />
 
+      <ConsolidatedPanel
+        totals={data.consolidated}
+        rates={currentRates}
+        currencies={currencies}
+      />
+
+
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-        Ventes export — en euros
+        Ventes export — par devise
       </h2>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard

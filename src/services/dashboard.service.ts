@@ -1,7 +1,8 @@
 import 'server-only'
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
-import { add, dec, mul, round } from '@/lib/money'
+import { BASE_DECIMALS, sumTnd } from '@/lib/exchange'
+import { add, dec, mul, round, sub } from '@/lib/money'
 import { stockLevel } from '@/lib/stock-labels'
 
 /**
@@ -14,7 +15,29 @@ export interface CurrencyTotal {
   amount: string
 }
 
+/**
+ * Bilan consolide en dinars.
+ * Chaque montant provient des colonnes `*Tnd` deja calculees au taux fige
+ * de chaque document : l'agregation est faite par PostgreSQL, pas en JS.
+ */
+export interface ConsolidatedTotals {
+  revenueTnd: string
+  collectedTnd: string
+  outstandingTnd: string
+  purchasesTnd: string
+  purchasesOutstandingTnd: string
+  /** Valeur du stock au prix d'achat (quantite x prix), en dinars. */
+  stockValueTnd: string
+  /** Ventes converties - achats. Marge brute approximative, hors stock. */
+  grossMarginTnd: string
+  /** Devises reellement presentes dans les factures prises en compte. */
+  currencies: string[]
+  /** Factures non converties (taux absent) : leur montant est exclu du bilan. */
+  missingRateCount: number
+}
+
 export interface DashboardData {
+  consolidated: ConsolidatedTotals
   revenue: CurrencyTotal[]
   collected: CurrencyTotal[]
   outstanding: CurrencyTotal[]
@@ -68,6 +91,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     draftCount,
     overdueCount,
     unpaidCount,
+    missingRateCount,
     customerCount,
     productCount,
     supplierCount,
@@ -80,7 +104,14 @@ export async function getDashboardData(): Promise<DashboardData> {
     prisma.invoice.groupBy({
       by: ['currencyCode'],
       where: BILLED,
-      _sum: { netToPay: true, paidAmount: true, balanceDue: true },
+      _sum: {
+        netToPay: true,
+        paidAmount: true,
+        balanceDue: true,
+        netToPayTnd: true,
+        paidAmountTnd: true,
+        balanceDueTnd: true,
+      },
     }),
     prisma.invoice.count({ where: BILLED }),
     prisma.invoice.count({ where: { status: 'DRAFT' } }),
@@ -88,13 +119,19 @@ export async function getDashboardData(): Promise<DashboardData> {
       where: { status: { notIn: ['DRAFT', 'CANCELLED', 'PAID'] }, dueDate: { lt: startOfToday } },
     }),
     prisma.invoice.count({ where: { ...BILLED, balanceDue: { gt: 0 } } }),
+    // Factures dont la contrevaleur n'a pas pu etre calculee (taux absent).
+    // Leur montant est volontairement exclu du bilan consolide plutot que
+    // compte pour zero sans le dire.
+    prisma.invoice.count({
+      where: { ...BILLED, currencyCode: { not: 'TND' }, exchangeRateTnd: { lte: 0 } },
+    }),
     prisma.customer.count({ where: { isActive: true } }),
     prisma.product.count({ where: { isActive: true } }),
     prisma.supplier.count({ where: { isActive: true } }),
     prisma.purchase.groupBy({
       by: ['currencyCode'],
       where: { status: { notIn: ['DRAFT', 'CANCELLED'] } },
-      _sum: { netToPay: true, balanceDue: true },
+      _sum: { netToPay: true, balanceDue: true, netToPayTnd: true, balanceDueTnd: true },
       _count: { _all: true },
     }),
     prisma.product.findMany({
@@ -169,7 +206,28 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const levels = stockProducts.map((product) => stockLevel(product))
 
+  // Bilan consolide : les colonnes *Tnd sont deja au taux fige de chaque
+  // document, il ne reste qu'a les additionner.
+  const revenueTnd = sumTnd(byCurrency.map((r) => r._sum.netToPayTnd))
+  const collectedTnd = sumTnd(byCurrency.map((r) => r._sum.paidAmountTnd))
+  const outstandingTnd = sumTnd(byCurrency.map((r) => r._sum.balanceDueTnd))
+  const purchasesTnd = sumTnd(purchaseTotals.map((r) => r._sum.netToPayTnd))
+  const purchasesOutstandingTnd = sumTnd(purchaseTotals.map((r) => r._sum.balanceDueTnd))
+
+  const consolidated: ConsolidatedTotals = {
+    revenueTnd: revenueTnd.toFixed(BASE_DECIMALS),
+    collectedTnd: collectedTnd.toFixed(BASE_DECIMALS),
+    outstandingTnd: outstandingTnd.toFixed(BASE_DECIMALS),
+    purchasesTnd: purchasesTnd.toFixed(BASE_DECIMALS),
+    purchasesOutstandingTnd: purchasesOutstandingTnd.toFixed(BASE_DECIMALS),
+    stockValueTnd,
+    grossMarginTnd: round(sub(revenueTnd, purchasesTnd), BASE_DECIMALS).toFixed(BASE_DECIMALS),
+    currencies: byCurrency.map((r) => r.currencyCode).sort(),
+    missingRateCount,
+  }
+
   return {
+    consolidated,
     purchases: purchaseTotals.map((r) => ({ currencyCode: r.currencyCode, amount: round(r._sum.netToPay, 3).toFixed(3) })),
     purchasesOutstanding: purchaseTotals.map((r) => ({ currencyCode: r.currencyCode, amount: round(r._sum.balanceDue, 3).toFixed(3) })),
     stock: {

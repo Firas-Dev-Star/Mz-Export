@@ -164,8 +164,40 @@ model Currency {
   suppliers        Supplier[]
   purchases        Purchase[]
   purchasePayments PurchasePayment[]
+  exchangeRates    ExchangeRate[]
 
   @@map("currencies")
+}
+
+// ---------------------------------------------------------------------------
+// Taux de change vers le dinar tunisien
+// ---------------------------------------------------------------------------
+
+/// Historique des taux de change. Un taux est valable a partir de `validFrom`
+/// jusqu'au taux suivant de la meme devise.
+///
+/// REGLE : ces taux ne servent qu'a PROPOSER une valeur par defaut au moment
+/// de la saisie. Une fois le document enregistre, il porte son propre taux
+/// (`exchangeRateTnd`) et ne depend plus de cette table : modifier un taux
+/// ici ne reecrit JAMAIS l'historique comptable.
+model ExchangeRate {
+  id           String   @id @default(cuid())
+  currencyCode String
+  /// 1 unite de `currencyCode` = `rateToTnd` dinars tunisiens.
+  rateToTnd    Decimal  @db.Decimal(18, 6)
+  /// Date d'entree en vigueur (incluse).
+  validFrom    DateTime @db.Date
+  source       String   @default("") // Ex. "BCT", "saisie manuelle"
+  note         String   @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  currency Currency @relation(fields: [currencyCode], references: [code], onDelete: Cascade)
+
+  @@unique([currencyCode, validFrom])
+  @@index([currencyCode, validFrom])
+  @@map("exchange_rates")
 }
 
 // ---------------------------------------------------------------------------
@@ -366,6 +398,15 @@ model Invoice {
   paidAmount Decimal @default(0) @db.Decimal(18, 2)
   balanceDue Decimal @default(0) @db.Decimal(18, 2)
 
+  /// Taux FIGE au moment de l'enregistrement : 1 unite de `currencyCode` = X TND.
+  /// Ne change jamais ensuite, meme si le taux de reference evolue.
+  exchangeRateTnd Decimal @default(1) @db.Decimal(18, 6)
+  /// Contrevaleur en dinars, calculee une fois et stockee : le tableau de bord
+  /// et les rapports agregent ces colonnes en SQL au lieu de convertir en JS.
+  netToPayTnd   Decimal @default(0) @db.Decimal(18, 3)
+  paidAmountTnd Decimal @default(0) @db.Decimal(18, 3)
+  balanceDueTnd Decimal @default(0) @db.Decimal(18, 3)
+
   amountInWords     String @default("")
   priceBreakdownNote String @default("")
   notes             String @default("")
@@ -388,6 +429,8 @@ model Invoice {
   @@index([customerId])
   @@index([status])
   @@index([date])
+  /// Requete "factures en retard" : filtre status + dueDate + balanceDue.
+  @@index([status, dueDate])
   @@map("invoices")
 }
 
@@ -523,6 +566,13 @@ model Purchase {
 
   paidAmount Decimal @default(0) @db.Decimal(18, 3)
   balanceDue Decimal @default(0) @db.Decimal(18, 3)
+
+  /// Achats normalement en TND (taux = 1), mais la colonne existe pour
+  /// permettre un achat en devise sans changer le reste du code.
+  exchangeRateTnd Decimal @default(1) @db.Decimal(18, 6)
+  netToPayTnd   Decimal @default(0) @db.Decimal(18, 3)
+  paidAmountTnd Decimal @default(0) @db.Decimal(18, 3)
+  balanceDueTnd Decimal @default(0) @db.Decimal(18, 3)
 
   notes String @default("")
 

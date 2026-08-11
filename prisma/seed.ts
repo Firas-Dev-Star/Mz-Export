@@ -7,7 +7,7 @@ import { PrismaClient } from '../src/generated/prisma/client'
  * Seed de la base MZ EXPORT.
  *
  * Ce script ne cree QUE les donnees reelles indispensables au demarrage :
- *   - les devises (EUR, TND)
+ *   - les devises (EUR, TND, USD, GBP)
  *   - les parametres de la societe, repris de la facture papier n 49
  *   - les sequences de numerotation (ventes et achats)
  *   - le compte administrateur
@@ -40,6 +40,21 @@ async function main() {
     update: {},
     create: { code: 'TND', name: 'Dinar tunisien', symbol: 'DT', decimals: 3 },
   })
+  await prisma.currency.upsert({
+    where: { code: 'USD' },
+    update: {},
+    create: { code: 'USD', name: 'Dollar americain', symbol: '$', decimals: 2 },
+  })
+  await prisma.currency.upsert({
+    where: { code: 'GBP' },
+    update: {},
+    create: { code: 'GBP', name: 'Livre sterling', symbol: '\u00a3', decimals: 2 },
+  })
+
+  // --- Taux de change ------------------------------------------------------
+  // AUCUN taux n'est cree automatiquement : un taux invente produirait des
+  // bilans faux sans que personne ne s'en apercoive. Ils se saisissent dans
+  // Parametres -> Taux de change, avec leur date d'entree en vigueur.
 
   // --- Parametres societe (donnees reelles) -------------------------------
   await prisma.company.upsert({

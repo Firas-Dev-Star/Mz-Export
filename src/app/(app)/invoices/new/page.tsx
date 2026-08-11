@@ -1,5 +1,6 @@
 import { PageHeader } from '@/components/layout/page-header'
 import { InvoiceForm } from '@/components/invoices/invoice-form'
+import { getCurrentRates } from '@/services/exchange.service'
 import { can, requirePermission } from '@/lib/auth'
 import { toDateInputValue } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
@@ -20,7 +21,7 @@ export default async function NewInvoicePage({
   const params = await searchParams
   const customerId = typeof params.customerId === 'string' ? params.customerId : undefined
 
-  const [customers, products, currencies, defaults, nextNumber] = await Promise.all([
+  const [customers, products, currencies, defaults, nextNumber, currentRates] = await Promise.all([
     prisma.customer.findMany({
       where: { isActive: true },
       orderBy: { companyName: 'asc' },
@@ -33,6 +34,7 @@ export default async function NewInvoicePage({
     prisma.currency.findMany({ where: { isActive: true }, orderBy: { code: 'asc' } }),
     getInvoiceDefaults(customerId),
     previewNextNumber('SALE'),
+    getCurrentRates(),
   ])
 
   const today = toDateInputValue(new Date())
@@ -42,6 +44,8 @@ export default async function NewInvoicePage({
     date: today,
     dueDate: '',
     currencyCode: defaults.currencyCode,
+    // Pre-rempli depuis les taux de reference ; l'utilisateur peut le corriger.
+    exchangeRateTnd: currentRates[defaults.currencyCode] ?? '',
     paymentTerms: defaults.paymentTerms,
     deliveryAddress: defaults.deliveryAddress,
     deliveryCountry: defaults.deliveryCountry,
@@ -91,6 +95,7 @@ export default async function NewInvoicePage({
         customers={customers}
         products={products}
         currencies={currencies}
+        currentRates={currentRates}
         canConfirm={can(session.role, 'invoice.confirm')}
       />
     </>

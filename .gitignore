@@ -10,3 +10,6 @@ next-env.d.ts
 /public/logo/*
 !/public/logo/.gitkeep
 coverage
+
+# Artefacts de build TypeScript (regeneres a chaque compilation)
+tsconfig.tsbuildinfo

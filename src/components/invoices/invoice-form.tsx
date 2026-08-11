@@ -15,9 +15,18 @@ import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/toast'
 import { VAT_MODE_LABELS, formatMoney } from '@/lib/format'
+import { CurrencyConverter } from '@/components/invoices/currency-converter'
+import { BASE_CURRENCY } from '@/lib/exchange'
 import { computeInvoiceTotals, computeLine } from '@/lib/invoice-totals'
 import { dec } from '@/lib/money'
 import { amountToFrenchWords } from '@/lib/number-to-words-fr'
+import {
+  INCOTERM_CODES,
+  TRANSPORT_MODE_CODES,
+  incotermLabel,
+  incotermTransportWarning,
+  transportModeLabel,
+} from '@/lib/trade'
 import { type InvoiceInput, invoiceSchema } from '@/validations/invoice'
 
 export interface CustomerOption {
@@ -41,6 +50,12 @@ export interface ProductOption {
   description: string
 }
 
+/**
+ * Taux de change de reference par devise, charges depuis les parametres.
+ * Sert uniquement a pre-remplir : le taux retenu est celui du formulaire.
+ */
+export type CurrentRates = Record<string, string>
+
 /** Taux de TVA proposes en raccourci (Tunisie : 19 %, 13 %, 7 %). */
 const VAT_PRESETS = ['19', '13', '7']
 
@@ -63,6 +78,7 @@ export function InvoiceForm({
   customers,
   products,
   currencies,
+  currentRates = {},
   canConfirm,
   isDraft = true,
 }: {
@@ -71,6 +87,7 @@ export function InvoiceForm({
   customers: CustomerOption[]
   products: ProductOption[]
   currencies: Array<{ code: string; name: string }>
+  currentRates?: CurrentRates
   canConfirm: boolean
   isDraft?: boolean
 }) {
@@ -123,6 +140,28 @@ export function InvoiceForm({
   )
 
   const feesExceedGoods = Boolean(watched.feesIncluded) && totals.merchandiseAmount.isNegative()
+
+  const exchangeRate = watched.exchangeRateTnd ?? ''
+  const suggestedRate = currentRates[currencyCode] ?? ''
+
+  // Avertissement non bloquant : incoterm maritime sur un transport terrestre.
+  const tradeWarning = incotermTransportWarning(
+    watched.incoterm ?? '',
+    watched.transportMode ?? '',
+  )
+
+  // Quand la devise change, on repropose le taux de reference correspondant.
+  // Le dinar force un taux de 1 : il ne se convertit pas contre lui-meme.
+  const previousCurrency = React.useRef(currencyCode)
+  React.useEffect(() => {
+    if (previousCurrency.current === currencyCode) return
+    previousCurrency.current = currencyCode
+    setValue(
+      'exchangeRateTnd',
+      currencyCode === BASE_CURRENCY ? '1' : (currentRates[currencyCode] ?? ''),
+      { shouldValidate: false },
+    )
+  }, [currencyCode, currentRates, setValue])
 
   function onCustomerChange(id: string) {
     const customer = customers.find((c) => c.id === id)
@@ -485,6 +524,26 @@ export function InvoiceForm({
             </p>
           </CardContent>
         </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Conversion en dinars</CardTitle>
+          <CardDescription>
+            Le taux saisi ici est enregistré avec la facture et ne changera plus. Il alimente les
+            bilans consolidés du tableau de bord.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CurrencyConverter
+            currencyCode={currencyCode}
+            rate={String(exchangeRate)}
+            onRateChange={(v) => setValue('exchangeRateTnd', v, { shouldValidate: true })}
+            netToPay={totals.netToPay}
+            suggestedRate={suggestedRate}
+            error={errors.exchangeRateTnd?.message}
+          />
+        </CardContent>
+      </Card>
       </div>
 
       <Card>
@@ -523,12 +582,31 @@ export function InvoiceForm({
           <Field label="Poids net (kg)" htmlFor="netWeightKg" error={errors.netWeightKg?.message}>
             <Input id="netWeightKg" inputMode="decimal" {...register('netWeightKg')} />
           </Field>
-          <Field label="Incoterm" htmlFor="incoterm" error={errors.incoterm?.message} hint="Ex. DDP">
-            <Input id="incoterm" {...register('incoterm')} />
+          <Field label="Incoterm" htmlFor="incoterm" error={errors.incoterm?.message} hint="Incoterms 2020">
+            <Select id="incoterm" {...register('incoterm')}>
+              <option value="">— Non precise —</option>
+              {INCOTERM_CODES.map((code) => (
+                <option key={code} value={code}>
+                  {incotermLabel(code)}
+                </option>
+              ))}
+            </Select>
           </Field>
           <Field label="Mode de transport" htmlFor="transportMode" error={errors.transportMode?.message}>
-            <Input id="transportMode" {...register('transportMode')} />
+            <Select id="transportMode" {...register('transportMode')}>
+              <option value="">— Non precise —</option>
+              {TRANSPORT_MODE_CODES.map((code) => (
+                <option key={code} value={code}>
+                  {transportModeLabel(code)}
+                </option>
+              ))}
+            </Select>
           </Field>
+          {tradeWarning ? (
+            <p className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900 sm:col-span-2 lg:col-span-4">
+              {tradeWarning}
+            </p>
+          ) : null}
           <Field label="Port / lieu de départ" htmlFor="departurePort" error={errors.departurePort?.message}>
             <Input id="departurePort" {...register('departurePort')} />
           </Field>

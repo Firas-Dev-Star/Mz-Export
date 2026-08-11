@@ -2,6 +2,7 @@ import 'server-only'
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 
+import { BASE_DECIMALS, RATE_DECIMALS, tndAmounts } from '@/lib/exchange'
 import { computeInvoiceTotals } from '@/lib/invoice-totals'
 import { dec, round, toDbDecimal } from '@/lib/money'
 import { amountToFrenchWords } from '@/lib/number-to-words-fr'
@@ -135,6 +136,16 @@ export function buildInvoiceData(input: InvoiceInput, paidAmount: unknown = 0) {
     paidAmount,
   })
 
+  // Taux de change fige sur le document : c'est la valeur du formulaire qui
+  // fait foi, jamais le taux de reference courant (sinon l'historique bougerait).
+  const tnd = tndAmounts({
+    currencyCode: input.currencyCode,
+    rateToTnd: input.exchangeRateTnd,
+    netToPay: totals.netToPay,
+    paidAmount: totals.paidAmount,
+    balanceDue: totals.balanceDue,
+  })
+
   const autoNote = buildPriceBreakdownNote({
     merchandiseAmount: totals.merchandiseAmount,
     shippingLabel: input.shippingLabel || 'Transport',
@@ -195,6 +206,12 @@ export function buildInvoiceData(input: InvoiceInput, paidAmount: unknown = 0) {
     netToPay: toDbDecimal(totals.netToPay),
     balanceDue: toDbDecimal(totals.balanceDue),
 
+    // Contrevaleur en dinars, figee avec le document.
+    exchangeRateTnd: toDbDecimal(tnd.exchangeRateTnd, RATE_DECIMALS),
+    netToPayTnd: toDbDecimal(tnd.netToPayTnd, BASE_DECIMALS),
+    paidAmountTnd: toDbDecimal(tnd.paidAmountTnd, BASE_DECIMALS),
+    balanceDueTnd: toDbDecimal(tnd.balanceDueTnd, BASE_DECIMALS),
+
     amountInWords: amountToFrenchWords(totals.netToPay, input.currencyCode),
     priceBreakdownNote: input.priceBreakdownNote?.trim() || autoNote,
     notes: input.notes,
@@ -233,7 +250,14 @@ export function buildInvoiceData(input: InvoiceInput, paidAmount: unknown = 0) {
 export async function refreshInvoicePaymentState(tx: Prisma.TransactionClient, invoiceId: string) {
   const invoice = await tx.invoice.findUnique({
     where: { id: invoiceId },
-    select: { id: true, status: true, netToPay: true, dueDate: true },
+    select: {
+      id: true,
+      status: true,
+      netToPay: true,
+      dueDate: true,
+      currencyCode: true,
+      exchangeRateTnd: true,
+    },
   })
   if (!invoice) return null
 
@@ -241,6 +265,15 @@ export async function refreshInvoicePaymentState(tx: Prisma.TransactionClient, i
   const paid = round(aggregate._sum.amount, 2)
   const net = round(invoice.netToPay, 2)
   const balance = round(net.minus(paid), 2)
+
+  // Contrevaleur recalculee au taux FIGE de la facture, jamais au taux du jour.
+  const tnd = tndAmounts({
+    currencyCode: invoice.currencyCode,
+    rateToTnd: invoice.exchangeRateTnd,
+    netToPay: net,
+    paidAmount: paid,
+    balanceDue: balance,
+  })
 
   let status = invoice.status
   if (status !== 'DRAFT' && status !== 'CANCELLED') {
@@ -256,7 +289,14 @@ export async function refreshInvoicePaymentState(tx: Prisma.TransactionClient, i
 
   return tx.invoice.update({
     where: { id: invoiceId },
-    data: { paidAmount: paid.toFixed(2), balanceDue: balance.toFixed(2), status },
+    data: {
+      paidAmount: paid.toFixed(2),
+      balanceDue: balance.toFixed(2),
+      status,
+      netToPayTnd: tnd.netToPayTnd.toFixed(BASE_DECIMALS),
+      paidAmountTnd: tnd.paidAmountTnd.toFixed(BASE_DECIMALS),
+      balanceDueTnd: tnd.balanceDueTnd.toFixed(BASE_DECIMALS),
+    },
     select: { id: true, status: true },
   })
 }

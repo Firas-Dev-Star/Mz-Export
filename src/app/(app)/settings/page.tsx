@@ -1,6 +1,7 @@
 import { PageHeader } from '@/components/layout/page-header'
 import { CompanyForm } from '@/components/settings/company-form'
 import { DemoDataPanel } from '@/components/settings/demo-data-panel'
+import { ExchangeRatesPanel } from '@/components/settings/exchange-rates-panel'
 import { LogoUpload } from '@/components/settings/logo-upload'
 import { SequenceForm } from '@/components/settings/sequence-form'
 import { UsersPanel } from '@/components/settings/users-panel'
@@ -10,6 +11,7 @@ import { can, requirePermission } from '@/lib/auth'
 import { formatDateTime } from '@/lib/format'
 import { previewNextNumber } from '@/lib/numbering'
 import { prisma } from '@/lib/prisma'
+import { listRates } from '@/services/exchange.service'
 import type { CompanyInput } from '@/validations/settings'
 
 export const metadata = { title: 'Paramètres — MZ EXPORT' }
@@ -19,7 +21,7 @@ export default async function SettingsPage() {
   const session = await requirePermission('settings.read')
   const isAdmin = can(session.role, 'settings.write')
 
-  const [company, sequence, preview, users, demoCounts, auditLogs] = await Promise.all([
+  const [company, sequence, preview, users, demoCounts, auditLogs, rates, currencies] = await Promise.all([
     prisma.company.findUnique({ where: { id: 'company' } }),
     prisma.invoiceSequence.findUnique({ where: { key: 'SALE' } }),
     previewNextNumber('SALE'),
@@ -39,6 +41,12 @@ export default async function SettingsPage() {
     can(session.role, 'audit.read')
       ? prisma.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: 30 })
       : Promise.resolve([]),
+    listRates(),
+    prisma.currency.findMany({
+      where: { isActive: true },
+      orderBy: { code: 'asc' },
+      select: { code: true, name: true },
+    }),
   ])
 
   const companyValues: CompanyInput = {
@@ -108,6 +116,7 @@ export default async function SettingsPage() {
               resetYearly: sequence?.resetYearly ?? false,
             }}
           />
+          <ExchangeRatesPanel rates={rates} currencies={currencies} canEdit={isAdmin} />
           <UsersPanel users={users} currentUserId={session.userId} />
           <DemoDataPanel
             counts={{

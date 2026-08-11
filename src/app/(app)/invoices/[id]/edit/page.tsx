@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 import { PageHeader } from '@/components/layout/page-header'
 import { InvoiceForm } from '@/components/invoices/invoice-form'
+import { getCurrentRates } from '@/services/exchange.service'
 import { can, requirePermission } from '@/lib/auth'
 import { toDateInputValue } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
@@ -19,7 +20,7 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
   // Seul un brouillon est modifiable (cf. src/actions/invoice.actions.ts).
   if (invoice.status !== 'DRAFT') redirect(`/invoices/${id}`)
 
-  const [customers, products, currencies] = await Promise.all([
+  const [customers, products, currencies, currentRates] = await Promise.all([
     prisma.customer.findMany({
       where: { OR: [{ isActive: true }, { id: invoice.customerId }] },
       orderBy: { companyName: 'asc' },
@@ -30,6 +31,7 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
     }),
     listProductOptions(),
     prisma.currency.findMany({ where: { isActive: true }, orderBy: { code: 'asc' } }),
+    getCurrentRates(),
   ])
 
   const defaultValues: InvoiceInput = {
@@ -37,6 +39,8 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
     date: toDateInputValue(invoice.date),
     dueDate: toDateInputValue(invoice.dueDate),
     currencyCode: invoice.currencyCode,
+    // Taux deja fige sur ce brouillon : on le reaffiche tel quel.
+    exchangeRateTnd: String(invoice.exchangeRateTnd),
     paymentTerms: invoice.paymentTerms,
     deliveryAddress: invoice.deliveryAddress,
     deliveryCountry: invoice.deliveryCountry,
@@ -93,6 +97,7 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
         customers={customers}
         products={products}
         currencies={currencies}
+        currentRates={currentRates}
         canConfirm={can(session.role, 'invoice.confirm')}
         isDraft={invoice.status === 'DRAFT'}
       />
