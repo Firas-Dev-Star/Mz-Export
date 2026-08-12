@@ -8,18 +8,34 @@ import { buildInvoiceDocument } from '@/services/invoice-document'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-/** Charge le logo depuis /public et le convertit en data URL pour le PDF. */
+/**
+ * Prepare le logo pour le PDF.
+ *
+ * Deux formats coexistent dans `company.logoPath` :
+ *  - une data URL (`data:image/png;base64,...`), format actuel : elle est
+ *    directement exploitable par @react-pdf/renderer, aucune lecture disque ;
+ *  - un chemin relatif vers /public, format historique : on lit le fichier.
+ *
+ * Sans le premier cas, `readFile` recevait la data URL entiere comme nom de
+ * fichier et echouait (ENAMETOOLONG). L'erreur etait avalee silencieusement :
+ * l'apercu HTML affichait le logo, le PDF telecharge non.
+ */
 async function loadLogo(logoPath: string): Promise<string | undefined> {
   if (!logoPath) return undefined
+
+  if (logoPath.startsWith('data:')) return logoPath
+
   try {
-    const safe = logoPath.replace(/^\/+/, '')
+    const safe = logoPath.replace(/^\//, '')
     if (safe.includes('..')) return undefined
     const absolute = path.join(process.cwd(), 'public', safe)
     const file = await readFile(absolute)
     const ext = path.extname(safe).toLowerCase()
     const mime = ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 'image/png'
     return `data:${mime};base64,${file.toString('base64')}`
-  } catch {
+  } catch (error) {
+    // Trace volontairement tronquee : une data URL depasse les 40 000 caracteres.
+    console.warn('[pdf] logo illisible :', logoPath.slice(0, 60), error)
     return undefined
   }
 }
