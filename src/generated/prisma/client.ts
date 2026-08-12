@@ -62,6 +62,17 @@ export type Company = Prisma.CompanyModel
  */
 export type Currency = Prisma.CurrencyModel
 /**
+ * Model ExchangeRate
+ * Historique des taux de change. Un taux est valable a partir de `validFrom`
+ * jusqu'au taux suivant de la meme devise.
+ * 
+ * REGLE : ces taux ne servent qu'a PROPOSER une valeur par defaut au moment
+ * de la saisie. Une fois le document enregistre, il porte son propre taux
+ * (`exchangeRateTnd`) et ne depend plus de cette table : modifier un taux
+ * ici ne reecrit JAMAIS l'historique comptable.
+ */
+export type ExchangeRate = Prisma.ExchangeRateModel
+/**
  * Model InvoiceSequence
  * 
  */

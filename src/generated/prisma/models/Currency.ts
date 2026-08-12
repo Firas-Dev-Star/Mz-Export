@@ -222,6 +222,7 @@ export type CurrencyWhereInput = {
   suppliers?: Prisma.SupplierListRelationFilter
   purchases?: Prisma.PurchaseListRelationFilter
   purchasePayments?: Prisma.PurchasePaymentListRelationFilter
+  exchangeRates?: Prisma.ExchangeRateListRelationFilter
 }
 
 export type CurrencyOrderByWithRelationInput = {
@@ -236,6 +237,7 @@ export type CurrencyOrderByWithRelationInput = {
   suppliers?: Prisma.SupplierOrderByRelationAggregateInput
   purchases?: Prisma.PurchaseOrderByRelationAggregateInput
   purchasePayments?: Prisma.PurchasePaymentOrderByRelationAggregateInput
+  exchangeRates?: Prisma.ExchangeRateOrderByRelationAggregateInput
 }
 
 export type CurrencyWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +255,7 @@ export type CurrencyWhereUniqueInput = Prisma.AtLeast<{
   suppliers?: Prisma.SupplierListRelationFilter
   purchases?: Prisma.PurchaseListRelationFilter
   purchasePayments?: Prisma.PurchasePaymentListRelationFilter
+  exchangeRates?: Prisma.ExchangeRateListRelationFilter
 }, "code">
 
 export type CurrencyOrderByWithAggregationInput = {
@@ -291,6 +294,7 @@ export type CurrencyCreateInput = {
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateInput = {
@@ -305,6 +309,7 @@ export type CurrencyUncheckedCreateInput = {
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUpdateInput = {
@@ -319,6 +324,7 @@ export type CurrencyUpdateInput = {
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateInput = {
@@ -333,6 +339,7 @@ export type CurrencyUncheckedUpdateInput = {
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateManyInput = {
@@ -402,6 +409,20 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type CurrencyCreateNestedOneWithoutExchangeRatesInput = {
+  create?: Prisma.XOR<Prisma.CurrencyCreateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedCreateWithoutExchangeRatesInput>
+  connectOrCreate?: Prisma.CurrencyCreateOrConnectWithoutExchangeRatesInput
+  connect?: Prisma.CurrencyWhereUniqueInput
+}
+
+export type CurrencyUpdateOneRequiredWithoutExchangeRatesNestedInput = {
+  create?: Prisma.XOR<Prisma.CurrencyCreateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedCreateWithoutExchangeRatesInput>
+  connectOrCreate?: Prisma.CurrencyCreateOrConnectWithoutExchangeRatesInput
+  upsert?: Prisma.CurrencyUpsertWithoutExchangeRatesInput
+  connect?: Prisma.CurrencyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CurrencyUpdateToOneWithWhereWithoutExchangeRatesInput, Prisma.CurrencyUpdateWithoutExchangeRatesInput>, Prisma.CurrencyUncheckedUpdateWithoutExchangeRatesInput>
 }
 
 export type CurrencyCreateNestedOneWithoutCustomersInput = {
@@ -488,6 +509,78 @@ export type CurrencyUpdateOneRequiredWithoutPurchasePaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CurrencyUpdateToOneWithWhereWithoutPurchasePaymentsInput, Prisma.CurrencyUpdateWithoutPurchasePaymentsInput>, Prisma.CurrencyUncheckedUpdateWithoutPurchasePaymentsInput>
 }
 
+export type CurrencyCreateWithoutExchangeRatesInput = {
+  code: string
+  name: string
+  symbol: string
+  decimals?: number
+  isActive?: boolean
+  customers?: Prisma.CustomerCreateNestedManyWithoutCurrencyInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutCurrencyInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCurrencyInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
+  purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+}
+
+export type CurrencyUncheckedCreateWithoutExchangeRatesInput = {
+  code: string
+  name: string
+  symbol: string
+  decimals?: number
+  isActive?: boolean
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCurrencyInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCurrencyInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
+  purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+}
+
+export type CurrencyCreateOrConnectWithoutExchangeRatesInput = {
+  where: Prisma.CurrencyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CurrencyCreateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedCreateWithoutExchangeRatesInput>
+}
+
+export type CurrencyUpsertWithoutExchangeRatesInput = {
+  update: Prisma.XOR<Prisma.CurrencyUpdateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedUpdateWithoutExchangeRatesInput>
+  create: Prisma.XOR<Prisma.CurrencyCreateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedCreateWithoutExchangeRatesInput>
+  where?: Prisma.CurrencyWhereInput
+}
+
+export type CurrencyUpdateToOneWithWhereWithoutExchangeRatesInput = {
+  where?: Prisma.CurrencyWhereInput
+  data: Prisma.XOR<Prisma.CurrencyUpdateWithoutExchangeRatesInput, Prisma.CurrencyUncheckedUpdateWithoutExchangeRatesInput>
+}
+
+export type CurrencyUpdateWithoutExchangeRatesInput = {
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
+  decimals?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customers?: Prisma.CustomerUpdateManyWithoutCurrencyNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutCurrencyNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCurrencyNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
+  purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+}
+
+export type CurrencyUncheckedUpdateWithoutExchangeRatesInput = {
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
+  decimals?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCurrencyNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCurrencyNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
+  purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+}
+
 export type CurrencyCreateWithoutCustomersInput = {
   code: string
   name: string
@@ -499,6 +592,7 @@ export type CurrencyCreateWithoutCustomersInput = {
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutCustomersInput = {
@@ -512,6 +606,7 @@ export type CurrencyUncheckedCreateWithoutCustomersInput = {
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutCustomersInput = {
@@ -541,6 +636,7 @@ export type CurrencyUpdateWithoutCustomersInput = {
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutCustomersInput = {
@@ -554,6 +650,7 @@ export type CurrencyUncheckedUpdateWithoutCustomersInput = {
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateWithoutInvoicesInput = {
@@ -567,6 +664,7 @@ export type CurrencyCreateWithoutInvoicesInput = {
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutInvoicesInput = {
@@ -580,6 +678,7 @@ export type CurrencyUncheckedCreateWithoutInvoicesInput = {
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutInvoicesInput = {
@@ -609,6 +708,7 @@ export type CurrencyUpdateWithoutInvoicesInput = {
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutInvoicesInput = {
@@ -622,6 +722,7 @@ export type CurrencyUncheckedUpdateWithoutInvoicesInput = {
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateWithoutPaymentsInput = {
@@ -635,6 +736,7 @@ export type CurrencyCreateWithoutPaymentsInput = {
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutPaymentsInput = {
@@ -648,6 +750,7 @@ export type CurrencyUncheckedCreateWithoutPaymentsInput = {
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutPaymentsInput = {
@@ -677,6 +780,7 @@ export type CurrencyUpdateWithoutPaymentsInput = {
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutPaymentsInput = {
@@ -690,6 +794,7 @@ export type CurrencyUncheckedUpdateWithoutPaymentsInput = {
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateWithoutSuppliersInput = {
@@ -703,6 +808,7 @@ export type CurrencyCreateWithoutSuppliersInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutSuppliersInput = {
@@ -716,6 +822,7 @@ export type CurrencyUncheckedCreateWithoutSuppliersInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutSuppliersInput = {
@@ -745,6 +852,7 @@ export type CurrencyUpdateWithoutSuppliersInput = {
   payments?: Prisma.PaymentUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutSuppliersInput = {
@@ -758,6 +866,7 @@ export type CurrencyUncheckedUpdateWithoutSuppliersInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateWithoutPurchasesInput = {
@@ -771,6 +880,7 @@ export type CurrencyCreateWithoutPurchasesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutCurrencyInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutPurchasesInput = {
@@ -784,6 +894,7 @@ export type CurrencyUncheckedCreateWithoutPurchasesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCurrencyInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutPurchasesInput = {
@@ -813,6 +924,7 @@ export type CurrencyUpdateWithoutPurchasesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutCurrencyNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutPurchasesInput = {
@@ -826,6 +938,7 @@ export type CurrencyUncheckedUpdateWithoutPurchasesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCurrencyNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchasePayments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyCreateWithoutPurchasePaymentsInput = {
@@ -839,6 +952,7 @@ export type CurrencyCreateWithoutPurchasePaymentsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutCurrencyInput
   suppliers?: Prisma.SupplierCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyUncheckedCreateWithoutPurchasePaymentsInput = {
@@ -852,6 +966,7 @@ export type CurrencyUncheckedCreateWithoutPurchasePaymentsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCurrencyInput
   suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutCurrencyInput
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutCurrencyInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutCurrencyInput
 }
 
 export type CurrencyCreateOrConnectWithoutPurchasePaymentsInput = {
@@ -881,6 +996,7 @@ export type CurrencyUpdateWithoutPurchasePaymentsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutCurrencyNestedInput
   suppliers?: Prisma.SupplierUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutCurrencyNestedInput
 }
 
 export type CurrencyUncheckedUpdateWithoutPurchasePaymentsInput = {
@@ -894,6 +1010,7 @@ export type CurrencyUncheckedUpdateWithoutPurchasePaymentsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCurrencyNestedInput
   suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutCurrencyNestedInput
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutCurrencyNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutCurrencyNestedInput
 }
 
 
@@ -908,6 +1025,7 @@ export type CurrencyCountOutputType = {
   suppliers: number
   purchases: number
   purchasePayments: number
+  exchangeRates: number
 }
 
 export type CurrencyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -917,6 +1035,7 @@ export type CurrencyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   suppliers?: boolean | CurrencyCountOutputTypeCountSuppliersArgs
   purchases?: boolean | CurrencyCountOutputTypeCountPurchasesArgs
   purchasePayments?: boolean | CurrencyCountOutputTypeCountPurchasePaymentsArgs
+  exchangeRates?: boolean | CurrencyCountOutputTypeCountExchangeRatesArgs
 }
 
 /**
@@ -971,6 +1090,13 @@ export type CurrencyCountOutputTypeCountPurchasePaymentsArgs<ExtArgs extends run
   where?: Prisma.PurchasePaymentWhereInput
 }
 
+/**
+ * CurrencyCountOutputType without action
+ */
+export type CurrencyCountOutputTypeCountExchangeRatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExchangeRateWhereInput
+}
+
 
 export type CurrencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   code?: boolean
@@ -984,6 +1110,7 @@ export type CurrencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   suppliers?: boolean | Prisma.Currency$suppliersArgs<ExtArgs>
   purchases?: boolean | Prisma.Currency$purchasesArgs<ExtArgs>
   purchasePayments?: boolean | Prisma.Currency$purchasePaymentsArgs<ExtArgs>
+  exchangeRates?: boolean | Prisma.Currency$exchangeRatesArgs<ExtArgs>
   _count?: boolean | Prisma.CurrencyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["currency"]>
 
@@ -1019,6 +1146,7 @@ export type CurrencyInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   suppliers?: boolean | Prisma.Currency$suppliersArgs<ExtArgs>
   purchases?: boolean | Prisma.Currency$purchasesArgs<ExtArgs>
   purchasePayments?: boolean | Prisma.Currency$purchasePaymentsArgs<ExtArgs>
+  exchangeRates?: boolean | Prisma.Currency$exchangeRatesArgs<ExtArgs>
   _count?: boolean | Prisma.CurrencyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CurrencyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1033,6 +1161,7 @@ export type $CurrencyPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     suppliers: Prisma.$SupplierPayload<ExtArgs>[]
     purchases: Prisma.$PurchasePayload<ExtArgs>[]
     purchasePayments: Prisma.$PurchasePaymentPayload<ExtArgs>[]
+    exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     code: string
@@ -1440,6 +1569,7 @@ export interface Prisma__CurrencyClient<T, Null = never, ExtArgs extends runtime
   suppliers<T extends Prisma.Currency$suppliersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Currency$suppliersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchases<T extends Prisma.Currency$purchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Currency$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchasePayments<T extends Prisma.Currency$purchasePaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Currency$purchasePaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchasePaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exchangeRates<T extends Prisma.Currency$exchangeRatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Currency$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2008,6 +2138,30 @@ export type Currency$purchasePaymentsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.PurchasePaymentScalarFieldEnum | Prisma.PurchasePaymentScalarFieldEnum[]
+}
+
+/**
+ * Currency.exchangeRates
+ */
+export type Currency$exchangeRatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExchangeRate
+   */
+  select?: Prisma.ExchangeRateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExchangeRate
+   */
+  omit?: Prisma.ExchangeRateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExchangeRateInclude<ExtArgs> | null
+  where?: Prisma.ExchangeRateWhereInput
+  orderBy?: Prisma.ExchangeRateOrderByWithRelationInput | Prisma.ExchangeRateOrderByWithRelationInput[]
+  cursor?: Prisma.ExchangeRateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExchangeRateScalarFieldEnum | Prisma.ExchangeRateScalarFieldEnum[]
 }
 
 /**

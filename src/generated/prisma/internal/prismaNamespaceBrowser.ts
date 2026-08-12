@@ -55,6 +55,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   Company: 'Company',
   Currency: 'Currency',
+  ExchangeRate: 'ExchangeRate',
   InvoiceSequence: 'InvoiceSequence',
   Customer: 'Customer',
   Category: 'Category',
@@ -169,6 +170,20 @@ export const CurrencyScalarFieldEnum = {
 } as const
 
 export type CurrencyScalarFieldEnum = (typeof CurrencyScalarFieldEnum)[keyof typeof CurrencyScalarFieldEnum]
+
+
+export const ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  currencyCode: 'currencyCode',
+  rateToTnd: 'rateToTnd',
+  validFrom: 'validFrom',
+  source: 'source',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
 
 
 export const InvoiceSequenceScalarFieldEnum = {
@@ -306,6 +321,10 @@ export const InvoiceScalarFieldEnum = {
   netToPay: 'netToPay',
   paidAmount: 'paidAmount',
   balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
   amountInWords: 'amountInWords',
   priceBreakdownNote: 'priceBreakdownNote',
   notes: 'notes',
@@ -409,6 +428,10 @@ export const PurchaseScalarFieldEnum = {
   netToPay: 'netToPay',
   paidAmount: 'paidAmount',
   balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
   notes: 'notes',
   createdById: 'createdById',
   confirmedAt: 'confirmedAt',

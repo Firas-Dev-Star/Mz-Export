@@ -401,6 +401,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   Company: 'Company',
   Currency: 'Currency',
+  ExchangeRate: 'ExchangeRate',
   InvoiceSequence: 'InvoiceSequence',
   Customer: 'Customer',
   Category: 'Category',
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "company" | "currency" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "stockMovement"
+    modelProps: "user" | "auditLog" | "company" | "currency" | "exchangeRate" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "stockMovement"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -725,6 +726,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CurrencyCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CurrencyCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExchangeRate: {
+      payload: Prisma.$ExchangeRatePayload<ExtArgs>
+      fields: Prisma.ExchangeRateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExchangeRateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExchangeRateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        findFirst: {
+          args: Prisma.ExchangeRateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExchangeRateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        findMany: {
+          args: Prisma.ExchangeRateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        create: {
+          args: Prisma.ExchangeRateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        createMany: {
+          args: Prisma.ExchangeRateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExchangeRateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        delete: {
+          args: Prisma.ExchangeRateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        update: {
+          args: Prisma.ExchangeRateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExchangeRateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExchangeRateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExchangeRateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        upsert: {
+          args: Prisma.ExchangeRateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        aggregate: {
+          args: Prisma.ExchangeRateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExchangeRate>
+        }
+        groupBy: {
+          args: Prisma.ExchangeRateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExchangeRateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExchangeRateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExchangeRateCountAggregateOutputType> | number
         }
       }
     }
@@ -1741,6 +1816,20 @@ export const CurrencyScalarFieldEnum = {
 export type CurrencyScalarFieldEnum = (typeof CurrencyScalarFieldEnum)[keyof typeof CurrencyScalarFieldEnum]
 
 
+export const ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  currencyCode: 'currencyCode',
+  rateToTnd: 'rateToTnd',
+  validFrom: 'validFrom',
+  source: 'source',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
+
+
 export const InvoiceSequenceScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -1876,6 +1965,10 @@ export const InvoiceScalarFieldEnum = {
   netToPay: 'netToPay',
   paidAmount: 'paidAmount',
   balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
   amountInWords: 'amountInWords',
   priceBreakdownNote: 'priceBreakdownNote',
   notes: 'notes',
@@ -1979,6 +2072,10 @@ export const PurchaseScalarFieldEnum = {
   netToPay: 'netToPay',
   paidAmount: 'paidAmount',
   balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
   notes: 'notes',
   createdById: 'createdById',
   confirmedAt: 'confirmedAt',
@@ -2420,6 +2517,7 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   company?: Prisma.CompanyOmit
   currency?: Prisma.CurrencyOmit
+  exchangeRate?: Prisma.ExchangeRateOmit
   invoiceSequence?: Prisma.InvoiceSequenceOmit
   customer?: Prisma.CustomerOmit
   category?: Prisma.CategoryOmit

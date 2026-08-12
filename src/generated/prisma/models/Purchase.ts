@@ -39,6 +39,10 @@ export type PurchaseAvgAggregateOutputType = {
   netToPay: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
+  exchangeRateTnd: runtime.Decimal | null
+  netToPayTnd: runtime.Decimal | null
+  paidAmountTnd: runtime.Decimal | null
+  balanceDueTnd: runtime.Decimal | null
 }
 
 export type PurchaseSumAggregateOutputType = {
@@ -54,6 +58,10 @@ export type PurchaseSumAggregateOutputType = {
   netToPay: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
+  exchangeRateTnd: runtime.Decimal | null
+  netToPayTnd: runtime.Decimal | null
+  paidAmountTnd: runtime.Decimal | null
+  balanceDueTnd: runtime.Decimal | null
 }
 
 export type PurchaseMinAggregateOutputType = {
@@ -82,6 +90,10 @@ export type PurchaseMinAggregateOutputType = {
   netToPay: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
+  exchangeRateTnd: runtime.Decimal | null
+  netToPayTnd: runtime.Decimal | null
+  paidAmountTnd: runtime.Decimal | null
+  balanceDueTnd: runtime.Decimal | null
   notes: string | null
   createdById: string | null
   confirmedAt: Date | null
@@ -117,6 +129,10 @@ export type PurchaseMaxAggregateOutputType = {
   netToPay: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
+  exchangeRateTnd: runtime.Decimal | null
+  netToPayTnd: runtime.Decimal | null
+  paidAmountTnd: runtime.Decimal | null
+  balanceDueTnd: runtime.Decimal | null
   notes: string | null
   createdById: string | null
   confirmedAt: Date | null
@@ -152,6 +168,10 @@ export type PurchaseCountAggregateOutputType = {
   netToPay: number
   paidAmount: number
   balanceDue: number
+  exchangeRateTnd: number
+  netToPayTnd: number
+  paidAmountTnd: number
+  balanceDueTnd: number
   notes: number
   createdById: number
   confirmedAt: number
@@ -176,6 +196,10 @@ export type PurchaseAvgAggregateInputType = {
   netToPay?: true
   paidAmount?: true
   balanceDue?: true
+  exchangeRateTnd?: true
+  netToPayTnd?: true
+  paidAmountTnd?: true
+  balanceDueTnd?: true
 }
 
 export type PurchaseSumAggregateInputType = {
@@ -191,6 +215,10 @@ export type PurchaseSumAggregateInputType = {
   netToPay?: true
   paidAmount?: true
   balanceDue?: true
+  exchangeRateTnd?: true
+  netToPayTnd?: true
+  paidAmountTnd?: true
+  balanceDueTnd?: true
 }
 
 export type PurchaseMinAggregateInputType = {
@@ -219,6 +247,10 @@ export type PurchaseMinAggregateInputType = {
   netToPay?: true
   paidAmount?: true
   balanceDue?: true
+  exchangeRateTnd?: true
+  netToPayTnd?: true
+  paidAmountTnd?: true
+  balanceDueTnd?: true
   notes?: true
   createdById?: true
   confirmedAt?: true
@@ -254,6 +286,10 @@ export type PurchaseMaxAggregateInputType = {
   netToPay?: true
   paidAmount?: true
   balanceDue?: true
+  exchangeRateTnd?: true
+  netToPayTnd?: true
+  paidAmountTnd?: true
+  balanceDueTnd?: true
   notes?: true
   createdById?: true
   confirmedAt?: true
@@ -289,6 +325,10 @@ export type PurchaseCountAggregateInputType = {
   netToPay?: true
   paidAmount?: true
   balanceDue?: true
+  exchangeRateTnd?: true
+  netToPayTnd?: true
+  paidAmountTnd?: true
+  balanceDueTnd?: true
   notes?: true
   createdById?: true
   confirmedAt?: true
@@ -411,6 +451,10 @@ export type PurchaseGroupByOutputType = {
   netToPay: runtime.Decimal
   paidAmount: runtime.Decimal
   balanceDue: runtime.Decimal
+  exchangeRateTnd: runtime.Decimal
+  netToPayTnd: runtime.Decimal
+  paidAmountTnd: runtime.Decimal
+  balanceDueTnd: runtime.Decimal
   notes: string
   createdById: string | null
   confirmedAt: Date | null
@@ -469,6 +513,10 @@ export type PurchaseWhereInput = {
   netToPay?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFilter<"Purchase"> | string
   createdById?: Prisma.StringNullableFilter<"Purchase"> | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
@@ -509,6 +557,10 @@ export type PurchaseOrderByWithRelationInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -552,6 +604,10 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
   netToPay?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFilter<"Purchase"> | string
   createdById?: Prisma.StringNullableFilter<"Purchase"> | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
@@ -592,6 +648,10 @@ export type PurchaseOrderByWithAggregationInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -635,6 +695,10 @@ export type PurchaseScalarWhereWithAggregatesInput = {
   netToPay?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
   createdById?: Prisma.StringNullableWithAggregatesFilter<"Purchase"> | string | null
   confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Purchase"> | Date | string | null
@@ -668,6 +732,10 @@ export type PurchaseCreateInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -707,6 +775,10 @@ export type PurchaseUncheckedCreateInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -742,6 +814,10 @@ export type PurchaseUpdateInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -781,6 +857,10 @@ export type PurchaseUncheckedUpdateInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -818,6 +898,10 @@ export type PurchaseCreateManyInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -851,6 +935,10 @@ export type PurchaseUpdateManyMutationInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -885,6 +973,10 @@ export type PurchaseUncheckedUpdateManyInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -930,6 +1022,10 @@ export type PurchaseCountOrderByAggregateInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
@@ -952,6 +1048,10 @@ export type PurchaseAvgOrderByAggregateInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
 }
 
 export type PurchaseMaxOrderByAggregateInput = {
@@ -980,6 +1080,10 @@ export type PurchaseMaxOrderByAggregateInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
@@ -1015,6 +1119,10 @@ export type PurchaseMinOrderByAggregateInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
@@ -1037,6 +1145,10 @@ export type PurchaseSumOrderByAggregateInput = {
   netToPay?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
+  exchangeRateTnd?: Prisma.SortOrder
+  netToPayTnd?: Prisma.SortOrder
+  paidAmountTnd?: Prisma.SortOrder
+  balanceDueTnd?: Prisma.SortOrder
 }
 
 export type PurchaseScalarRelationFilter = {
@@ -1222,6 +1334,10 @@ export type PurchaseCreateWithoutCreatedByInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1260,6 +1376,10 @@ export type PurchaseUncheckedCreateWithoutCreatedByInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1325,6 +1445,10 @@ export type PurchaseScalarWhereInput = {
   netToPay?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFilter<"Purchase"> | string
   createdById?: Prisma.StringNullableFilter<"Purchase"> | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
@@ -1358,6 +1482,10 @@ export type PurchaseCreateWithoutCurrencyInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1395,6 +1523,10 @@ export type PurchaseUncheckedCreateWithoutCurrencyInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -1456,6 +1588,10 @@ export type PurchaseCreateWithoutSupplierInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1493,6 +1629,10 @@ export type PurchaseUncheckedCreateWithoutSupplierInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -1554,6 +1694,10 @@ export type PurchaseCreateWithoutItemsInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1592,6 +1736,10 @@ export type PurchaseUncheckedCreateWithoutItemsInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -1642,6 +1790,10 @@ export type PurchaseUpdateWithoutItemsInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1680,6 +1832,10 @@ export type PurchaseUncheckedUpdateWithoutItemsInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1714,6 +1870,10 @@ export type PurchaseCreateWithoutPaymentsInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1752,6 +1912,10 @@ export type PurchaseUncheckedCreateWithoutPaymentsInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -1802,6 +1966,10 @@ export type PurchaseUpdateWithoutPaymentsInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1840,6 +2008,10 @@ export type PurchaseUncheckedUpdateWithoutPaymentsInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1876,6 +2048,10 @@ export type PurchaseCreateManyCreatedByInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   confirmedAt?: Date | string | null
   cancelledAt?: Date | string | null
@@ -1908,6 +2084,10 @@ export type PurchaseUpdateWithoutCreatedByInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1946,6 +2126,10 @@ export type PurchaseUncheckedUpdateWithoutCreatedByInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1982,6 +2166,10 @@ export type PurchaseUncheckedUpdateManyWithoutCreatedByInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2015,6 +2203,10 @@ export type PurchaseCreateManyCurrencyInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -2048,6 +2240,10 @@ export type PurchaseUpdateWithoutCurrencyInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2085,6 +2281,10 @@ export type PurchaseUncheckedUpdateWithoutCurrencyInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2121,6 +2321,10 @@ export type PurchaseUncheckedUpdateManyWithoutCurrencyInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2155,6 +2359,10 @@ export type PurchaseCreateManySupplierInput = {
   netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string
   createdById?: string | null
   confirmedAt?: Date | string | null
@@ -2188,6 +2396,10 @@ export type PurchaseUpdateWithoutSupplierInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2225,6 +2437,10 @@ export type PurchaseUncheckedUpdateWithoutSupplierInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2261,6 +2477,10 @@ export type PurchaseUncheckedUpdateManyWithoutSupplierInput = {
   netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2336,6 +2556,10 @@ export type PurchaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   netToPay?: boolean
   paidAmount?: boolean
   balanceDue?: boolean
+  exchangeRateTnd?: boolean
+  netToPayTnd?: boolean
+  paidAmountTnd?: boolean
+  balanceDueTnd?: boolean
   notes?: boolean
   createdById?: boolean
   confirmedAt?: boolean
@@ -2377,6 +2601,10 @@ export type PurchaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   netToPay?: boolean
   paidAmount?: boolean
   balanceDue?: boolean
+  exchangeRateTnd?: boolean
+  netToPayTnd?: boolean
+  paidAmountTnd?: boolean
+  balanceDueTnd?: boolean
   notes?: boolean
   createdById?: boolean
   confirmedAt?: boolean
@@ -2415,6 +2643,10 @@ export type PurchaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   netToPay?: boolean
   paidAmount?: boolean
   balanceDue?: boolean
+  exchangeRateTnd?: boolean
+  netToPayTnd?: boolean
+  paidAmountTnd?: boolean
+  balanceDueTnd?: boolean
   notes?: boolean
   createdById?: boolean
   confirmedAt?: boolean
@@ -2453,6 +2685,10 @@ export type PurchaseSelectScalar = {
   netToPay?: boolean
   paidAmount?: boolean
   balanceDue?: boolean
+  exchangeRateTnd?: boolean
+  netToPayTnd?: boolean
+  paidAmountTnd?: boolean
+  balanceDueTnd?: boolean
   notes?: boolean
   createdById?: boolean
   confirmedAt?: boolean
@@ -2462,7 +2698,7 @@ export type PurchaseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "status" | "supplierReference" | "supplierId" | "date" | "dueDate" | "currencyCode" | "paymentTerms" | "itemsTotal" | "discountTotal" | "shippingLabel" | "shippingAmount" | "otherFeesLabel" | "otherFeesAmount" | "vatMode" | "vatRate" | "stampDutyLabel" | "stampDutyAmount" | "totalHt" | "vatAmount" | "totalTtc" | "netToPay" | "paidAmount" | "balanceDue" | "notes" | "createdById" | "confirmedAt" | "cancelledAt" | "isDemo" | "createdAt" | "updatedAt", ExtArgs["result"]["purchase"]>
+export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "status" | "supplierReference" | "supplierId" | "date" | "dueDate" | "currencyCode" | "paymentTerms" | "itemsTotal" | "discountTotal" | "shippingLabel" | "shippingAmount" | "otherFeesLabel" | "otherFeesAmount" | "vatMode" | "vatRate" | "stampDutyLabel" | "stampDutyAmount" | "totalHt" | "vatAmount" | "totalTtc" | "netToPay" | "paidAmount" | "balanceDue" | "exchangeRateTnd" | "netToPayTnd" | "paidAmountTnd" | "balanceDueTnd" | "notes" | "createdById" | "confirmedAt" | "cancelledAt" | "isDemo" | "createdAt" | "updatedAt", ExtArgs["result"]["purchase"]>
 export type PurchaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
@@ -2520,6 +2756,14 @@ export type $PurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     netToPay: runtime.Decimal
     paidAmount: runtime.Decimal
     balanceDue: runtime.Decimal
+    /**
+     * Achats normalement en TND (taux = 1), mais la colonne existe pour
+     * permettre un achat en devise sans changer le reste du code.
+     */
+    exchangeRateTnd: runtime.Decimal
+    netToPayTnd: runtime.Decimal
+    paidAmountTnd: runtime.Decimal
+    balanceDueTnd: runtime.Decimal
     notes: string
     createdById: string | null
     confirmedAt: Date | null
@@ -2980,6 +3224,10 @@ export interface PurchaseFieldRefs {
   readonly netToPay: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly paidAmount: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly balanceDue: Prisma.FieldRef<"Purchase", 'Decimal'>
+  readonly exchangeRateTnd: Prisma.FieldRef<"Purchase", 'Decimal'>
+  readonly netToPayTnd: Prisma.FieldRef<"Purchase", 'Decimal'>
+  readonly paidAmountTnd: Prisma.FieldRef<"Purchase", 'Decimal'>
+  readonly balanceDueTnd: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly notes: Prisma.FieldRef<"Purchase", 'String'>
   readonly createdById: Prisma.FieldRef<"Purchase", 'String'>
   readonly confirmedAt: Prisma.FieldRef<"Purchase", 'DateTime'>
