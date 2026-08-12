@@ -10,12 +10,15 @@ export const productSchema = z.object({
   // Liste fermee : evite les variantes du meme code (KG / Kg / kg).
   unit: z.enum(UNIT_CODES, { message: 'Choisissez une unité dans la liste' }),
   categoryName: optionalText(80),
-  salePriceEur: decimalString({ min: 0, label: 'Le prix de vente' }),
-  purchasePriceTnd: decimalString({ min: 0, label: "Le prix d'achat" }),
+  // Prix et TVA ne sont plus saisis sur la fiche produit : ils se renseignent
+  // sur les factures, ou ils sont exacts et dates. Les champs restent dans le
+  // schema (valeur neutre) pour ne pas exiger de migration s'ils reviennent.
+  salePriceEur: decimalString({ min: 0, label: 'Le prix de vente' }).default('0'),
+  purchasePriceTnd: decimalString({ min: 0, label: "Le prix d'achat" }).default('0'),
   trackStock: z.coerce.boolean().default(true),
   minStock: decimalString({ min: 0, label: 'Le stock minimum' }),
   vatMode: vatModeSchema.default('NONE'),
-  vatRate: decimalString({ min: 0, label: 'Le taux de TVA' }),
+  vatRate: decimalString({ min: 0, label: 'Le taux de TVA' }).default('0'),
   ngp: optionalText(40),
   originCountry: optionalText(90),
   unitWeightKg: decimalString({ min: 0, label: 'Le poids unitaire' }),

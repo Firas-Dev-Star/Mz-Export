@@ -14,9 +14,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/toast'
 import { UNIT_CODES, unitLabel } from '@/lib/units'
 import { createProduct, updateProduct } from '@/actions/product.actions'
-import { VAT_MODE_LABELS } from '@/lib/format'
 import { type ProductInput, productSchema } from '@/validations/product'
 
+/**
+ * Prix et TVA ne figurent PAS sur la fiche produit : ils se saisissent sur les
+ * factures, ou ils sont exacts et dates. Les champs restent dans le schema a
+ * leur valeur neutre pour ne pas exiger de migration s'ils reviennent un jour.
+ */
 const EMPTY: ProductInput = {
   reference: '',
   sku: '',
@@ -62,8 +66,6 @@ export function ProductForm({
     resolver: zodResolver(productSchema),
     defaultValues: { ...EMPTY, ...defaultValues },
   })
-
-  const vatMode = watch('vatMode')
 
   async function onSubmit(values: ProductInput) {
     const result = productId ? await updateProduct(productId, values) : await createProduct(values)
@@ -122,33 +124,6 @@ export function ProductForm({
               <option value="true">Actif</option>
               <option value="false">Inactif</option>
             </Select>
-          </Field>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Prix et TVA</CardTitle>
-          <CardDescription>
-            Les ventes export sont libellées en euros. Le régime de TVA reste configurable et doit être validé par votre comptable.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-3">
-          <Field label="Prix de vente (EUR)" htmlFor="salePriceEur" required error={errors.salePriceEur?.message}>
-            <Input id="salePriceEur" inputMode="decimal" {...register('salePriceEur')} />
-          </Field>
-          <Field label="Prix d'achat (TND)" htmlFor="purchasePriceTnd" error={errors.purchasePriceTnd?.message} hint="Sert au calcul de la valeur du stock">
-            <Input id="purchasePriceTnd" inputMode="decimal" {...register('purchasePriceTnd')} />
-          </Field>
-          <Field label="Régime de TVA" htmlFor="vatMode" error={errors.vatMode?.message}>
-            <Select id="vatMode" {...register('vatMode')}>
-              {Object.entries(VAT_MODE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </Select>
-          </Field>
-          <Field label="Taux de TVA (%)" htmlFor="vatRate" error={errors.vatRate?.message}>
-            <Input id="vatRate" inputMode="decimal" disabled={vatMode !== 'RATE'} {...register('vatRate')} />
           </Field>
         </CardContent>
       </Card>
