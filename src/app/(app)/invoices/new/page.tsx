@@ -5,6 +5,7 @@ import { can, requirePermission } from '@/lib/auth'
 import { toDateInputValue } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { previewNextNumber } from '@/lib/numbering'
+import { isIncotermCode } from '@/lib/trade'
 import { getInvoiceDefaults } from '@/services/invoice.service'
 import { listProductOptions } from '@/services/product.service'
 import type { InvoiceInput } from '@/validations/invoice'
@@ -56,7 +57,9 @@ export default async function NewInvoicePage({
     packageDimensions: '',
     grossWeightKg: '0',
     netWeightKg: '0',
-    incoterm: defaults.incoterm,
+    // `defaults.incoterm` vient des parametres societe (colonne String) :
+    // on ne le retient que s'il correspond a un code de la liste fermee.
+    incoterm: isIncotermCode(defaults.incoterm) ? defaults.incoterm : '',
     transportMode: '',
     departurePort: '',
     destination: '',
