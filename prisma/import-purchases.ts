@@ -226,9 +226,10 @@ const PURCHASES: PurchaseSource[] = [
         quantity: '2083.875',
         unitPrice: '7.6924',
       },
+      
     ],
   },
-  {
+   {
     number: 'ACH-2026-000475',
     supplierCode: 'SAHAFA',
     supplierReference: '000475',
