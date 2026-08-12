@@ -228,6 +228,26 @@ const PURCHASES: PurchaseSource[] = [
       },
     ],
   },
+  {
+    number: 'ACH-2026-000475',
+    supplierCode: 'SAHAFA',
+    supplierReference: '000475',
+    // DATE ABSENTE du document original : le champ n'a pas ete rempli.
+    // Valeur provisoire — a corriger depuis Achats > Factures d'achat.
+    date: '2026-01-01',
+    vatRate: '7',
+    stampDuty: '1.000',
+    expectedTtc: '964.000',
+    lines: [
+      {
+        productRef: 'FOUTA-COTON',
+        designation: 'Foutas artisanales',
+        unit: 'KG',
+        quantity: '150',
+        unitPrice: '6.0000',
+      },
+    ],
+  },
 ]
 
 /** Produits decouverts sur les factures 06 et 08. */
