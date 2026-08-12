@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { UNIT_CODES } from '@/lib/units'
 import { decimalString, optionalText, requiredText, vatModeSchema } from '@/validations/common'
 
 export const productSchema = z.object({
@@ -6,7 +7,8 @@ export const productSchema = z.object({
   sku: optionalText(60),
   designation: requiredText('La désignation', 200),
   description: optionalText(2000),
-  unit: optionalText(20),
+  // Liste fermee : evite les variantes du meme code (KG / Kg / kg).
+  unit: z.enum(UNIT_CODES, { message: 'Choisissez une unité dans la liste' }),
   categoryName: optionalText(80),
   salePriceEur: decimalString({ min: 0, label: 'Le prix de vente' }),
   purchasePriceTnd: decimalString({ min: 0, label: "Le prix d'achat" }),

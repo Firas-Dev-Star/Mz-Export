@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/toast'
+import { UNIT_CODES, unitLabel } from '@/lib/units'
 import { createProduct, updateProduct } from '@/actions/product.actions'
 import { VAT_MODE_LABELS } from '@/lib/format'
 import { type ProductInput, productSchema } from '@/validations/product'
@@ -107,8 +108,14 @@ export function ProductForm({
               {categories.map((c) => <option key={c} value={c} />)}
             </datalist>
           </Field>
-          <Field label="Unité" htmlFor="unit" error={errors.unit?.message} hint="Ex. KG, PCS, M²">
-            <Input id="unit" {...register('unit')} />
+          <Field label="Unité" htmlFor="unit" error={errors.unit?.message}>
+            <Select id="unit" {...register('unit')}>
+              {UNIT_CODES.map((code) => (
+                <option key={code} value={code}>
+                  {unitLabel(code)}
+                </option>
+              ))}
+            </Select>
           </Field>
           <Field label="Statut" htmlFor="isActive">
             <Select id="isActive" {...register('isActive', { setValueAs: (v) => v === 'true' || v === true })}>
