@@ -99,7 +99,11 @@ const styles = StyleSheet.create({
   },
 
   // --- Tableau ---
-  table: { borderWidth: 1, borderColor: BORDER, marginBottom: 10 },
+  // `minHeight` force le tableau a occuper une hauteur constante meme avec une
+  // seule ligne : le document garde la meme allure qu'il porte 1 ou 10 articles,
+  // et le bloc des totaux reste toujours a la meme place sur la page.
+  table: { borderWidth: 1, borderColor: BORDER, marginBottom: 10, minHeight: 300 },
+  tbody: { flexGrow: 1 },
   thead: { flexDirection: 'row', backgroundColor: LIGHT, borderBottomWidth: 1, borderColor: BORDER },
   th: { padding: 5, fontSize: 8, fontFamily: 'Helvetica-Bold' },
   tr: { flexDirection: 'row', borderBottomWidth: 0.5, borderColor: '#d1d5db' },
@@ -139,10 +143,6 @@ const styles = StyleSheet.create({
   // --- Bas de page ---
   wordsBox: { borderWidth: 1, borderColor: BORDER, padding: 7, marginTop: 10 },
   wordsText: { fontSize: 8.5 },
-  notesBox: { marginTop: 8 },
-  notesLabel: { fontSize: 7.5, color: MUTED, marginBottom: 2 },
-  notesText: { fontSize: 8 },
-
   disclaimer: {
     position: 'absolute',
     bottom: 22,
@@ -263,6 +263,7 @@ export function PurchasePdf({
             <Text style={[styles.th, styles.colTotal]}>Montant HT</Text>
           </View>
 
+          <View style={styles.tbody}>
           {lines.map((line) => (
             <View key={line.position} style={styles.tr} wrap={false}>
               <View style={[styles.td, styles.colQty]}>
@@ -285,6 +286,7 @@ export function PurchasePdf({
               <Text style={[styles.td, styles.colTotal]}>{line.lineTotal}</Text>
             </View>
           ))}
+          </View>
         </View>
 
         {/* --- Totaux --- */}
@@ -316,14 +318,6 @@ export function PurchasePdf({
               <Text style={styles.totalStrongLabel}>Total TTC</Text>
               <Text style={styles.totalStrongValue}>{totals.totalTtc}</Text>
             </View>
-            <View style={styles.totalLine}>
-              <Text style={styles.totalLabel}>Deja regle</Text>
-              <Text style={styles.totalValue}>{totals.paidAmount}</Text>
-            </View>
-            <View style={styles.totalLine}>
-              <Text style={styles.totalLabel}>Reste a payer</Text>
-              <Text style={styles.totalValue}>{totals.balanceDue}</Text>
-            </View>
           </View>
         </View>
 
@@ -333,13 +327,6 @@ export function PurchasePdf({
             Arretee la presente a la somme de : {purchase.amountInWords}.
           </Text>
         </View>
-
-        {purchase.notes ? (
-          <View style={styles.notesBox}>
-            <Text style={styles.notesLabel}>Observations</Text>
-            <Text style={styles.notesText}>{purchase.notes}</Text>
-          </View>
-        ) : null}
 
         {/* --- Rappel de la nature du document --- */}
         <Text style={styles.disclaimer} fixed>
