@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { CreditCard, Pencil } from 'lucide-react'
+import { CreditCard, FileDown, Pencil } from 'lucide-react'
 import { deletePurchase } from '@/actions/purchase.actions'
 import { PageHeader } from '@/components/layout/page-header'
 import { CancelPurchaseButton, ConfirmPurchaseButton } from '@/components/purchases/purchase-actions'
@@ -49,6 +49,13 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
         description={`${purchase.supplier.companyName} — ${formatDate(purchase.date)}`}
         actions={
           <>
+            {/* Recapitulatif de saisie : le PDF officiel reste celui du fournisseur. */}
+            <Button asChild variant="outline">
+              <a href={`/api/purchases/${purchase.id}/pdf?download=1`} target="_blank" rel="noreferrer">
+                <FileDown className="h-4 w-4" />
+                Récapitulatif PDF
+              </a>
+            </Button>
             {isDraft && can(session.role, 'purchase.write') ? (
               <Button asChild variant="outline">
                 <Link href={`/purchases/${purchase.id}/edit`}><Pencil className="h-4 w-4" />Modifier</Link>
