@@ -37,31 +37,36 @@ const styles = StyleSheet.create({
   },
 
   // --- En-tete ---
+  // Disposition calquee sur les factures fournisseurs : l'EMETTEUR occupe la
+  // gauche, le CLIENT — c'est-a-dire nous — l'encadre de droite.
   header: { flexDirection: 'row', alignItems: 'stretch', marginBottom: 14 },
-  logoBox: {
-    width: '42%',
+  emitterBox: {
+    width: '52%',
     borderWidth: 1,
     borderColor: BORDER,
-    padding: 8,
+    padding: 9,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  logoImage: { maxHeight: 54, objectFit: 'contain' },
-  logoText: { fontSize: 20, fontFamily: 'Helvetica-Bold', color: NAVY, letterSpacing: 2 },
-  companyBox: {
+  emitterName: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: NAVY, marginBottom: 4 },
+  emitterLine: { fontSize: 8.5, marginBottom: 1.5 },
+
+  clientBox: {
     flex: 1,
-    marginLeft: 8,
+    marginLeft: 10,
     borderWidth: 1,
     borderColor: BORDER,
-    padding: 8,
+    borderRadius: 6,
+    padding: 9,
     justifyContent: 'center',
   },
-  companyName: { textAlign: 'center', fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 3 },
-  companyLine: { textAlign: 'center', fontSize: 8.5, marginBottom: 2 },
+  clientLabel: { fontSize: 7.5, color: MUTED, marginBottom: 3 },
+  clientName: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 3 },
+  clientLine: { fontSize: 8.5, marginBottom: 1.5 },
+  logoImage: { maxHeight: 30, objectFit: 'contain', marginBottom: 5 },
 
   // --- Bandeau titre / fournisseur ---
   midRow: { flexDirection: 'row', marginBottom: 10 },
-  titleCol: { width: '48%' },
+  titleCol: { width: '52%' },
   titleBox: {
     borderWidth: 1,
     borderColor: BORDER,
@@ -73,17 +78,6 @@ const styles = StyleSheet.create({
   titleSub: { fontSize: 7, color: MUTED, marginTop: 3, letterSpacing: 0.5 },
   metaLine: { fontSize: 9, fontFamily: 'Helvetica-Bold', marginBottom: 2 },
   metaRef: { fontSize: 9, fontFamily: 'Helvetica-Bold', color: NAVY, marginBottom: 2 },
-
-  partyBox: {
-    flex: 1,
-    marginLeft: 10,
-    borderWidth: 1,
-    borderColor: BORDER,
-    padding: 8,
-  },
-  partyLabel: { fontSize: 7.5, color: MUTED, marginBottom: 3 },
-  partyName: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 3 },
-  partyLine: { fontSize: 8.5, marginBottom: 1.5 },
 
   // --- Filigrane statut ---
   statusBanner: {
@@ -180,67 +174,67 @@ export function PurchasePdf({
       subject={`Achat ${purchase.supplierReference || purchase.number} — ${supplier.name}`}
     >
       <Page size="A4" style={styles.page}>
-        {/* --- En-tete : le destinataire de la facture, c'est nous --- */}
+        {/* --- En-tete : l'emetteur du document d'origine est le FOURNISSEUR --- */}
         <View style={styles.header}>
-          <View style={styles.logoBox}>
-            {logoDataUrl ? (
-              // eslint-disable-next-line jsx-a11y/alt-text -- Image de @react-pdf/renderer, pas du DOM
-              <Image src={logoDataUrl} style={styles.logoImage} />
-            ) : (
-              <Text style={styles.logoText}>MZ</Text>
-            )}
-          </View>
-          <View style={styles.companyBox}>
-            <Text style={styles.companyName}>{company.name}</Text>
-            {company.legalLine ? <Text style={styles.companyLine}>{company.legalLine}</Text> : null}
-            {company.taxLine ? <Text style={styles.companyLine}>{company.taxLine}</Text> : null}
-            {company.addressBlock ? (
-              <Text style={styles.companyLine}>{company.addressBlock.replace(/\n/g, ' — ')}</Text>
+          <View style={styles.emitterBox}>
+            <Text style={styles.emitterName}>{supplier.name}</Text>
+            {supplier.addressBlock
+              ? supplier.addressBlock
+                  .split('\n')
+                  .map((l, i) => (
+                    <Text key={i} style={styles.emitterLine}>
+                      {l}
+                    </Text>
+                  ))
+              : null}
+            {supplier.taxId ? <Text style={styles.emitterLine}>{supplier.taxId}</Text> : null}
+            {supplier.tradeRegister ? (
+              <Text style={styles.emitterLine}>{supplier.tradeRegister}</Text>
             ) : null}
-            {company.email ? <Text style={styles.companyLine}>{company.email}</Text> : null}
+            {supplier.contactLine ? (
+              <Text style={styles.emitterLine}>{supplier.contactLine}</Text>
+            ) : null}
+          </View>
+
+          {/* Sur un achat, le client c'est nous : meme place que sur l'original. */}
+          <View style={styles.clientBox}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text -- Image de @react-pdf/renderer, pas du DOM */}
+            {logoDataUrl ? <Image src={logoDataUrl} style={styles.logoImage} /> : null}
+            <Text style={styles.clientLabel}>Client :</Text>
+            <Text style={styles.clientName}>{company.name}</Text>
+            {company.addressBlock
+              ? company.addressBlock
+                  .split('\n')
+                  .map((l, i) => (
+                    <Text key={i} style={styles.clientLine}>
+                      {l}
+                    </Text>
+                  ))
+              : null}
+            {company.taxLine ? <Text style={styles.clientLine}>{company.taxLine}</Text> : null}
+            {company.email ? <Text style={styles.clientLine}>{company.email}</Text> : null}
           </View>
         </View>
 
-        {/* --- Titre + fournisseur emetteur --- */}
+        {/* --- Titre et references --- */}
         <View style={styles.midRow}>
           <View style={styles.titleCol}>
             <View style={styles.titleBox}>
               <Text style={styles.titleText}>RECAPITULATIF D&apos;ACHAT</Text>
               <Text style={styles.titleSub}>Document interne — non contractuel</Text>
             </View>
-            <Text style={styles.metaLine}>Enregistrement N° : {purchase.number}</Text>
             {purchase.supplierReference ? (
               <Text style={styles.metaRef}>
                 Facture fournisseur N° : {purchase.supplierReference}
               </Text>
             ) : null}
             <Text style={styles.metaLine}>Date : {purchase.date}</Text>
+            <Text style={styles.metaLine}>Enregistrement N° : {purchase.number}</Text>
             {purchase.dueDate ? (
               <Text style={styles.metaLine}>Echeance : {purchase.dueDate}</Text>
             ) : null}
             {purchase.paymentTerms ? (
               <Text style={styles.metaLine}>Reglement : {purchase.paymentTerms}</Text>
-            ) : null}
-          </View>
-
-          <View style={styles.partyBox}>
-            <Text style={styles.partyLabel}>Fournisseur :</Text>
-            <Text style={styles.partyName}>{supplier.name}</Text>
-            {supplier.addressBlock
-              ? supplier.addressBlock
-                  .split('\n')
-                  .map((l, i) => (
-                    <Text key={i} style={styles.partyLine}>
-                      {l}
-                    </Text>
-                  ))
-              : null}
-            {supplier.taxId ? <Text style={styles.partyLine}>{supplier.taxId}</Text> : null}
-            {supplier.tradeRegister ? (
-              <Text style={styles.partyLine}>{supplier.tradeRegister}</Text>
-            ) : null}
-            {supplier.contactLine ? (
-              <Text style={styles.partyLine}>{supplier.contactLine}</Text>
             ) : null}
           </View>
         </View>
