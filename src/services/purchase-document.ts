@@ -30,6 +30,12 @@ export interface PurchaseDocumentLine {
   unitPrice: string
   discountPercent: string
   lineTotal: string
+  /**
+   * Poids indicatif de la ligne : quantite x poids unitaire du produit.
+   * OBSERVATION INTERNE uniquement — la facturation se fait a la piece.
+   * Chaine vide si le produit n'a pas de poids unitaire renseigne.
+   */
+  weightKg: string
   /** Vrai si la ligne est rattachee a un produit, donc entree en stock. */
   inStock: boolean
 }
@@ -80,6 +86,8 @@ export interface PurchaseDocumentData {
     totalTtc: string
     paidAmount: string
     balanceDue: string
+    /** Poids total indicatif, en kilogrammes. Vide si aucun poids connu. */
+    weightKg: string
   }
 }
 
@@ -107,7 +115,10 @@ export async function getPurchaseDocument(
       where: { id: purchaseId },
       include: {
         supplier: true,
-        items: { orderBy: { position: 'asc' } },
+        items: {
+          orderBy: { position: 'asc' },
+          include: { product: { select: { unitWeightKg: true } } },
+        },
       },
     }),
     prisma.company.findUnique({ where: { id: 'company' } }),
@@ -174,7 +185,13 @@ export async function getPurchaseDocument(
       amountInWords: amountToFrenchWords(purchase.netToPay, currency),
     },
 
-    lines: purchase.items.map((item) => ({
+    lines: purchase.items.map((item) => {
+      // Poids = quantite x poids unitaire du produit rattache. Une ligne libre
+      // ou un produit sans poids renseigne n'affiche rien plutot que zero.
+      const unitWeight = Number(item.product?.unitWeightKg ?? 0)
+      const weight = unitWeight > 0 ? Number(item.quantity) * unitWeight : 0
+
+      return {
       position: item.position,
       reference: item.reference,
       designation: item.designation,
@@ -183,10 +200,12 @@ export async function getPurchaseDocument(
       unitPrice: formatMoney(item.unitPrice, currency),
       discountPercent: formatNumber(item.discountPercent, 2),
       lineTotal: formatMoney(item.lineTotal, currency),
+      weightKg: weight > 0 ? formatNumber(weight, 3) : '',
       // Une ligne sans produit rattache est une ligne libre : frais de
       // transport, prestation... Elle est facturee mais n'entre pas en stock.
       inStock: Boolean(item.productId),
-    })),
+      }
+    }),
 
     totals: {
       quantity: formatNumber(
@@ -205,6 +224,13 @@ export async function getPurchaseDocument(
       totalTtc: formatMoney(purchase.totalTtc, currency),
       paidAmount: formatMoney(purchase.paidAmount, currency),
       balanceDue: formatMoney(purchase.balanceDue, currency),
+      weightKg: (() => {
+        const total = purchase.items.reduce((acc, item) => {
+          const uw = Number(item.product?.unitWeightKg ?? 0)
+          return uw > 0 ? acc + Number(item.quantity) * uw : acc
+        }, 0)
+        return total > 0 ? formatNumber(total, 3) : ''
+      })(),
     },
   }
 }
