@@ -1,7 +1,7 @@
 import 'server-only'
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
-import { Decimal, add, dec, mul, round } from '@/lib/money'
+import { Decimal, add, dec, mul, round, gt } from '@/lib/money'
 import { stockLevel } from '@/lib/stock-labels'
 
 export interface MovementListParams {
@@ -72,6 +72,17 @@ export interface StockRow {
   minStock: string
   purchasePriceTnd: string
   stockValueTnd: string
+  /**
+   * Poids total du stock, en kilogrammes : quantite x poids unitaire.
+   *
+   * DONNEE DERIVEE, jamais stockee. Une colonne en base devrait etre mise a
+   * jour a chaque mouvement et finirait par diverger de la quantite reelle.
+   * Calculee ici, elle suit automatiquement chaque achat, vente ou ajustement.
+   *
+   * Chaine vide si le produit n'a pas de poids unitaire renseigne : mieux vaut
+   * ne rien afficher qu'un zero trompeur.
+   */
+  weightKg: string
   level: ReturnType<typeof stockLevel>
 }
 
@@ -130,6 +141,9 @@ export async function getStockOverview(params: {
     minStock: round(product.minStock, 3).toString(),
     purchasePriceTnd: round(product.purchasePriceTnd, 4).toString(),
     stockValueTnd: round(mul(product.stockQuantity, product.purchasePriceTnd), 3).toFixed(3),
+    weightKg: gt(product.unitWeightKg, 0)
+      ? round(mul(product.stockQuantity, product.unitWeightKg), 3).toFixed(3)
+      : '',
     level: stockLevel(product),
   }))
 
@@ -167,6 +181,7 @@ export async function getStockAlerts() {
     select: {
       id: true, reference: true, designation: true, unit: true,
       stockQuantity: true, minStock: true, trackStock: true, purchasePriceTnd: true,
+      unitWeightKg: true,
     },
   })
 

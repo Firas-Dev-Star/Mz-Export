@@ -109,18 +109,13 @@ const styles = StyleSheet.create({
   tr: { flexDirection: 'row', borderBottomWidth: 0.5, borderColor: '#d1d5db' },
   td: { padding: 5, fontSize: 8.5 },
 
-  colQty: { width: '11%', textAlign: 'center' },
+  colQty: { width: '12%', textAlign: 'center' },
   colDesignation: { flex: 1 },
-  // Colonne d'OBSERVATION INTERNE : le poids ne sert pas de base de
-  // facturation, d'ou le fond grise et l'intitule explicite.
-  colWeight: { width: '13%', textAlign: 'right', backgroundColor: '#f8fafc' },
-  colUnitPrice: { width: '16%', textAlign: 'right' },
-  colTotal: { width: '19%', textAlign: 'right' },
+  colUnitPrice: { width: '18%', textAlign: 'right' },
+  colTotal: { width: '20%', textAlign: 'right' },
 
   lineRef: { fontSize: 7, color: MUTED, marginBottom: 1 },
   lineStock: { fontSize: 6.5, color: MUTED, marginTop: 1.5 },
-
-  weightNote: { fontSize: 7.5, color: MUTED, marginBottom: 8, fontStyle: 'italic' },
 
   // --- Totaux ---
   totalsRow: { flexDirection: 'row', justifyContent: 'flex-end' },
@@ -264,7 +259,6 @@ export function PurchasePdf({
           <View style={styles.thead}>
             <Text style={[styles.th, styles.colQty]}>Qte</Text>
             <Text style={[styles.th, styles.colDesignation]}>Designation</Text>
-            <Text style={[styles.th, styles.colWeight]}>Poids (kg)</Text>
             <Text style={[styles.th, styles.colUnitPrice]}>P.U. HT</Text>
             <Text style={[styles.th, styles.colTotal]}>Montant HT</Text>
           </View>
@@ -288,21 +282,12 @@ export function PurchasePdf({
                   {line.inStock ? 'Entree en stock' : 'Ligne libre — hors stock'}
                 </Text>
               </View>
-              <Text style={[styles.td, styles.colWeight]}>{line.weightKg || '—'}</Text>
               <Text style={[styles.td, styles.colUnitPrice]}>{line.unitPrice}</Text>
               <Text style={[styles.td, styles.colTotal]}>{line.lineTotal}</Text>
             </View>
           ))}
           </View>
         </View>
-
-        {/* Poids total : information de gestion, hors calcul de facturation. */}
-        {totals.weightKg ? (
-          <Text style={styles.weightNote}>
-            Poids total indicatif : {totals.weightKg} kg — observation interne, la facturation
-            s&apos;effectue a la piece.
-          </Text>
-        ) : null}
 
         {/* --- Totaux --- */}
         <View style={styles.totalsRow}>

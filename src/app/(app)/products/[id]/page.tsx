@@ -78,6 +78,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               label="Quantité en stock"
               value={product.trackStock ? `${formatQuantity(product.stockQuantity)} ${product.unit}` : 'Non suivi'}
             />
+            {/* Poids derive : suit automatiquement chaque achat et chaque vente. */}
+            <Info
+              label="Poids total (kg)"
+              value={
+                product.trackStock && Number(product.unitWeightKg) > 0
+                  ? `${formatNumber(mul(product.stockQuantity, product.unitWeightKg), 3)} kg`
+                  : '—'
+              }
+            />
             <Info label="Stock minimum" value={product.trackStock ? formatQuantity(product.minStock) : '—'} />
             <Info
               label="Valeur au prix d'achat"

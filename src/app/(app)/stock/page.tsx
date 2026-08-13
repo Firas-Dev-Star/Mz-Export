@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { can, requirePermission } from '@/lib/auth'
-import { formatMoney, formatQuantity } from '@/lib/format'
+import { formatMoney, formatQuantity, formatNumber } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { getStockOverview } from '@/services/stock.service'
 
@@ -107,6 +107,7 @@ export default async function StockPage({
                   <TableHead>Référence</TableHead>
                   <TableHead>Désignation</TableHead>
                   <TableHead className="text-right">Stock</TableHead>
+                  <TableHead className="text-right">Poids (kg)</TableHead>
                   <TableHead className="text-right">Minimum</TableHead>
                   <TableHead className="text-right">Prix d&apos;achat</TableHead>
                   <TableHead className="text-right">Valeur</TableHead>
@@ -127,6 +128,11 @@ export default async function StockPage({
                     </TableCell>
                     <TableCell className="tabular whitespace-nowrap text-right font-medium">
                       {row.trackStock ? `${formatQuantity(row.stockQuantity)} ${row.unit}` : '—'}
+                    </TableCell>
+                    {/* Poids derive : quantite x poids unitaire, recalcule a
+                        chaque affichage donc toujours a jour. */}
+                    <TableCell className="tabular whitespace-nowrap text-right text-muted-foreground">
+                      {row.trackStock && row.weightKg ? formatNumber(row.weightKg, 3) : '—'}
                     </TableCell>
                     <TableCell className="tabular whitespace-nowrap text-right text-muted-foreground">
                       {row.trackStock ? formatQuantity(row.minStock) : '—'}
