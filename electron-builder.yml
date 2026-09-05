@@ -1,0 +1,65 @@
+# Empaquetage de l'application desktop MZ EXPORT.
+#
+# Produit un installeur Windows (NSIS) qui n'exige aucun droit administrateur :
+# l'installation se fait dans le profil utilisateur, PostgreSQL demarre dans le
+# contexte de l'utilisateur, aucun service systeme n'est cree.
+
+appId: org.mzexport.gestion
+productName: MZ EXPORT
+copyright: MZ EXPORT SARL — Monastir, Tunisie
+
+directories:
+  output: dist-desktop
+  buildResources: electron/assets
+
+# Les fichiers du processus principal. Le serveur Next et ses dependances sont
+# ajoutes via extraResources : les inclure ici les ferait passer par l'archive
+# asar, dont un processus enfant Node ne sait pas lire les fichiers.
+files:
+  - electron/**/*
+  - package.json
+
+asar: true
+
+# Le serveur Next autonome est copie par ce hook, PAS par extraResources :
+# le filtrage par glob d'electron-builder exclut node_modules, ce qui produisait
+# un installeur ou le serveur ne demarrait pas. Voir electron/after-pack.cjs.
+afterPack: electron/after-pack.cjs
+
+extraResources:
+  # Migrations SQL et donnees initiales.
+  #
+  # La CLI Prisma n'est PAS livree : son graphe de dependances (@prisma/config,
+  # @prisma/dev, mysql2, postgres...) est impossible a embarquer de facon
+  # fiable. electron/migrate.js applique le SQL avec `pg` et alimente
+  # `_prisma_migrations` au format exact de Prisma ; electron/bootstrap.js ecrit
+  # les donnees initiales depuis seed-data.cjs. Ni tsx ni le client genere ne
+  # sont necessaires.
+  - from: prisma
+    to: prisma
+    filter: ['migrations/**/*', 'seed-data.cjs']
+
+  # PostgreSQL portable. A placer dans vendor/pgsql AVANT de lancer
+  # `npm run desktop:dist` — voir electron/README.md.
+  - from: vendor/pgsql
+    to: pgsql
+    filter: ['**/*']
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: electron/assets/icon.ico
+  # Sans signature de code, Windows SmartScreen affichera un avertissement au
+  # premier lancement. C'est attendu pour une application interne.
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: MZ EXPORT
+  # Les donnees vivent dans %APPDATA%, jamais dans le dossier d'installation :
+  # la desinstallation ne doit donc PAS les effacer.
+  deleteAppDataOnUninstall: false

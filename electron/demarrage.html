@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>MZ EXPORT</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1e2f52;
+        color: #fff;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .box { text-align: center; max-width: 22rem; padding: 0 1.5rem; }
+      .logo {
+        width: 56px; height: 56px; margin: 0 auto 1rem;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 12px; background: rgba(255, 255, 255, 0.1);
+        font-size: 18px; font-weight: 700; letter-spacing: 1px;
+      }
+      h1 { margin: 0; font-size: 17px; font-weight: 600; }
+      p { margin: 0.35rem 0 0; font-size: 13px; color: #8fa2c4; }
+      .bar {
+        margin-top: 1.75rem; height: 3px; border-radius: 2px;
+        background: rgba(255, 255, 255, 0.12); overflow: hidden;
+      }
+      .bar span {
+        display: block; height: 100%; width: 35%; border-radius: 2px;
+        background: #5b8dd0; animation: slide 1.4s ease-in-out infinite;
+      }
+      @keyframes slide {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(320%); }
+      }
+      .etape {
+        margin-top: 0.9rem; font-size: 11px; color: #a8bcdd;
+        min-height: 1.2em; font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+      }
+      .hint { margin-top: 1.5rem; font-size: 11px; color: #7e91b5; line-height: 1.6; }
+      /* Etat de panne : la barre s'arrete, le message prend la place du reste. */
+      body.echec .bar span { animation: none; width: 100%; background: #d06b5b; }
+      body.echec .hint, body.echec .etape { display: none; }
+      .erreur {
+        display: none; margin-top: 1.5rem; padding: 0.85rem 1rem;
+        text-align: left; border-radius: 8px;
+        background: rgba(208, 107, 91, 0.12);
+        border: 1px solid rgba(208, 107, 91, 0.35);
+        font-size: 11.5px; line-height: 1.55; color: #f2c9c1;
+        white-space: pre-wrap; overflow-wrap: anywhere;
+        max-height: 40vh; overflow-y: auto;
+      }
+      .erreur b { display: block; margin-bottom: 0.4rem; color: #fff; font-size: 12px; }
+      body.echec .erreur { display: block; }
+      .credit { margin-top: 2rem; font-size: 10px; color: rgba(143, 162, 196, 0.7); }
+      @media (prefers-reduced-motion: reduce) {
+        .bar span { animation: none; width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <div class="logo">MZ</div>
+      <h1>MZ EXPORT</h1>
+      <p>Gestion Commerciale</p>
+
+      <div class="bar"><span></span></div>
+
+      <p class="etape" id="etape"></p>
+
+      <p class="hint">
+        Démarrage de la base de données et du serveur.<br />
+        Le premier lancement est plus long : la base est créée.
+      </p>
+
+      <div class="erreur" id="erreur">
+        <b>Le démarrage a échoué.</b>
+        <span id="erreur-detail"></span>
+      </div>
+
+      <p class="credit">Créé par Firas ZRAMDA</p>
+    </div>
+
+    <script>
+      // Appelé depuis le processus principal (electron/main.js) à chaque ligne
+      // de journal, puis une dernière fois si le démarrage échoue.
+      window.mz = {
+        etape(texte) {
+          document.getElementById('etape').textContent = texte
+        },
+        erreur(message) {
+          document.body.classList.add('echec')
+          document.getElementById('erreur-detail').textContent = message
+        },
+      }
+    </script>
+  </body>
+</html>
