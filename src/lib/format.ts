@@ -41,6 +41,30 @@ export function formatMoney(value: unknown, currencyCode = 'EUR'): string {
   return `${formatNumber(value, decimals)} ${currencySymbol(currencyCode)}`
 }
 
+/**
+ * Prix UNITAIRE, affiche a la precision reellement stockee.
+ *
+ * POURQUOI PAS `formatMoney`. Un montant est arrondi aux decimales de sa
+ * devise — 3 pour le dinar. Mais un prix unitaire est enregistre a 4 decimales
+ * (`Decimal(18,4)`), parce qu'un prix au kilo ou a la piece se negocie a la
+ * fraction de millime. L'afficher avec 3 decimales cachait un chiffre qui
+ * existe en base, et rendait impossible le recoupement avec le classeur.
+ *
+ * Les zeros inutiles sont retires au-dela des decimales de la devise :
+ * 8,5 s'affiche « 8,500 » et non « 8,5000 », 6,0459 garde ses quatre chiffres.
+ */
+export const UNIT_PRICE_DECIMALS = 4
+
+export function formatUnitPrice(value: unknown, currencyCode = 'EUR'): string {
+  const minimum = currencyDecimals(currencyCode)
+  const d = dec(value).toDecimalPlaces(UNIT_PRICE_DECIMALS)
+  // Nombre de decimales reellement significatives, jamais moins que la devise.
+  const ecrit = d.toFixed(UNIT_PRICE_DECIMALS)
+  const sansZeros = ecrit.replace(/0+$/, '')
+  const utiles = Math.max(minimum, (sansZeros.split('.')[1] ?? '').length)
+  return `${formatNumber(d, utiles)} ${currencySymbol(currencyCode)}`
+}
+
 /** Variante compacte pour les cartes du tableau de bord. */
 export function formatMoneyCompact(value: unknown, currencyCode = 'EUR'): string {
   const d = dec(value)

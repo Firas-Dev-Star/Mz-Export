@@ -40,6 +40,7 @@ export type SupplierMinAggregateOutputType = {
   tradeRegister: string | null
   paymentTerms: string | null
   currencyCode: string | null
+  nature: $Enums.SupplierNature | null
   notes: string | null
   isDemo: boolean | null
   isActive: boolean | null
@@ -63,6 +64,7 @@ export type SupplierMaxAggregateOutputType = {
   tradeRegister: string | null
   paymentTerms: string | null
   currencyCode: string | null
+  nature: $Enums.SupplierNature | null
   notes: string | null
   isDemo: boolean | null
   isActive: boolean | null
@@ -86,6 +88,7 @@ export type SupplierCountAggregateOutputType = {
   tradeRegister: number
   paymentTerms: number
   currencyCode: number
+  nature: number
   notes: number
   isDemo: number
   isActive: number
@@ -111,6 +114,7 @@ export type SupplierMinAggregateInputType = {
   tradeRegister?: true
   paymentTerms?: true
   currencyCode?: true
+  nature?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -134,6 +138,7 @@ export type SupplierMaxAggregateInputType = {
   tradeRegister?: true
   paymentTerms?: true
   currencyCode?: true
+  nature?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -157,6 +162,7 @@ export type SupplierCountAggregateInputType = {
   tradeRegister?: true
   paymentTerms?: true
   currencyCode?: true
+  nature?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -253,6 +259,7 @@ export type SupplierGroupByOutputType = {
   tradeRegister: string
   paymentTerms: string
   currencyCode: string
+  nature: $Enums.SupplierNature
   notes: string
   isDemo: boolean
   isActive: boolean
@@ -297,6 +304,7 @@ export type SupplierWhereInput = {
   tradeRegister?: Prisma.StringFilter<"Supplier"> | string
   paymentTerms?: Prisma.StringFilter<"Supplier"> | string
   currencyCode?: Prisma.StringFilter<"Supplier"> | string
+  nature?: Prisma.EnumSupplierNatureFilter<"Supplier"> | $Enums.SupplierNature
   notes?: Prisma.StringFilter<"Supplier"> | string
   isDemo?: Prisma.BoolFilter<"Supplier"> | boolean
   isActive?: Prisma.BoolFilter<"Supplier"> | boolean
@@ -322,6 +330,7 @@ export type SupplierOrderByWithRelationInput = {
   tradeRegister?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  nature?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -350,6 +359,7 @@ export type SupplierWhereUniqueInput = Prisma.AtLeast<{
   tradeRegister?: Prisma.StringFilter<"Supplier"> | string
   paymentTerms?: Prisma.StringFilter<"Supplier"> | string
   currencyCode?: Prisma.StringFilter<"Supplier"> | string
+  nature?: Prisma.EnumSupplierNatureFilter<"Supplier"> | $Enums.SupplierNature
   notes?: Prisma.StringFilter<"Supplier"> | string
   isDemo?: Prisma.BoolFilter<"Supplier"> | boolean
   isActive?: Prisma.BoolFilter<"Supplier"> | boolean
@@ -375,6 +385,7 @@ export type SupplierOrderByWithAggregationInput = {
   tradeRegister?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  nature?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -404,6 +415,7 @@ export type SupplierScalarWhereWithAggregatesInput = {
   tradeRegister?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
   paymentTerms?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
   currencyCode?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
+  nature?: Prisma.EnumSupplierNatureWithAggregatesFilter<"Supplier"> | $Enums.SupplierNature
   notes?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
   isDemo?: Prisma.BoolWithAggregatesFilter<"Supplier"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Supplier"> | boolean
@@ -426,6 +438,7 @@ export type SupplierCreateInput = {
   taxId?: string
   tradeRegister?: string
   paymentTerms?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -451,6 +464,7 @@ export type SupplierUncheckedCreateInput = {
   tradeRegister?: string
   paymentTerms?: string
   currencyCode?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -474,6 +488,7 @@ export type SupplierUpdateInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -499,6 +514,7 @@ export type SupplierUncheckedUpdateInput = {
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -523,6 +539,7 @@ export type SupplierCreateManyInput = {
   tradeRegister?: string
   paymentTerms?: string
   currencyCode?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -545,6 +562,7 @@ export type SupplierUpdateManyMutationInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -568,6 +586,7 @@ export type SupplierUncheckedUpdateManyInput = {
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -601,6 +620,7 @@ export type SupplierCountOrderByAggregateInput = {
   tradeRegister?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  nature?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -624,6 +644,7 @@ export type SupplierMaxOrderByAggregateInput = {
   tradeRegister?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  nature?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -647,6 +668,7 @@ export type SupplierMinOrderByAggregateInput = {
   tradeRegister?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  nature?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -701,6 +723,10 @@ export type SupplierUncheckedUpdateManyWithoutCurrencyNestedInput = {
   deleteMany?: Prisma.SupplierScalarWhereInput | Prisma.SupplierScalarWhereInput[]
 }
 
+export type EnumSupplierNatureFieldUpdateOperationsInput = {
+  set?: $Enums.SupplierNature
+}
+
 export type SupplierCreateNestedOneWithoutPurchasesInput = {
   create?: Prisma.XOR<Prisma.SupplierCreateWithoutPurchasesInput, Prisma.SupplierUncheckedCreateWithoutPurchasesInput>
   connectOrCreate?: Prisma.SupplierCreateOrConnectWithoutPurchasesInput
@@ -730,6 +756,7 @@ export type SupplierCreateWithoutCurrencyInput = {
   taxId?: string
   tradeRegister?: string
   paymentTerms?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -753,6 +780,7 @@ export type SupplierUncheckedCreateWithoutCurrencyInput = {
   taxId?: string
   tradeRegister?: string
   paymentTerms?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -806,6 +834,7 @@ export type SupplierScalarWhereInput = {
   tradeRegister?: Prisma.StringFilter<"Supplier"> | string
   paymentTerms?: Prisma.StringFilter<"Supplier"> | string
   currencyCode?: Prisma.StringFilter<"Supplier"> | string
+  nature?: Prisma.EnumSupplierNatureFilter<"Supplier"> | $Enums.SupplierNature
   notes?: Prisma.StringFilter<"Supplier"> | string
   isDemo?: Prisma.BoolFilter<"Supplier"> | boolean
   isActive?: Prisma.BoolFilter<"Supplier"> | boolean
@@ -828,6 +857,7 @@ export type SupplierCreateWithoutPurchasesInput = {
   taxId?: string
   tradeRegister?: string
   paymentTerms?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -852,6 +882,7 @@ export type SupplierUncheckedCreateWithoutPurchasesInput = {
   tradeRegister?: string
   paymentTerms?: string
   currencyCode?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -890,6 +921,7 @@ export type SupplierUpdateWithoutPurchasesInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -914,6 +946,7 @@ export type SupplierUncheckedUpdateWithoutPurchasesInput = {
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -936,6 +969,7 @@ export type SupplierCreateManyCurrencyInput = {
   taxId?: string
   tradeRegister?: string
   paymentTerms?: string
+  nature?: $Enums.SupplierNature
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -958,6 +992,7 @@ export type SupplierUpdateWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -981,6 +1016,7 @@ export type SupplierUncheckedUpdateWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1004,6 +1040,7 @@ export type SupplierUncheckedUpdateManyWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   tradeRegister?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  nature?: Prisma.EnumSupplierNatureFieldUpdateOperationsInput | $Enums.SupplierNature
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1058,6 +1095,7 @@ export type SupplierSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   tradeRegister?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
+  nature?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1084,6 +1122,7 @@ export type SupplierSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tradeRegister?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
+  nature?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1108,6 +1147,7 @@ export type SupplierSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tradeRegister?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
+  nature?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1132,6 +1172,7 @@ export type SupplierSelectScalar = {
   tradeRegister?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
+  nature?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1139,7 +1180,7 @@ export type SupplierSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SupplierOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "contactName" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "tradeRegister" | "paymentTerms" | "currencyCode" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
+export type SupplierOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "contactName" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "tradeRegister" | "paymentTerms" | "currencyCode" | "nature" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
 export type SupplierInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   purchases?: boolean | Prisma.Supplier$purchasesArgs<ExtArgs>
@@ -1174,6 +1215,10 @@ export type $SupplierPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     tradeRegister: string
     paymentTerms: string
     currencyCode: string
+    /**
+     * Ventilation des achats dans le resultat. Reglee une fois sur la fiche.
+     */
+    nature: $Enums.SupplierNature
     notes: string
     isDemo: boolean
     isActive: boolean
@@ -1619,6 +1664,7 @@ export interface SupplierFieldRefs {
   readonly tradeRegister: Prisma.FieldRef<"Supplier", 'String'>
   readonly paymentTerms: Prisma.FieldRef<"Supplier", 'String'>
   readonly currencyCode: Prisma.FieldRef<"Supplier", 'String'>
+  readonly nature: Prisma.FieldRef<"Supplier", 'SupplierNature'>
   readonly notes: Prisma.FieldRef<"Supplier", 'String'>
   readonly isDemo: Prisma.FieldRef<"Supplier", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Supplier", 'Boolean'>

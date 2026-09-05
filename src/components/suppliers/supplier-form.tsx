@@ -30,6 +30,7 @@ const EMPTY: SupplierInput = {
   tradeRegister: '',
   paymentTerms: '',
   currencyCode: 'TND',
+  nature: 'DIVERS' as const,
   notes: '',
   isActive: true,
 }
@@ -148,6 +149,19 @@ export function SupplierForm({
               {currencies.map((c) => (
                 <option key={c.code} value={c.code}>{c.code} — {c.name}</option>
               ))}
+            </Select>
+          </Field>
+          {/* « Transport » n'est plus proposé : les sociétés de transport ont
+              leur propre module, elles ne sont pas des fournisseurs. */}
+          <Field
+            label="Nature des achats"
+            htmlFor="nature"
+            hint="Sert à ventiler les achats dans le résultat. Pour une société de transport, utilisez le module Transport."
+            error={errors.nature?.message}
+          >
+            <Select id="nature" {...register('nature')}>
+              <option value="FOUTA">Fouta — marchandise</option>
+              <option value="DIVERS">Divers</option>
             </Select>
           </Field>
           <Field label="Notes internes" htmlFor="notes" error={errors.notes?.message} className="sm:col-span-2">

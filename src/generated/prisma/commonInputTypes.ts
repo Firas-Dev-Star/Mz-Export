@@ -348,6 +348,23 @@ export type EnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumPaymentMethodFilter<$PrismaModel>
 }
 
+export type EnumSupplierNatureFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupplierNature | Prisma.EnumSupplierNatureFieldRefInput<$PrismaModel>
+  in?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel> | $Enums.SupplierNature
+}
+
+export type EnumSupplierNatureWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupplierNature | Prisma.EnumSupplierNatureFieldRefInput<$PrismaModel>
+  in?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSupplierNatureWithAggregatesFilter<$PrismaModel> | $Enums.SupplierNature
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel>
+}
+
 export type EnumStockMovementTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.StockMovementType | Prisma.EnumStockMovementTypeFieldRefInput<$PrismaModel>
   in?: $Enums.StockMovementType[] | Prisma.ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
@@ -380,6 +397,40 @@ export type EnumStockReferenceTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStockReferenceTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStockReferenceTypeFilter<$PrismaModel>
+}
+
+export type EnumDocumentKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.DocumentKind | Prisma.EnumDocumentKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel> | $Enums.DocumentKind
+}
+
+export type BytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
+export type EnumDocumentKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DocumentKind | Prisma.EnumDocumentKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel> | $Enums.DocumentKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel>
+}
+
+export type BytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -702,6 +753,23 @@ export type NestedEnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumPaymentMethodFilter<$PrismaModel>
 }
 
+export type NestedEnumSupplierNatureFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupplierNature | Prisma.EnumSupplierNatureFieldRefInput<$PrismaModel>
+  in?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel> | $Enums.SupplierNature
+}
+
+export type NestedEnumSupplierNatureWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupplierNature | Prisma.EnumSupplierNatureFieldRefInput<$PrismaModel>
+  in?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SupplierNature[] | Prisma.ListEnumSupplierNatureFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSupplierNatureWithAggregatesFilter<$PrismaModel> | $Enums.SupplierNature
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSupplierNatureFilter<$PrismaModel>
+}
+
 export type NestedEnumStockMovementTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.StockMovementType | Prisma.EnumStockMovementTypeFieldRefInput<$PrismaModel>
   in?: $Enums.StockMovementType[] | Prisma.ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
@@ -734,6 +802,40 @@ export type NestedEnumStockReferenceTypeWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStockReferenceTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStockReferenceTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumDocumentKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.DocumentKind | Prisma.EnumDocumentKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel> | $Enums.DocumentKind
+}
+
+export type NestedBytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
+export type NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DocumentKind | Prisma.EnumDocumentKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DocumentKind[] | Prisma.ListEnumDocumentKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel> | $Enums.DocumentKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDocumentKindFilter<$PrismaModel>
+}
+
+export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
 }
 
 

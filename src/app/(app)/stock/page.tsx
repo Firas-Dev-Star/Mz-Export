@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { can, requirePermission } from '@/lib/auth'
-import { formatMoney, formatQuantity, formatNumber } from '@/lib/format'
+import { formatMoney, formatQuantity, formatNumber, formatUnitPrice } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { getStockOverview } from '@/services/stock.service'
 
@@ -138,7 +138,7 @@ export default async function StockPage({
                       {row.trackStock ? formatQuantity(row.minStock) : '—'}
                     </TableCell>
                     <TableCell className="tabular whitespace-nowrap text-right text-muted-foreground">
-                      {formatMoney(row.purchasePriceTnd, 'TND')}
+                      {formatUnitPrice(row.purchasePriceTnd, 'TND')}
                     </TableCell>
                     <TableCell className="tabular whitespace-nowrap text-right">
                       {row.trackStock ? formatMoney(row.stockValueTnd, 'TND') : '—'}

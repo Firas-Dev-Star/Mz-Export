@@ -29,6 +29,7 @@ export default async function NewInvoicePage({
       select: {
         id: true, companyName: true, paymentTerms: true, currencyCode: true,
         deliveryAddress: true, deliveryCountry: true, country: true,
+        defaultIncoterm: true,
       },
     }),
     listProductOptions(),
@@ -64,6 +65,7 @@ export default async function NewInvoicePage({
     departurePort: '',
     destination: '',
     orderReference: '',
+    domiciliationRef: '',
     feesIncluded: true,
     shippingLabel: 'Transport',
     shippingAmount: '0',

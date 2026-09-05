@@ -9,6 +9,7 @@ import {
   BarChart3,
   Boxes,
   Building2,
+  CalendarRange,
   CreditCard,
   FilePlus2,
   FileText,
@@ -18,10 +19,13 @@ import {
   Package,
   Settings,
   ShoppingCart,
+  TableProperties,
+  Truck,
   Users,
   X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { APP_CREDIT, APP_VERSION, buildStamp } from '@/lib/app-info'
 import { ROLE_LABELS } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -56,6 +60,14 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    title: 'Transport',
+    items: [
+      { href: '/transport', label: 'Factures de transport', icon: Truck, exact: true },
+      { href: '/transport/new', label: 'Nouvelle facture', icon: FilePlus2 },
+      { href: '/transport/carriers', label: 'Transporteurs', icon: Building2 },
+    ],
+  },
+  {
     title: 'Stock',
     items: [
       { href: '/stock', label: 'État du stock', icon: Boxes, exact: true },
@@ -74,6 +86,8 @@ const NAV: NavGroup[] = [
   {
     title: 'Pilotage',
     items: [
+      { href: '/bilan', label: 'Bilan mensuel', icon: CalendarRange },
+      { href: '/etats', label: 'États', icon: TableProperties },
       { href: '/reports', label: 'Rapports', icon: BarChart3 },
       { href: '/settings', label: 'Paramètres', icon: Settings },
     ],
@@ -173,6 +187,12 @@ function UserBlock({ user }: { user: SidebarUser }) {
         <LogOut className="h-4 w-4" />
         Déconnexion
       </Button>
+      <p className="mt-2 px-2 text-[10px] text-navy-300/70">{APP_CREDIT}</p>
+      {/* Tampon de version : permet de verifier d'un coup d'oeil que le poste
+          tourne bien la derniere version installee. */}
+      <p className="px-2 text-[10px] text-navy-300/50" title={`Compilée le ${buildStamp()}`}>
+        v{APP_VERSION} · {buildStamp()}
+      </p>
     </div>
   )
 }

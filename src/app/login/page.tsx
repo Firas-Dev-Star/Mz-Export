@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { APP_CREDIT } from '@/lib/app-info'
 import { getCurrentUser } from '@/lib/auth'
 import { LoginForm } from './login-form'
 
@@ -37,6 +38,7 @@ export default async function LoginPage() {
         <p className="mt-6 text-center text-xs text-navy-300">
           MZ EXPORT SARL — Monastir, Tunisie
         </p>
+        <p className="mt-1 text-center text-[10px] text-navy-300/70">{APP_CREDIT}</p>
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Download, Eye, Pencil, Printer } from 'lucide-react'
+import { Download, Eye, Pencil, Printer, Truck } from 'lucide-react'
 import { deleteInvoice } from '@/actions/invoice.actions'
 import { PageHeader } from '@/components/layout/page-header'
 import {
@@ -8,6 +8,7 @@ import {
   ConfirmInvoiceButton,
   DuplicateInvoiceButton,
 } from '@/components/invoices/invoice-actions'
+import { DocumentPanel } from '@/components/documents/document-panel'
 import { PaymentDialog } from '@/components/payments/payment-dialog'
 import { DeleteButton } from '@/components/shared/delete-button'
 import { DeletePaymentButton } from '@/components/payments/delete-payment-button'
@@ -17,10 +18,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { EmptyState } from '@/components/ui/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { can, requireUser } from '@/lib/auth'
-import { PAYMENT_METHOD_LABELS, formatDate, formatDateTime, formatMoney, formatQuantity } from '@/lib/format'
+import { INVOICE_DOCUMENT_KINDS } from '@/lib/document-file'
+import { PAYMENT_METHOD_LABELS, formatDate, formatDateTime, formatMoney, formatQuantity, formatUnitPrice } from '@/lib/format'
 import { previewNextNumber } from '@/lib/numbering'
 import { round } from '@/lib/money'
+import { listDocuments } from '@/services/document.service'
 import { getInvoice } from '@/services/invoice.service'
+import { getTransportCostForInvoice } from '@/services/transport.service'
+import { ShippingDialog } from '@/components/invoices/shipping-dialog'
+import {
+  ENLEVEMENT_PAR_CLIENT,
+  incotermLabel,
+  isIncotermCode,
+  isTransportModeCode,
+  transportModeLabel,
+} from '@/lib/trade'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,6 +48,16 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   const remaining = round(invoice.balanceDue, 2).toFixed(2)
   const nextNumber = isDraft ? await previewNextNumber('SALE') : ''
   const editable = isDraft
+
+  const documents = await listDocuments({ invoiceId: id })
+  // Cout d'acheminement de cette expedition : le prix de vente ne dit rien
+  // tant que le transport n'est pas deduit.
+  const transport = await getTransportCostForInvoice(id)
+
+  // Ventes a l'enlevement : le client vient chercher la marchandise et paie le
+  // transport. Aucune facture de transporteur n'est attendue, et l'ecran ne
+  // doit pas en reclamer une.
+  const enlevementClient = ENLEVEMENT_PAR_CLIENT.includes(invoice.incoterm)
 
   return (
     <>
@@ -69,6 +91,33 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                   Modifier
                 </Link>
               </Button>
+            ) : null}
+            {/* Corrigeable meme apres validation : ces mentions ne touchent
+                aucun montant. */}
+            {!isCancelled && can(session.role, 'invoice.write') ? (
+              <ShippingDialog
+                invoiceId={invoice.id}
+                numero={isDraft ? 'brouillon' : invoice.number}
+                defaultValues={{
+                  deliveryAddress: invoice.deliveryAddress,
+                  deliveryCountry: invoice.deliveryCountry,
+                  ngp: invoice.ngp,
+                  originCountry: invoice.originCountry,
+                  packageCount: invoice.packageCount,
+                  packageType: invoice.packageType,
+                  packageDimensions: invoice.packageDimensions,
+                  grossWeightKg: String(invoice.grossWeightKg),
+                  netWeightKg: String(invoice.netWeightKg),
+                  incoterm: isIncotermCode(invoice.incoterm) ? invoice.incoterm : '',
+                  transportMode: isTransportModeCode(invoice.transportMode)
+                    ? invoice.transportMode
+                    : '',
+                  departurePort: invoice.departurePort,
+                  destination: invoice.destination,
+                  orderReference: invoice.orderReference,
+                  domiciliationRef: invoice.domiciliationRef,
+                }}
+              />
             ) : null}
             <DuplicateInvoiceButton invoiceId={invoice.id} />
             {isDraft && can(session.role, 'invoice.confirm') ? (
@@ -155,7 +204,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                     {formatQuantity(item.quantity)} {item.unit}
                   </TableCell>
                   <TableCell className="tabular whitespace-nowrap text-right">
-                    {formatMoney(item.unitPrice, invoice.currencyCode)}
+                    {formatUnitPrice(item.unitPrice, invoice.currencyCode)}
                   </TableCell>
                   <TableCell className="tabular text-right">
                     {Number(item.discountPercent) > 0 ? `${formatQuantity(item.discountPercent)} %` : '—'}
@@ -224,6 +273,104 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         </CardContent>
       </Card>
 
+      <div className="mt-4">
+        <DocumentPanel
+          invoiceId={invoice.id}
+          documents={documents}
+          kinds={INVOICE_DOCUMENT_KINDS}
+          canWrite={can(session.role, 'invoice.write')}
+          title="Pièces jointes de l'expédition"
+          description="Bon de livraison et facture remis par le transporteur, pièces douanières, justificatifs de règlement."
+        />
+      </div>
+
+      <Card className="mt-4">
+        <CardHeader className="flex-row items-start justify-between space-y-0">
+          <div>
+            <CardTitle>Coût de transport de l&apos;expédition</CardTitle>
+            <CardDescription>
+              {enlevementClient
+                ? `Vente en ${invoice.incoterm} : le client prend l'acheminement à sa charge.`
+                : transport.factures.length === 0
+                  ? "Aucune facture de transport n'est rattachée à cette vente."
+                  : `${transport.factures.length} facture(s) de transport rattachée(s).`}
+            </CardDescription>
+          </div>
+          {/* Sur une vente a l'enlevement, proposer d'ajouter un transport
+              inviterait a saisir une charge qui n'existe pas. */}
+          {can(session.role, 'transport.write') && !enlevementClient ? (
+            <Button asChild variant="outline">
+              <Link href={`/transport/new?invoiceId=${invoice.id}`}>
+                <Truck className="h-4 w-4" />
+                Ajouter une facture de transport
+              </Link>
+            </Button>
+          ) : null}
+        </CardHeader>
+        <CardContent className="px-0 pb-0">
+          {transport.factures.length === 0 ? (
+            <EmptyState
+              icon={Truck}
+              title={enlevementClient ? 'Enlèvement par le client' : 'Aucun transport rattaché'}
+              description={
+                enlevementClient
+                  ? `Incoterm ${invoice.incoterm} : la marchandise est enlevée par le client, aucun transport n'est à notre charge. L'absence de facture de transporteur est normale.`
+                  : 'Rattachez la facture reçue de la société de transport pour connaître la marge réelle de cette expédition.'
+              }
+            />
+          ) : (
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Numéro</TableHead>
+                    <TableHead>Transporteur</TableHead>
+                    <TableHead>Réf. transporteur</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead className="text-right">Montant</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {transport.factures.map((f) => (
+                    <TableRow key={f.id}>
+                      <TableCell className="whitespace-nowrap font-medium">
+                        <Link href={`/transport/${f.id}`} className="text-primary hover:underline">
+                          {f.status === 'DRAFT' ? 'Brouillon' : f.number}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="max-w-[200px] truncate">{f.carrier.companyName}</TableCell>
+                      <TableCell className="text-muted-foreground">{f.carrierReference || '—'}</TableCell>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {formatDate(f.date)}
+                      </TableCell>
+                      <TableCell>
+                        <StatusBadge status={f.status} />
+                      </TableCell>
+                      <TableCell className="tabular whitespace-nowrap text-right font-medium">
+                        {formatMoney(f.netToPay, f.currencyCode)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="flex flex-wrap justify-end gap-6 border-t border-border px-5 py-3 text-sm">
+                {transport.totaux.map((t) => (
+                  <div key={t.currencyCode} className="text-right">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Total transport
+                    </p>
+                    <p className="tabular font-semibold text-navy-800">
+                      {formatMoney(t.netToPay, t.currencyCode)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader><CardTitle>Informations export</CardTitle></CardHeader>
@@ -236,8 +383,16 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                 ['Dimensions', invoice.packageDimensions],
                 ['Poids brut', Number(invoice.grossWeightKg) ? `${formatQuantity(invoice.grossWeightKg)} kg` : ''],
                 ['Poids net', Number(invoice.netWeightKg) ? `${formatQuantity(invoice.netWeightKg)} kg` : ''],
-                ['Incoterm', invoice.incoterm],
-                ['Transport', invoice.transportMode],
+                [
+                  'Incoterm',
+                  isIncotermCode(invoice.incoterm) ? incotermLabel(invoice.incoterm) : invoice.incoterm,
+                ],
+                [
+                  'Transport',
+                  isTransportModeCode(invoice.transportMode)
+                    ? transportModeLabel(invoice.transportMode)
+                    : invoice.transportMode,
+                ],
                 ['Départ', invoice.departurePort],
                 ['Destination', invoice.destination],
                 ['Réf. commande', invoice.orderReference],

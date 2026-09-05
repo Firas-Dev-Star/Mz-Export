@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { can, requireUser } from '@/lib/auth'
 import { formatDate, formatMoney } from '@/lib/format'
 import { getCustomerDetail } from '@/services/customer.service'
+import { incotermLabel } from '@/lib/trade'
 
 export const dynamic = 'force-dynamic'
 
@@ -152,6 +153,10 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
             <dl className="divide-y divide-border">
               <InfoRow label="Adresse de livraison" value={customer.deliveryAddress} />
               <InfoRow label="Pays de destination" value={customer.deliveryCountry} />
+              <InfoRow
+                label="Incoterm habituel"
+                value={customer.defaultIncoterm ? incotermLabel(customer.defaultIncoterm as never) : ''}
+              />
               <InfoRow label="Notes internes" value={customer.notes} />
             </dl>
           </CardContent>

@@ -4,14 +4,19 @@ import { revalidatePath } from 'next/cache'
 import { recordAudit } from '@/lib/audit'
 import { ForbiddenError, requirePermission } from '@/lib/auth'
 import { BusinessError, isBusinessError } from '@/lib/errors'
-import { gt } from '@/lib/money'
+import { gt, toDbDecimal } from '@/lib/money'
 import { applyStockMovement, assertStockAvailable, reverseDocumentMovements } from '@/lib/stock'
 import { amountToFrenchWords } from '@/lib/number-to-words-fr'
 import { reserveNextNumber } from '@/lib/numbering'
 import { prisma } from '@/lib/prisma'
 import { buildInvoiceData } from '@/services/invoice.service'
 import type { ActionResult } from '@/validations/common'
-import { type InvoiceInput, invoiceSchema } from '@/validations/invoice'
+import {
+  type InvoiceInput,
+  type InvoiceShippingInput,
+  invoiceSchema,
+  invoiceShippingSchema,
+} from '@/validations/invoice'
 
 function fail(error: string): ActionResult {
   return { ok: false, error }
@@ -190,6 +195,87 @@ export async function updateInvoice(id: string, raw: InvoiceInput): Promise<Acti
     revalidatePath(`/invoices/${id}`)
     revalidatePath('/dashboard')
     return { ok: true, data: { id }, message: 'Facture mise à jour.' }
+  } catch (error) {
+    return handleError(error)
+  }
+}
+
+/**
+ * Corrige les informations d'expedition d'une facture, MEME VALIDEE.
+ *
+ * POURQUOI CETTE ACTION A PART. `updateInvoice` refuse une facture confirmee,
+ * a juste titre : ses montants sont figes et son numero est consomme. Mais un
+ * incoterm oublie, un poids mal saisi ou une domiciliation a completer ne sont
+ * pas des montants — les corriger ne doit pas exiger d'annuler la facture.
+ *
+ * Le schema garantit la frontiere : aucun champ accepte ici n'entre dans le
+ * calcul des totaux ni dans l'etat des reglements. Une facture annulee, elle,
+ * reste intouchable.
+ */
+export async function updateInvoiceShipping(
+  id: string,
+  raw: InvoiceShippingInput,
+): Promise<ActionResult> {
+  try {
+    const session = await requirePermission('invoice.write')
+
+    const parsed = invoiceShippingSchema.safeParse(raw)
+    if (!parsed.success) {
+      return {
+        ok: false,
+        error: 'Formulaire invalide',
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      }
+    }
+    const input = parsed.data
+
+    const existing = await prisma.invoice.findUnique({
+      where: { id },
+      select: { id: true, number: true, status: true, incoterm: true },
+    })
+    if (!existing) return fail('Facture introuvable.')
+    if (existing.status === 'CANCELLED') {
+      return fail('Cette facture est annulée : ses informations ne sont plus modifiables.')
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.invoice.update({
+        where: { id },
+        data: {
+          deliveryAddress: input.deliveryAddress,
+          deliveryCountry: input.deliveryCountry,
+          ngp: input.ngp,
+          originCountry: input.originCountry,
+          packageCount: input.packageCount,
+          packageType: input.packageType,
+          packageDimensions: input.packageDimensions,
+          grossWeightKg: toDbDecimal(input.grossWeightKg, 3),
+          netWeightKg: toDbDecimal(input.netWeightKg, 3),
+          incoterm: input.incoterm,
+          transportMode: input.transportMode,
+          departurePort: input.departurePort,
+          destination: input.destination,
+          orderReference: input.orderReference,
+          domiciliationRef: input.domiciliationRef,
+        },
+      })
+      await recordAudit(
+        {
+          session,
+          action: 'UPDATE_INVOICE_SHIPPING',
+          entity: 'Invoice',
+          entityId: id,
+          reference: existing.number,
+          details: { incotermAvant: existing.incoterm, incotermApres: input.incoterm },
+        },
+        tx,
+      )
+    })
+
+    revalidatePath('/invoices')
+    revalidatePath(`/invoices/${id}`)
+    revalidatePath('/etats')
+    return { ok: true, message: "Informations d'expédition mises à jour." }
   } catch (error) {
     return handleError(error)
   }

@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/toast'
 import { createCustomer, updateCustomer } from '@/actions/customer.actions'
 import { type CustomerInput, customerSchema } from '@/validations/customer'
+import { INCOTERM_CODES, incotermLabel } from '@/lib/trade'
 
 const EMPTY: CustomerInput = {
   code: '',
@@ -38,6 +39,7 @@ const EMPTY: CustomerInput = {
   currencyCode: 'EUR',
   deliveryAddress: '',
   deliveryCountry: '',
+  defaultIncoterm: '' as const,
   notes: '',
   isActive: true,
 }
@@ -152,6 +154,21 @@ export function CustomerForm({
           </Field>
           <Field label="Pays de destination" htmlFor="deliveryCountry" error={errors.deliveryCountry?.message}>
             <Input id="deliveryCountry" {...register('deliveryCountry')} />
+          </Field>
+          <Field
+            label="Incoterm habituel"
+            htmlFor="defaultIncoterm"
+            hint="Repris sur les nouvelles factures. EXW : le client enlève la marchandise, aucun transport à notre charge."
+            error={errors.defaultIncoterm?.message}
+          >
+            <Select id="defaultIncoterm" {...register('defaultIncoterm')}>
+              <option value="">— Aucun —</option>
+              {INCOTERM_CODES.map((code) => (
+                <option key={code} value={code}>
+                  {incotermLabel(code)}
+                </option>
+              ))}
+            </Select>
           </Field>
         </CardContent>
       </Card>

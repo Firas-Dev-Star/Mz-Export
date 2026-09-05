@@ -47,6 +47,7 @@ export function buildInvoiceWhere(params: InvoiceListParams): Prisma.InvoiceWher
       OR: [
         { number: { contains: search, mode: 'insensitive' } },
         { orderReference: { contains: search, mode: 'insensitive' } },
+        { domiciliationRef: { contains: search, mode: 'insensitive' } },
         { customer: { companyName: { contains: search, mode: 'insensitive' } } },
         { customer: { siret: { contains: search, mode: 'insensitive' } } },
         { items: { some: { designation: { contains: search, mode: 'insensitive' } } } },
@@ -181,6 +182,7 @@ export function buildInvoiceData(input: InvoiceInput, paidAmount: unknown = 0) {
     departurePort: input.departurePort,
     destination: input.destination,
     orderReference: input.orderReference,
+    domiciliationRef: input.domiciliationRef,
 
     feesIncluded: input.feesIncluded,
     shippingLabel: input.shippingLabel || 'Transport',

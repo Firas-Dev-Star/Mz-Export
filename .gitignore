@@ -13,3 +13,11 @@ coverage
 
 # Artefacts de build TypeScript (regeneres a chaque compilation)
 tsconfig.tsbuildinfo
+
+# Application desktop : binaires PostgreSQL portables et installeurs
+/vendor/
+/dist-desktop/
+/electron/assets/_apercu*
+
+# Reglages Claude Code propres au poste
+.claude/settings.local.json

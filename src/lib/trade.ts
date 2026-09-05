@@ -25,6 +25,19 @@ export const INCOTERM_CODES = [
 
 export type IncotermCode = (typeof INCOTERM_CODES)[number]
 
+/**
+ * Incoterms ou l'acheminement n'est PAS a la charge du vendeur.
+ *
+ * EXW : le client enleve la marchandise dans nos locaux.
+ * FCA / FAS / FOB : nous ne payons que la mise a disposition au point convenu,
+ * le transport principal est au client.
+ *
+ * Consequence dans l'application : sur une vente portant l'un de ces
+ * incoterms, l'absence de facture de transporteur est NORMALE. Les ecrans ne
+ * doivent ni la signaler comme un oubli, ni proposer d'en creer une.
+ */
+export const ENLEVEMENT_PAR_CLIENT: readonly string[] = ['EXW', 'FCA', 'FAS', 'FOB']
+
 interface IncotermDefinition {
   /** Intitule anglais officiel. */
   english: string

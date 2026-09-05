@@ -1,7 +1,15 @@
 import Link from 'next/link'
 import { BarChart3, FileWarning } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
+import { AccountantExport } from '@/components/shared/accountant-export'
 import { ExportMenu } from '@/components/shared/export-menu'
+import {
+  MarginChart,
+  OutstandingChart,
+  SupplierShareChart,
+  UnitPriceChart,
+  WeightReconciliationChart,
+} from '@/components/shared/insight-charts'
 import { PeriodFilter } from '@/components/shared/period-filter'
 import { StatusBadge } from '@/components/shared/status-badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,6 +17,13 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { requirePermission } from '@/lib/auth'
 import { formatDate, formatMoney, formatQuantity } from '@/lib/format'
+import {
+  getMarginBreakdown,
+  getOutstandingByCustomer,
+  getPurchaseShareBySupplier,
+  getUnitPriceTrend,
+  getWeightReconciliation,
+} from '@/services/insight.service'
 import { getReports } from '@/services/report.service'
 
 export const metadata = { title: 'Rapports — MZ EXPORT' }
@@ -24,19 +39,124 @@ export default async function ReportsPage({
   const get = (key: string) => (typeof params[key] === 'string' ? (params[key] as string) : undefined)
 
   const period = { from: get('from'), to: get('to') }
-  const data = await getReports(period)
+  const [data, margin, weights, outstanding, unitPrices, supplierShare] = await Promise.all([
+    getReports(period),
+    getMarginBreakdown(period),
+    getWeightReconciliation(period),
+    getOutstandingByCustomer(),
+    getUnitPriceTrend(period),
+    getPurchaseShareBySupplier(period),
+  ])
 
   return (
     <>
       <PageHeader
         title="Rapports"
         description="Analyse des ventes export. Les montants ne sont jamais convertis entre devises."
-        actions={<ExportMenu />}
+        actions={
+          <>
+            <AccountantExport />
+            <ExportMenu />
+          </>
+        }
       />
 
       <PeriodFilter />
 
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        Vue d’ensemble
+      </h2>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-baseline justify-between gap-3">
+              <span>Résultat simplifié</span>
+              <span
+                className={
+                  margin.resultat >= 0
+                    ? 'text-base font-semibold text-emerald-700'
+                    : 'text-base font-semibold text-destructive'
+                }
+              >
+                {formatQuantity(margin.margePercent)} %
+              </span>
+            </CardTitle>
+            <CardDescription>
+              Ventes converties au taux figé de chaque facture, achats ventilés par nature de fournisseur. En dinars.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <MarginChart data={margin} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Achats et ventes en kilogrammes</CardTitle>
+            <CardDescription>
+              Poids acheté (quantité × poids unitaire) contre poids net vendu, par mois.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {weights.length === 0 ? (
+              <EmptyState
+                icon={BarChart3}
+                title="Aucun poids exploitable"
+                description="Renseignez le poids unitaire des produits pour activer ce rapprochement."
+              />
+            ) : (
+              <WeightReconciliationChart data={weights} />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Reste à encaisser par client</CardTitle>
+            <CardDescription>Factures confirmées non soldées.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {outstanding.length === 0 ? (
+              <EmptyState icon={BarChart3} title="Rien à encaisser" />
+            ) : (
+              <OutstandingChart data={outstanding} />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Répartition des achats</CardTitle>
+            <CardDescription>Par fournisseur, en dinars.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {supplierShare.length === 0 ? (
+              <EmptyState icon={BarChart3} title="Aucun achat sur la période" />
+            ) : (
+              <SupplierShareChart data={supplierShare} />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Prix unitaire, avant et après transport</CardTitle>
+            <CardDescription>
+              L’écart entre les deux courbes est votre marge unitaire. Un resserrement signale une érosion.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {unitPrices.length === 0 ? (
+              <EmptyState icon={BarChart3} title="Aucune facture avec quantité sur la période" />
+            ) : (
+              <UnitPriceChart data={unitPrices} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         Ventes export — en euros
       </h2>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

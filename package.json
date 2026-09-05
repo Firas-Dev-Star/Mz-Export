@@ -13,7 +13,12 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "desktop:build": "set MZ_DESKTOP=1&& prisma generate&& next build&& node scripts/preparer-standalone.js",
+    "desktop": "electron .",
+    "desktop:dev": "set MZ_DESKTOP_DEV=1&& electron .",
+    "desktop:dist": "node scripts/generer-icones.js && node scripts/verifier-pgsql.js && electron-builder --win",
+    "icons": "node scripts/generer-icones.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -58,6 +63,8 @@
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",
+    "electron": "^43.4.1",
+    "electron-builder": "^26.15.3",
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.5.23",
     "postcss": "^8.5.26",
@@ -66,5 +73,10 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "vitest": "^4.1.10"
+  },
+  "main": "electron/main.js",
+  "description": "MZ EXPORT — Gestion Commerciale",
+  "author": {
+    "name": "Firas ZRAMDA"
   }
 }

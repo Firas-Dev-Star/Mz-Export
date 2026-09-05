@@ -44,6 +44,7 @@ export default async function EditCustomerPage({ params }: { params: Promise<{ i
           currencyCode: customer.currencyCode,
           deliveryAddress: customer.deliveryAddress,
           deliveryCountry: customer.deliveryCountry,
+          defaultIncoterm: customer.defaultIncoterm as never,
           notes: customer.notes,
           isActive: customer.isActive,
         }}

@@ -67,7 +67,11 @@ export const ModelName = {
   Purchase: 'Purchase',
   PurchaseItem: 'PurchaseItem',
   PurchasePayment: 'PurchasePayment',
-  StockMovement: 'StockMovement'
+  Carrier: 'Carrier',
+  TransportInvoice: 'TransportInvoice',
+  TransportPayment: 'TransportPayment',
+  StockMovement: 'StockMovement',
+  Document: 'Document'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -227,6 +231,7 @@ export const CustomerScalarFieldEnum = {
   currencyCode: 'currencyCode',
   deliveryAddress: 'deliveryAddress',
   deliveryCountry: 'deliveryCountry',
+  defaultIncoterm: 'defaultIncoterm',
   notes: 'notes',
   isDemo: 'isDemo',
   isActive: 'isActive',
@@ -300,6 +305,7 @@ export const InvoiceScalarFieldEnum = {
   departurePort: 'departurePort',
   destination: 'destination',
   orderReference: 'orderReference',
+  domiciliationRef: 'domiciliationRef',
   goodsTotal: 'goodsTotal',
   discountTotal: 'discountTotal',
   feesIncluded: 'feesIncluded',
@@ -392,6 +398,7 @@ export const SupplierScalarFieldEnum = {
   tradeRegister: 'tradeRegister',
   paymentTerms: 'paymentTerms',
   currencyCode: 'currencyCode',
+  nature: 'nature',
   notes: 'notes',
   isDemo: 'isDemo',
   isActive: 'isActive',
@@ -422,6 +429,8 @@ export const PurchaseScalarFieldEnum = {
   vatRate: 'vatRate',
   stampDutyLabel: 'stampDutyLabel',
   stampDutyAmount: 'stampDutyAmount',
+  withholdingLabel: 'withholdingLabel',
+  withholdingAmount: 'withholdingAmount',
   totalHt: 'totalHt',
   vatAmount: 'vatAmount',
   totalTtc: 'totalTtc',
@@ -479,6 +488,93 @@ export const PurchasePaymentScalarFieldEnum = {
 export type PurchasePaymentScalarFieldEnum = (typeof PurchasePaymentScalarFieldEnum)[keyof typeof PurchasePaymentScalarFieldEnum]
 
 
+export const CarrierScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  companyName: 'companyName',
+  contactName: 'contactName',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  postalCode: 'postalCode',
+  city: 'city',
+  country: 'country',
+  phone: 'phone',
+  email: 'email',
+  taxId: 'taxId',
+  tradeRegister: 'tradeRegister',
+  paymentTerms: 'paymentTerms',
+  currencyCode: 'currencyCode',
+  notes: 'notes',
+  isDemo: 'isDemo',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CarrierScalarFieldEnum = (typeof CarrierScalarFieldEnum)[keyof typeof CarrierScalarFieldEnum]
+
+
+export const TransportInvoiceScalarFieldEnum = {
+  id: 'id',
+  number: 'number',
+  status: 'status',
+  carrierReference: 'carrierReference',
+  carrierId: 'carrierId',
+  date: 'date',
+  dueDate: 'dueDate',
+  shipmentRef: 'shipmentRef',
+  invoiceId: 'invoiceId',
+  currencyCode: 'currencyCode',
+  paymentTerms: 'paymentTerms',
+  transportLabel: 'transportLabel',
+  transportAmount: 'transportAmount',
+  transitLabel: 'transitLabel',
+  transitAmount: 'transitAmount',
+  otherFeesLabel: 'otherFeesLabel',
+  otherFeesAmount: 'otherFeesAmount',
+  vatMode: 'vatMode',
+  vatRate: 'vatRate',
+  stampDutyLabel: 'stampDutyLabel',
+  stampDutyAmount: 'stampDutyAmount',
+  totalHt: 'totalHt',
+  vatAmount: 'vatAmount',
+  totalTtc: 'totalTtc',
+  netToPay: 'netToPay',
+  paidAmount: 'paidAmount',
+  balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
+  notes: 'notes',
+  createdById: 'createdById',
+  confirmedAt: 'confirmedAt',
+  cancelledAt: 'cancelledAt',
+  isDemo: 'isDemo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransportInvoiceScalarFieldEnum = (typeof TransportInvoiceScalarFieldEnum)[keyof typeof TransportInvoiceScalarFieldEnum]
+
+
+export const TransportPaymentScalarFieldEnum = {
+  id: 'id',
+  transportInvoiceId: 'transportInvoiceId',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  date: 'date',
+  method: 'method',
+  reference: 'reference',
+  note: 'note',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransportPaymentScalarFieldEnum = (typeof TransportPaymentScalarFieldEnum)[keyof typeof TransportPaymentScalarFieldEnum]
+
+
 export const StockMovementScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -495,6 +591,25 @@ export const StockMovementScalarFieldEnum = {
 } as const
 
 export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
+export const DocumentScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  content: 'content',
+  reference: 'reference',
+  note: 'note',
+  purchaseId: 'purchaseId',
+  invoiceId: 'invoiceId',
+  transportInvoiceId: 'transportInvoiceId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
 
 
 export const SortOrder = {

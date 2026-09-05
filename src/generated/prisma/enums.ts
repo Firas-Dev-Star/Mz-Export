@@ -49,6 +49,27 @@ export const VatMode = {
 export type VatMode = (typeof VatMode)[keyof typeof VatMode]
 
 
+export const SupplierNature = {
+  FOUTA: 'FOUTA',
+  TRANSPORT: 'TRANSPORT',
+  DIVERS: 'DIVERS'
+} as const
+
+export type SupplierNature = (typeof SupplierNature)[keyof typeof SupplierNature]
+
+
+export const DocumentKind = {
+  SUPPLIER_INVOICE: 'SUPPLIER_INVOICE',
+  DELIVERY_NOTE: 'DELIVERY_NOTE',
+  TRANSPORT_INVOICE: 'TRANSPORT_INVOICE',
+  PAYMENT_PROOF: 'PAYMENT_PROOF',
+  CUSTOMS: 'CUSTOMS',
+  OTHER: 'OTHER'
+} as const
+
+export type DocumentKind = (typeof DocumentKind)[keyof typeof DocumentKind]
+
+
 export const StockMovementType = {
   PURCHASE_IN: 'PURCHASE_IN',
   SALE_OUT: 'SALE_OUT',

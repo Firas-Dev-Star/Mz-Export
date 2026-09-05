@@ -33,6 +33,7 @@ export type PurchaseAvgAggregateOutputType = {
   otherFeesAmount: runtime.Decimal | null
   vatRate: runtime.Decimal | null
   stampDutyAmount: runtime.Decimal | null
+  withholdingAmount: runtime.Decimal | null
   totalHt: runtime.Decimal | null
   vatAmount: runtime.Decimal | null
   totalTtc: runtime.Decimal | null
@@ -52,6 +53,7 @@ export type PurchaseSumAggregateOutputType = {
   otherFeesAmount: runtime.Decimal | null
   vatRate: runtime.Decimal | null
   stampDutyAmount: runtime.Decimal | null
+  withholdingAmount: runtime.Decimal | null
   totalHt: runtime.Decimal | null
   vatAmount: runtime.Decimal | null
   totalTtc: runtime.Decimal | null
@@ -84,6 +86,8 @@ export type PurchaseMinAggregateOutputType = {
   vatRate: runtime.Decimal | null
   stampDutyLabel: string | null
   stampDutyAmount: runtime.Decimal | null
+  withholdingLabel: string | null
+  withholdingAmount: runtime.Decimal | null
   totalHt: runtime.Decimal | null
   vatAmount: runtime.Decimal | null
   totalTtc: runtime.Decimal | null
@@ -123,6 +127,8 @@ export type PurchaseMaxAggregateOutputType = {
   vatRate: runtime.Decimal | null
   stampDutyLabel: string | null
   stampDutyAmount: runtime.Decimal | null
+  withholdingLabel: string | null
+  withholdingAmount: runtime.Decimal | null
   totalHt: runtime.Decimal | null
   vatAmount: runtime.Decimal | null
   totalTtc: runtime.Decimal | null
@@ -162,6 +168,8 @@ export type PurchaseCountAggregateOutputType = {
   vatRate: number
   stampDutyLabel: number
   stampDutyAmount: number
+  withholdingLabel: number
+  withholdingAmount: number
   totalHt: number
   vatAmount: number
   totalTtc: number
@@ -190,6 +198,7 @@ export type PurchaseAvgAggregateInputType = {
   otherFeesAmount?: true
   vatRate?: true
   stampDutyAmount?: true
+  withholdingAmount?: true
   totalHt?: true
   vatAmount?: true
   totalTtc?: true
@@ -209,6 +218,7 @@ export type PurchaseSumAggregateInputType = {
   otherFeesAmount?: true
   vatRate?: true
   stampDutyAmount?: true
+  withholdingAmount?: true
   totalHt?: true
   vatAmount?: true
   totalTtc?: true
@@ -241,6 +251,8 @@ export type PurchaseMinAggregateInputType = {
   vatRate?: true
   stampDutyLabel?: true
   stampDutyAmount?: true
+  withholdingLabel?: true
+  withholdingAmount?: true
   totalHt?: true
   vatAmount?: true
   totalTtc?: true
@@ -280,6 +292,8 @@ export type PurchaseMaxAggregateInputType = {
   vatRate?: true
   stampDutyLabel?: true
   stampDutyAmount?: true
+  withholdingLabel?: true
+  withholdingAmount?: true
   totalHt?: true
   vatAmount?: true
   totalTtc?: true
@@ -319,6 +333,8 @@ export type PurchaseCountAggregateInputType = {
   vatRate?: true
   stampDutyLabel?: true
   stampDutyAmount?: true
+  withholdingLabel?: true
+  withholdingAmount?: true
   totalHt?: true
   vatAmount?: true
   totalTtc?: true
@@ -445,6 +461,8 @@ export type PurchaseGroupByOutputType = {
   vatRate: runtime.Decimal
   stampDutyLabel: string
   stampDutyAmount: runtime.Decimal
+  withholdingLabel: string
+  withholdingAmount: runtime.Decimal
   totalHt: runtime.Decimal
   vatAmount: runtime.Decimal
   totalTtc: runtime.Decimal
@@ -507,6 +525,8 @@ export type PurchaseWhereInput = {
   vatRate?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFilter<"Purchase"> | string
   stampDutyAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFilter<"Purchase"> | string
+  withholdingAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -529,6 +549,7 @@ export type PurchaseWhereInput = {
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.PurchaseItemListRelationFilter
   payments?: Prisma.PurchasePaymentListRelationFilter
+  documents?: Prisma.DocumentListRelationFilter
 }
 
 export type PurchaseOrderByWithRelationInput = {
@@ -551,6 +572,8 @@ export type PurchaseOrderByWithRelationInput = {
   vatRate?: Prisma.SortOrder
   stampDutyLabel?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingLabel?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -573,6 +596,7 @@ export type PurchaseOrderByWithRelationInput = {
   createdBy?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.PurchaseItemOrderByRelationAggregateInput
   payments?: Prisma.PurchasePaymentOrderByRelationAggregateInput
+  documents?: Prisma.DocumentOrderByRelationAggregateInput
 }
 
 export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
@@ -598,6 +622,8 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
   vatRate?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFilter<"Purchase"> | string
   stampDutyAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFilter<"Purchase"> | string
+  withholdingAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -620,6 +646,7 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.PurchaseItemListRelationFilter
   payments?: Prisma.PurchasePaymentListRelationFilter
+  documents?: Prisma.DocumentListRelationFilter
 }, "id" | "number">
 
 export type PurchaseOrderByWithAggregationInput = {
@@ -642,6 +669,8 @@ export type PurchaseOrderByWithAggregationInput = {
   vatRate?: Prisma.SortOrder
   stampDutyLabel?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingLabel?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -689,6 +718,8 @@ export type PurchaseScalarWhereWithAggregatesInput = {
   vatRate?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
   stampDutyAmount?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringWithAggregatesFilter<"Purchase"> | string
+  withholdingAmount?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalWithAggregatesFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -726,6 +757,8 @@ export type PurchaseCreateInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -747,6 +780,7 @@ export type PurchaseCreateInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
   items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateInput = {
@@ -769,6 +803,8 @@ export type PurchaseUncheckedCreateInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -788,6 +824,7 @@ export type PurchaseUncheckedCreateInput = {
   updatedAt?: Date | string
   items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUpdateInput = {
@@ -808,6 +845,8 @@ export type PurchaseUpdateInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -829,6 +868,7 @@ export type PurchaseUpdateInput = {
   createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
   items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateInput = {
@@ -851,6 +891,8 @@ export type PurchaseUncheckedUpdateInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -870,6 +912,7 @@ export type PurchaseUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseCreateManyInput = {
@@ -892,6 +935,8 @@ export type PurchaseCreateManyInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -929,6 +974,8 @@ export type PurchaseUpdateManyMutationInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -967,6 +1014,8 @@ export type PurchaseUncheckedUpdateManyInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1016,6 +1065,8 @@ export type PurchaseCountOrderByAggregateInput = {
   vatRate?: Prisma.SortOrder
   stampDutyLabel?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingLabel?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -1042,6 +1093,7 @@ export type PurchaseAvgOrderByAggregateInput = {
   otherFeesAmount?: Prisma.SortOrder
   vatRate?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -1074,6 +1126,8 @@ export type PurchaseMaxOrderByAggregateInput = {
   vatRate?: Prisma.SortOrder
   stampDutyLabel?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingLabel?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -1113,6 +1167,8 @@ export type PurchaseMinOrderByAggregateInput = {
   vatRate?: Prisma.SortOrder
   stampDutyLabel?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingLabel?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -1139,6 +1195,7 @@ export type PurchaseSumOrderByAggregateInput = {
   otherFeesAmount?: Prisma.SortOrder
   vatRate?: Prisma.SortOrder
   stampDutyAmount?: Prisma.SortOrder
+  withholdingAmount?: Prisma.SortOrder
   totalHt?: Prisma.SortOrder
   vatAmount?: Prisma.SortOrder
   totalTtc?: Prisma.SortOrder
@@ -1154,6 +1211,11 @@ export type PurchaseSumOrderByAggregateInput = {
 export type PurchaseScalarRelationFilter = {
   is?: Prisma.PurchaseWhereInput
   isNot?: Prisma.PurchaseWhereInput
+}
+
+export type PurchaseNullableScalarRelationFilter = {
+  is?: Prisma.PurchaseWhereInput | null
+  isNot?: Prisma.PurchaseWhereInput | null
 }
 
 export type PurchaseCreateNestedManyWithoutCreatedByInput = {
@@ -1310,6 +1372,22 @@ export type PurchaseUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PurchaseUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PurchaseUpdateWithoutPaymentsInput>, Prisma.PurchaseUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type PurchaseCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.PurchaseCreateWithoutDocumentsInput, Prisma.PurchaseUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.PurchaseCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.PurchaseWhereUniqueInput
+}
+
+export type PurchaseUpdateOneWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchaseCreateWithoutDocumentsInput, Prisma.PurchaseUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.PurchaseCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.PurchaseUpsertWithoutDocumentsInput
+  disconnect?: Prisma.PurchaseWhereInput | boolean
+  delete?: Prisma.PurchaseWhereInput | boolean
+  connect?: Prisma.PurchaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PurchaseUpdateToOneWithWhereWithoutDocumentsInput, Prisma.PurchaseUpdateWithoutDocumentsInput>, Prisma.PurchaseUncheckedUpdateWithoutDocumentsInput>
+}
+
 export type PurchaseCreateWithoutCreatedByInput = {
   id?: string
   number: string
@@ -1328,6 +1406,8 @@ export type PurchaseCreateWithoutCreatedByInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1348,6 +1428,7 @@ export type PurchaseCreateWithoutCreatedByInput = {
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasesInput
   items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateWithoutCreatedByInput = {
@@ -1370,6 +1451,8 @@ export type PurchaseUncheckedCreateWithoutCreatedByInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1388,6 +1471,7 @@ export type PurchaseUncheckedCreateWithoutCreatedByInput = {
   updatedAt?: Date | string
   items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseCreateOrConnectWithoutCreatedByInput = {
@@ -1439,6 +1523,8 @@ export type PurchaseScalarWhereInput = {
   vatRate?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFilter<"Purchase"> | string
   stampDutyAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFilter<"Purchase"> | string
+  withholdingAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFilter<"Purchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1476,6 +1562,8 @@ export type PurchaseCreateWithoutCurrencyInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1496,6 +1584,7 @@ export type PurchaseCreateWithoutCurrencyInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
   items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateWithoutCurrencyInput = {
@@ -1517,6 +1606,8 @@ export type PurchaseUncheckedCreateWithoutCurrencyInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1536,6 +1627,7 @@ export type PurchaseUncheckedCreateWithoutCurrencyInput = {
   updatedAt?: Date | string
   items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseCreateOrConnectWithoutCurrencyInput = {
@@ -1582,6 +1674,8 @@ export type PurchaseCreateWithoutSupplierInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1602,6 +1696,7 @@ export type PurchaseCreateWithoutSupplierInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
   items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateWithoutSupplierInput = {
@@ -1623,6 +1718,8 @@ export type PurchaseUncheckedCreateWithoutSupplierInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1642,6 +1739,7 @@ export type PurchaseUncheckedCreateWithoutSupplierInput = {
   updatedAt?: Date | string
   items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
   payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseCreateOrConnectWithoutSupplierInput = {
@@ -1688,6 +1786,8 @@ export type PurchaseCreateWithoutItemsInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1708,6 +1808,7 @@ export type PurchaseCreateWithoutItemsInput = {
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
   payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateWithoutItemsInput = {
@@ -1730,6 +1831,8 @@ export type PurchaseUncheckedCreateWithoutItemsInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1748,6 +1851,7 @@ export type PurchaseUncheckedCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseCreateOrConnectWithoutItemsInput = {
@@ -1784,6 +1888,8 @@ export type PurchaseUpdateWithoutItemsInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1804,6 +1910,7 @@ export type PurchaseUpdateWithoutItemsInput = {
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
   payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateWithoutItemsInput = {
@@ -1826,6 +1933,8 @@ export type PurchaseUncheckedUpdateWithoutItemsInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1844,6 +1953,7 @@ export type PurchaseUncheckedUpdateWithoutItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseCreateWithoutPaymentsInput = {
@@ -1864,6 +1974,8 @@ export type PurchaseCreateWithoutPaymentsInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1884,6 +1996,7 @@ export type PurchaseCreateWithoutPaymentsInput = {
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
   items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseUncheckedCreateWithoutPaymentsInput = {
@@ -1906,6 +2019,8 @@ export type PurchaseUncheckedCreateWithoutPaymentsInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1924,6 +2039,7 @@ export type PurchaseUncheckedCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutPurchaseInput
 }
 
 export type PurchaseCreateOrConnectWithoutPaymentsInput = {
@@ -1960,6 +2076,8 @@ export type PurchaseUpdateWithoutPaymentsInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1980,6 +2098,7 @@ export type PurchaseUpdateWithoutPaymentsInput = {
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
   items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateWithoutPaymentsInput = {
@@ -2002,6 +2121,8 @@ export type PurchaseUncheckedUpdateWithoutPaymentsInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2020,6 +2141,195 @@ export type PurchaseUncheckedUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
+}
+
+export type PurchaseCreateWithoutDocumentsInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  supplierReference?: string
+  date: Date | string
+  dueDate?: Date | string | null
+  paymentTerms?: string
+  itemsTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  shippingLabel?: string
+  shippingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  otherFeesLabel?: string
+  otherFeesAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatMode?: $Enums.VatMode
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stampDutyLabel?: string
+  stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string
+  confirmedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  isDemo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplier: Prisma.SupplierCreateNestedOneWithoutPurchasesInput
+  currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasesInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutPurchasesInput
+  items?: Prisma.PurchaseItemCreateNestedManyWithoutPurchaseInput
+  payments?: Prisma.PurchasePaymentCreateNestedManyWithoutPurchaseInput
+}
+
+export type PurchaseUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  supplierReference?: string
+  supplierId: string
+  date: Date | string
+  dueDate?: Date | string | null
+  currencyCode?: string
+  paymentTerms?: string
+  itemsTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  shippingLabel?: string
+  shippingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  otherFeesLabel?: string
+  otherFeesAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatMode?: $Enums.VatMode
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stampDutyLabel?: string
+  stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string
+  createdById?: string | null
+  confirmedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  isDemo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.PurchaseItemUncheckedCreateNestedManyWithoutPurchaseInput
+  payments?: Prisma.PurchasePaymentUncheckedCreateNestedManyWithoutPurchaseInput
+}
+
+export type PurchaseCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.PurchaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.PurchaseCreateWithoutDocumentsInput, Prisma.PurchaseUncheckedCreateWithoutDocumentsInput>
+}
+
+export type PurchaseUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.PurchaseUpdateWithoutDocumentsInput, Prisma.PurchaseUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.PurchaseCreateWithoutDocumentsInput, Prisma.PurchaseUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.PurchaseWhereInput
+}
+
+export type PurchaseUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.PurchaseWhereInput
+  data: Prisma.XOR<Prisma.PurchaseUpdateWithoutDocumentsInput, Prisma.PurchaseUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type PurchaseUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  supplierReference?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  shippingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  otherFeesLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  otherFeesAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatMode?: Prisma.EnumVatModeFieldUpdateOperationsInput | $Enums.VatMode
+  vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPurchasesNestedInput
+  currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasesNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
+  items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
+  payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+}
+
+export type PurchaseUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  supplierReference?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
+  itemsTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  shippingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  otherFeesLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  otherFeesAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatMode?: Prisma.EnumVatModeFieldUpdateOperationsInput | $Enums.VatMode
+  vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netToPayTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paidAmountTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDueTnd?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
+  payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseCreateManyCreatedByInput = {
@@ -2042,6 +2352,8 @@ export type PurchaseCreateManyCreatedByInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2078,6 +2390,8 @@ export type PurchaseUpdateWithoutCreatedByInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2098,6 +2412,7 @@ export type PurchaseUpdateWithoutCreatedByInput = {
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasesNestedInput
   items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateWithoutCreatedByInput = {
@@ -2120,6 +2435,8 @@ export type PurchaseUncheckedUpdateWithoutCreatedByInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2138,6 +2455,7 @@ export type PurchaseUncheckedUpdateWithoutCreatedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateManyWithoutCreatedByInput = {
@@ -2160,6 +2478,8 @@ export type PurchaseUncheckedUpdateManyWithoutCreatedByInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2197,6 +2517,8 @@ export type PurchaseCreateManyCurrencyInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2234,6 +2556,8 @@ export type PurchaseUpdateWithoutCurrencyInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2254,6 +2578,7 @@ export type PurchaseUpdateWithoutCurrencyInput = {
   createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
   items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateWithoutCurrencyInput = {
@@ -2275,6 +2600,8 @@ export type PurchaseUncheckedUpdateWithoutCurrencyInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2294,6 +2621,7 @@ export type PurchaseUncheckedUpdateWithoutCurrencyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateManyWithoutCurrencyInput = {
@@ -2315,6 +2643,8 @@ export type PurchaseUncheckedUpdateManyWithoutCurrencyInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2353,6 +2683,8 @@ export type PurchaseCreateManySupplierInput = {
   vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: string
   stampDutyAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: string
+  withholdingAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2390,6 +2722,8 @@ export type PurchaseUpdateWithoutSupplierInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2410,6 +2744,7 @@ export type PurchaseUpdateWithoutSupplierInput = {
   createdBy?: Prisma.UserUpdateOneWithoutPurchasesNestedInput
   items?: Prisma.PurchaseItemUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateWithoutSupplierInput = {
@@ -2431,6 +2766,8 @@ export type PurchaseUncheckedUpdateWithoutSupplierInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2450,6 +2787,7 @@ export type PurchaseUncheckedUpdateWithoutSupplierInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput
   payments?: Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutPurchaseNestedInput
 }
 
 export type PurchaseUncheckedUpdateManyWithoutSupplierInput = {
@@ -2471,6 +2809,8 @@ export type PurchaseUncheckedUpdateManyWithoutSupplierInput = {
   vatRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stampDutyLabel?: Prisma.StringFieldUpdateOperationsInput | string
   stampDutyAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  withholdingLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  withholdingAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalTtc?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2498,11 +2838,13 @@ export type PurchaseUncheckedUpdateManyWithoutSupplierInput = {
 export type PurchaseCountOutputType = {
   items: number
   payments: number
+  documents: number
 }
 
 export type PurchaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | PurchaseCountOutputTypeCountItemsArgs
   payments?: boolean | PurchaseCountOutputTypeCountPaymentsArgs
+  documents?: boolean | PurchaseCountOutputTypeCountDocumentsArgs
 }
 
 /**
@@ -2529,6 +2871,13 @@ export type PurchaseCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.PurchasePaymentWhereInput
 }
 
+/**
+ * PurchaseCountOutputType without action
+ */
+export type PurchaseCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentWhereInput
+}
+
 
 export type PurchaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2550,6 +2899,8 @@ export type PurchaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   vatRate?: boolean
   stampDutyLabel?: boolean
   stampDutyAmount?: boolean
+  withholdingLabel?: boolean
+  withholdingAmount?: boolean
   totalHt?: boolean
   vatAmount?: boolean
   totalTtc?: boolean
@@ -2572,6 +2923,7 @@ export type PurchaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdBy?: boolean | Prisma.Purchase$createdByArgs<ExtArgs>
   items?: boolean | Prisma.Purchase$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Purchase$paymentsArgs<ExtArgs>
+  documents?: boolean | Prisma.Purchase$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.PurchaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["purchase"]>
 
@@ -2595,6 +2947,8 @@ export type PurchaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   vatRate?: boolean
   stampDutyLabel?: boolean
   stampDutyAmount?: boolean
+  withholdingLabel?: boolean
+  withholdingAmount?: boolean
   totalHt?: boolean
   vatAmount?: boolean
   totalTtc?: boolean
@@ -2637,6 +2991,8 @@ export type PurchaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   vatRate?: boolean
   stampDutyLabel?: boolean
   stampDutyAmount?: boolean
+  withholdingLabel?: boolean
+  withholdingAmount?: boolean
   totalHt?: boolean
   vatAmount?: boolean
   totalTtc?: boolean
@@ -2679,6 +3035,8 @@ export type PurchaseSelectScalar = {
   vatRate?: boolean
   stampDutyLabel?: boolean
   stampDutyAmount?: boolean
+  withholdingLabel?: boolean
+  withholdingAmount?: boolean
   totalHt?: boolean
   vatAmount?: boolean
   totalTtc?: boolean
@@ -2698,13 +3056,14 @@ export type PurchaseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "status" | "supplierReference" | "supplierId" | "date" | "dueDate" | "currencyCode" | "paymentTerms" | "itemsTotal" | "discountTotal" | "shippingLabel" | "shippingAmount" | "otherFeesLabel" | "otherFeesAmount" | "vatMode" | "vatRate" | "stampDutyLabel" | "stampDutyAmount" | "totalHt" | "vatAmount" | "totalTtc" | "netToPay" | "paidAmount" | "balanceDue" | "exchangeRateTnd" | "netToPayTnd" | "paidAmountTnd" | "balanceDueTnd" | "notes" | "createdById" | "confirmedAt" | "cancelledAt" | "isDemo" | "createdAt" | "updatedAt", ExtArgs["result"]["purchase"]>
+export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "status" | "supplierReference" | "supplierId" | "date" | "dueDate" | "currencyCode" | "paymentTerms" | "itemsTotal" | "discountTotal" | "shippingLabel" | "shippingAmount" | "otherFeesLabel" | "otherFeesAmount" | "vatMode" | "vatRate" | "stampDutyLabel" | "stampDutyAmount" | "withholdingLabel" | "withholdingAmount" | "totalHt" | "vatAmount" | "totalTtc" | "netToPay" | "paidAmount" | "balanceDue" | "exchangeRateTnd" | "netToPayTnd" | "paidAmountTnd" | "balanceDueTnd" | "notes" | "createdById" | "confirmedAt" | "cancelledAt" | "isDemo" | "createdAt" | "updatedAt", ExtArgs["result"]["purchase"]>
 export type PurchaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Purchase$createdByArgs<ExtArgs>
   items?: boolean | Prisma.Purchase$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Purchase$paymentsArgs<ExtArgs>
+  documents?: boolean | Prisma.Purchase$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.PurchaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PurchaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2726,6 +3085,11 @@ export type $PurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdBy: Prisma.$UserPayload<ExtArgs> | null
     items: Prisma.$PurchaseItemPayload<ExtArgs>[]
     payments: Prisma.$PurchasePaymentPayload<ExtArgs>[]
+    /**
+     * Pieces recues et rattachees a l'achat : facture fournisseur scannee
+     * (le seul document ayant valeur probante), justificatifs de reglement.
+     */
+    documents: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2750,6 +3114,16 @@ export type $PurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     vatRate: runtime.Decimal
     stampDutyLabel: string
     stampDutyAmount: runtime.Decimal
+    /**
+     * Retenue a la source prelevee sur le reglement du fournisseur.
+     * 
+     * NE REDUIT PAS `netToPay` : la charge reste le montant facture. La retenue
+     * est prelevee au moment du paiement — le fournisseur recoit
+     * `netToPay - withholdingAmount`, le solde est reverse a l'administration.
+     * C'est pourquoi elle vit a cote des totaux et n'entre pas dans leur calcul.
+     */
+    withholdingLabel: string
+    withholdingAmount: runtime.Decimal
     totalHt: runtime.Decimal
     vatAmount: runtime.Decimal
     totalTtc: runtime.Decimal
@@ -3170,6 +3544,7 @@ export interface Prisma__PurchaseClient<T, Null = never, ExtArgs extends runtime
   createdBy<T extends Prisma.Purchase$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Purchase$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Purchase$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Purchase$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Purchase$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Purchase$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchasePaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documents<T extends Prisma.Purchase$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Purchase$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3218,6 +3593,8 @@ export interface PurchaseFieldRefs {
   readonly vatRate: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly stampDutyLabel: Prisma.FieldRef<"Purchase", 'String'>
   readonly stampDutyAmount: Prisma.FieldRef<"Purchase", 'Decimal'>
+  readonly withholdingLabel: Prisma.FieldRef<"Purchase", 'String'>
+  readonly withholdingAmount: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly totalHt: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly vatAmount: Prisma.FieldRef<"Purchase", 'Decimal'>
   readonly totalTtc: Prisma.FieldRef<"Purchase", 'Decimal'>
@@ -3700,6 +4077,30 @@ export type Purchase$paymentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.PurchasePaymentScalarFieldEnum | Prisma.PurchasePaymentScalarFieldEnum[]
+}
+
+/**
+ * Purchase.documents
+ */
+export type Purchase$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
 }
 
 /**

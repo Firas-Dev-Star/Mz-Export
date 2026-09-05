@@ -104,7 +104,37 @@ export type PurchaseItem = Prisma.PurchaseItemModel
  */
 export type PurchasePayment = Prisma.PurchasePaymentModel
 /**
+ * Model Carrier
+ * 
+ */
+export type Carrier = Prisma.CarrierModel
+/**
+ * Model TransportInvoice
+ * 
+ */
+export type TransportInvoice = Prisma.TransportInvoiceModel
+/**
+ * Model TransportPayment
+ * 
+ */
+export type TransportPayment = Prisma.TransportPaymentModel
+/**
  * Model StockMovement
  * 
  */
 export type StockMovement = Prisma.StockMovementModel
+/**
+ * Model Document
+ * Document original rattache a un achat OU a une vente.
+ * 
+ * REGLE : le contenu est stocke en base (`content`), pas sur le disque. A
+ * l'echelle de MZ EXPORT (quelques dizaines de pieces par an, ~500 Ko
+ * chacune) le surcout est negligeable, et un seul `pg_dump` sauvegarde
+ * l'integralite des justificatifs avec la comptabilite. Un dossier separe
+ * qu'on oublie de copier fait perdre les pieces en gardant les ecritures.
+ * 
+ * Exactement UN des deux rattachements (`purchaseId`, `invoiceId`) est
+ * renseigne. La contrainte est posee en SQL dans la migration, parce que
+ * Prisma ne sait pas l'exprimer.
+ */
+export type Document = Prisma.DocumentModel

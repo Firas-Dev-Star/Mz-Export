@@ -290,3 +290,56 @@ describe('mention « CE PRIX S’APPLIQUE »', () => {
     expect(note).not.toContain('AUTRES FRAIS')
   })
 })
+
+/**
+ * Une facture de transport n'a pas de lignes d'articles : ses trois montants
+ * nommes entrent comme frais annexes. Ces tests fixent cette forme, pour qu'un
+ * oubli de `transitAmount` ou de `otherFeesAmount` ne passe pas inapercu — il
+ * sous-estimerait le cout d'acheminement sans rien casser visiblement.
+ */
+describe('facture de transport (sans lignes)', () => {
+  const transport = (over: Record<string, unknown> = {}) =>
+    computeInvoiceTotals({
+      items: [],
+      feesIncluded: false,
+      shippingAmount: '1500.522',
+      transitAmount: '0',
+      otherFeesAmount: '0',
+      vatMode: 'NONE',
+      decimals: 3,
+      ...over,
+    })
+
+  it('le total HT est la somme des trois montants', () => {
+    const t = transport({ shippingAmount: '1000', transitAmount: '250.500', otherFeesAmount: '12.345' })
+    expect(t.goodsTotal.toFixed(3)).toBe('0.000')
+    expect(t.totalHt.toFixed(3)).toBe('1262.845')
+    expect(t.netToPay.toFixed(3)).toBe('1262.845')
+  })
+
+  it('reprend au millime un montant du registre, sans TVA ni timbre', () => {
+    const t = transport()
+    expect(t.totalHt.toFixed(3)).toBe('1500.522')
+    expect(t.vatAmount.toFixed(3)).toBe('0.000')
+    expect(t.netToPay.toFixed(3)).toBe('1500.522')
+  })
+
+  it('applique la TVA sur le total HT, puis le timbre après la TVA', () => {
+    const t = transport({
+      shippingAmount: '1000',
+      transitAmount: '0',
+      otherFeesAmount: '0',
+      vatMode: 'RATE',
+      vatRate: '19',
+      stampDutyAmount: '1',
+    })
+    expect(t.vatAmount.toFixed(3)).toBe('190.000')
+    expect(t.totalTtc.toFixed(3)).toBe('1190.000')
+    expect(t.netToPay.toFixed(3)).toBe('1191.000')
+  })
+
+  it('le solde suit le règlement', () => {
+    const t = transport({ shippingAmount: '2425.923', paidAmount: '1000' })
+    expect(t.balanceDue.toFixed(3)).toBe('1425.923')
+  })
+})

@@ -47,6 +47,7 @@ export type CustomerMinAggregateOutputType = {
   currencyCode: string | null
   deliveryAddress: string | null
   deliveryCountry: string | null
+  defaultIncoterm: string | null
   notes: string | null
   isDemo: boolean | null
   isActive: boolean | null
@@ -77,6 +78,7 @@ export type CustomerMaxAggregateOutputType = {
   currencyCode: string | null
   deliveryAddress: string | null
   deliveryCountry: string | null
+  defaultIncoterm: string | null
   notes: string | null
   isDemo: boolean | null
   isActive: boolean | null
@@ -107,6 +109,7 @@ export type CustomerCountAggregateOutputType = {
   currencyCode: number
   deliveryAddress: number
   deliveryCountry: number
+  defaultIncoterm: number
   notes: number
   isDemo: number
   isActive: number
@@ -139,6 +142,7 @@ export type CustomerMinAggregateInputType = {
   currencyCode?: true
   deliveryAddress?: true
   deliveryCountry?: true
+  defaultIncoterm?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -169,6 +173,7 @@ export type CustomerMaxAggregateInputType = {
   currencyCode?: true
   deliveryAddress?: true
   deliveryCountry?: true
+  defaultIncoterm?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -199,6 +204,7 @@ export type CustomerCountAggregateInputType = {
   currencyCode?: true
   deliveryAddress?: true
   deliveryCountry?: true
+  defaultIncoterm?: true
   notes?: true
   isDemo?: true
   isActive?: true
@@ -302,6 +308,7 @@ export type CustomerGroupByOutputType = {
   currencyCode: string
   deliveryAddress: string
   deliveryCountry: string
+  defaultIncoterm: string
   notes: string
   isDemo: boolean
   isActive: boolean
@@ -353,6 +360,7 @@ export type CustomerWhereInput = {
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
   deliveryCountry?: Prisma.StringFilter<"Customer"> | string
+  defaultIncoterm?: Prisma.StringFilter<"Customer"> | string
   notes?: Prisma.StringFilter<"Customer"> | string
   isDemo?: Prisma.BoolFilter<"Customer"> | boolean
   isActive?: Prisma.BoolFilter<"Customer"> | boolean
@@ -385,6 +393,7 @@ export type CustomerOrderByWithRelationInput = {
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCountry?: Prisma.SortOrder
+  defaultIncoterm?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -420,6 +429,7 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
   deliveryCountry?: Prisma.StringFilter<"Customer"> | string
+  defaultIncoterm?: Prisma.StringFilter<"Customer"> | string
   notes?: Prisma.StringFilter<"Customer"> | string
   isDemo?: Prisma.BoolFilter<"Customer"> | boolean
   isActive?: Prisma.BoolFilter<"Customer"> | boolean
@@ -452,6 +462,7 @@ export type CustomerOrderByWithAggregationInput = {
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCountry?: Prisma.SortOrder
+  defaultIncoterm?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -488,6 +499,7 @@ export type CustomerScalarWhereWithAggregatesInput = {
   currencyCode?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   deliveryCountry?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  defaultIncoterm?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   notes?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   isDemo?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
@@ -517,6 +529,7 @@ export type CustomerCreateInput = {
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -549,6 +562,7 @@ export type CustomerUncheckedCreateInput = {
   currencyCode?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -579,6 +593,7 @@ export type CustomerUpdateInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -611,6 +626,7 @@ export type CustomerUncheckedUpdateInput = {
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -642,6 +658,7 @@ export type CustomerCreateManyInput = {
   currencyCode?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -671,6 +688,7 @@ export type CustomerUpdateManyMutationInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -701,6 +719,7 @@ export type CustomerUncheckedUpdateManyInput = {
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -741,6 +760,7 @@ export type CustomerCountOrderByAggregateInput = {
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCountry?: Prisma.SortOrder
+  defaultIncoterm?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -771,6 +791,7 @@ export type CustomerMaxOrderByAggregateInput = {
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCountry?: Prisma.SortOrder
+  defaultIncoterm?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -801,6 +822,7 @@ export type CustomerMinOrderByAggregateInput = {
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCountry?: Prisma.SortOrder
+  defaultIncoterm?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isDemo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -891,6 +913,7 @@ export type CustomerCreateWithoutCurrencyInput = {
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -921,6 +944,7 @@ export type CustomerUncheckedCreateWithoutCurrencyInput = {
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -981,6 +1005,7 @@ export type CustomerScalarWhereInput = {
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
   deliveryCountry?: Prisma.StringFilter<"Customer"> | string
+  defaultIncoterm?: Prisma.StringFilter<"Customer"> | string
   notes?: Prisma.StringFilter<"Customer"> | string
   isDemo?: Prisma.BoolFilter<"Customer"> | boolean
   isActive?: Prisma.BoolFilter<"Customer"> | boolean
@@ -1010,6 +1035,7 @@ export type CustomerCreateWithoutInvoicesInput = {
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -1041,6 +1067,7 @@ export type CustomerUncheckedCreateWithoutInvoicesInput = {
   currencyCode?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -1086,6 +1113,7 @@ export type CustomerUpdateWithoutInvoicesInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1117,6 +1145,7 @@ export type CustomerUncheckedUpdateWithoutInvoicesInput = {
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1146,6 +1175,7 @@ export type CustomerCreateManyCurrencyInput = {
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
+  defaultIncoterm?: string
   notes?: string
   isDemo?: boolean
   isActive?: boolean
@@ -1175,6 +1205,7 @@ export type CustomerUpdateWithoutCurrencyInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1205,6 +1236,7 @@ export type CustomerUncheckedUpdateWithoutCurrencyInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1235,6 +1267,7 @@ export type CustomerUncheckedUpdateManyWithoutCurrencyInput = {
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultIncoterm?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1296,6 +1329,7 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   currencyCode?: boolean
   deliveryAddress?: boolean
   deliveryCountry?: boolean
+  defaultIncoterm?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1329,6 +1363,7 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   currencyCode?: boolean
   deliveryAddress?: boolean
   deliveryCountry?: boolean
+  defaultIncoterm?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1360,6 +1395,7 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   currencyCode?: boolean
   deliveryAddress?: boolean
   deliveryCountry?: boolean
+  defaultIncoterm?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1391,6 +1427,7 @@ export type CustomerSelectScalar = {
   currencyCode?: boolean
   deliveryAddress?: boolean
   deliveryCountry?: boolean
+  defaultIncoterm?: boolean
   notes?: boolean
   isDemo?: boolean
   isActive?: boolean
@@ -1398,7 +1435,7 @@ export type CustomerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "firstName" | "lastName" | "contactName" | "contactPhone" | "contactEmail" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "siret" | "vatNumber" | "paymentTerms" | "currencyCode" | "deliveryAddress" | "deliveryCountry" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "firstName" | "lastName" | "contactName" | "contactPhone" | "contactEmail" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "siret" | "vatNumber" | "paymentTerms" | "currencyCode" | "deliveryAddress" | "deliveryCountry" | "defaultIncoterm" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   invoices?: boolean | Prisma.Customer$invoicesArgs<ExtArgs>
@@ -1440,6 +1477,15 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     currencyCode: string
     deliveryAddress: string
     deliveryCountry: string
+    /**
+     * Incoterm habituel de ce client, repris sur ses nouvelles factures.
+     * 
+     * Sert a inscrire une regle commerciale durable plutot qu'a la reprendre de
+     * memoire a chaque facture. Un client en EXW enleve la marchandise lui-meme :
+     * aucun transport n'est a notre charge, et l'absence de facture de
+     * transporteur sur son expedition est NORMALE, pas un oubli.
+     */
+    defaultIncoterm: string
     notes: string
     isDemo: boolean
     isActive: boolean
@@ -1892,6 +1938,7 @@ export interface CustomerFieldRefs {
   readonly currencyCode: Prisma.FieldRef<"Customer", 'String'>
   readonly deliveryAddress: Prisma.FieldRef<"Customer", 'String'>
   readonly deliveryCountry: Prisma.FieldRef<"Customer", 'String'>
+  readonly defaultIncoterm: Prisma.FieldRef<"Customer", 'String'>
   readonly notes: Prisma.FieldRef<"Customer", 'String'>
   readonly isDemo: Prisma.FieldRef<"Customer", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Customer", 'Boolean'>

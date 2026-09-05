@@ -1,6 +1,7 @@
 import 'server-only'
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
+import { BASE_DECIMALS, RATE_DECIMALS, normalizeRate, tndAmounts, toTnd } from '@/lib/exchange'
 import { computeInvoiceTotals } from '@/lib/invoice-totals'
 import { round, toDbDecimal } from '@/lib/money'
 import type { PurchaseInput } from '@/validations/purchase'
@@ -109,8 +110,17 @@ export async function getPurchase(id: string) {
  * Prepare le payload Prisma d'une facture d'achat.
  * Les frais s'ajoutent toujours au total des lignes (pas de mode "compris"),
  * et les arrondis se font a 3 decimales (millimes).
+ *
+ * `rateToTnd` fige la contrevaleur en dinars du document, comme pour une
+ * facture de vente. Un achat libelle en dinars n'a pas besoin de taux : il vaut
+ * toujours 1. Un achat en devise sans taux reste a 0 et sort des totaux
+ * consolides, plutot que d'y entrer converti a un taux inconnu.
  */
-export function buildPurchaseData(input: PurchaseInput, paidAmount: unknown = 0) {
+export function buildPurchaseData(
+  input: PurchaseInput,
+  paidAmount: unknown = 0,
+  rateToTnd: unknown = 0,
+) {
   const totals = computeInvoiceTotals({
     items: input.items,
     feesIncluded: false,
@@ -121,6 +131,14 @@ export function buildPurchaseData(input: PurchaseInput, paidAmount: unknown = 0)
     stampDutyAmount: input.stampDutyAmount,
     paidAmount,
     decimals: PURCHASE_DECIMALS,
+  })
+
+  const tnd = tndAmounts({
+    currencyCode: input.currencyCode,
+    rateToTnd,
+    netToPay: totals.netToPay,
+    paidAmount: totals.paidAmount,
+    balanceDue: totals.balanceDue,
   })
 
   const scalars = {
@@ -149,6 +167,12 @@ export function buildPurchaseData(input: PurchaseInput, paidAmount: unknown = 0)
     totalTtc: toDbDecimal(totals.totalTtc, PURCHASE_DECIMALS),
     netToPay: toDbDecimal(totals.netToPay, PURCHASE_DECIMALS),
     balanceDue: toDbDecimal(totals.balanceDue, PURCHASE_DECIMALS),
+
+    // Contrevaleur en dinars, figee avec le document.
+    exchangeRateTnd: toDbDecimal(tnd.exchangeRateTnd, RATE_DECIMALS),
+    netToPayTnd: toDbDecimal(tnd.netToPayTnd, BASE_DECIMALS),
+    paidAmountTnd: toDbDecimal(tnd.paidAmountTnd, BASE_DECIMALS),
+    balanceDueTnd: toDbDecimal(tnd.balanceDueTnd, BASE_DECIMALS),
 
     notes: input.notes,
   }
@@ -182,7 +206,10 @@ export function buildPurchaseData(input: PurchaseInput, paidAmount: unknown = 0)
 export async function refreshPurchasePaymentState(tx: Prisma.TransactionClient, purchaseId: string) {
   const purchase = await tx.purchase.findUnique({
     where: { id: purchaseId },
-    select: { id: true, status: true, netToPay: true, dueDate: true },
+    select: {
+      id: true, status: true, netToPay: true, dueDate: true,
+      currencyCode: true, exchangeRateTnd: true,
+    },
   })
   if (!purchase) return null
 
@@ -203,9 +230,20 @@ export async function refreshPurchasePaymentState(tx: Prisma.TransactionClient, 
     else status = 'CONFIRMED'
   }
 
+  // Les contrevaleurs suivent le reglement, au taux fige du document : un
+  // paiement ne doit jamais reevaluer la facture au taux du jour.
+  const rate = normalizeRate(purchase.currencyCode, purchase.exchangeRateTnd)
+
   return tx.purchase.update({
     where: { id: purchaseId },
-    data: { paidAmount: paid.toFixed(3), balanceDue: balance.toFixed(3), status },
+    data: {
+      paidAmount: paid.toFixed(3),
+      balanceDue: balance.toFixed(3),
+      status,
+      netToPayTnd: toTnd(net, rate).toFixed(BASE_DECIMALS),
+      paidAmountTnd: toTnd(paid, rate).toFixed(BASE_DECIMALS),
+      balanceDueTnd: toTnd(balance, rate).toFixed(BASE_DECIMALS),
+    },
     select: { id: true, status: true },
   })
 }

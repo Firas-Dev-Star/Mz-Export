@@ -37,6 +37,8 @@ export interface CustomerOption {
   deliveryAddress: string
   deliveryCountry: string
   country: string
+  /** Incoterm habituel, prerempli a la selection du client. */
+  defaultIncoterm: string
 }
 
 export interface ProductOption {
@@ -170,6 +172,11 @@ export function InvoiceForm({
     if (!getValues('deliveryAddress')) setValue('deliveryAddress', customer.deliveryAddress)
     if (!getValues('deliveryCountry')) setValue('deliveryCountry', customer.deliveryCountry || customer.country)
     if (customer.currencyCode) setValue('currencyCode', customer.currencyCode)
+    // L'incoterm habituel du client : une regle commerciale ne doit pas
+    // dependre de la memoire de celui qui saisit.
+    if (!getValues('incoterm') && customer.defaultIncoterm) {
+      setValue('incoterm', customer.defaultIncoterm as typeof INCOTERM_CODES[number])
+    }
   }
 
   function onProductChange(index: number, productId: string) {
@@ -245,6 +252,15 @@ export function InvoiceForm({
           </Field>
           <Field label="Référence commande" htmlFor="orderReference" error={errors.orderReference?.message}>
             <Input id="orderReference" {...register('orderReference')} />
+          </Field>
+
+          <Field
+            label="Domiciliation bancaire"
+            htmlFor="domiciliationRef"
+            hint="N° communiqué par la banque pour cette opération"
+            error={errors.domiciliationRef?.message}
+          >
+            <Input id="domiciliationRef" inputMode="numeric" {...register('domiciliationRef')} />
           </Field>
         </CardContent>
       </Card>

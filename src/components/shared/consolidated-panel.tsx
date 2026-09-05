@@ -126,9 +126,9 @@ export function ConsolidatedPanel({ totals, rates, currencies }: Props) {
         <StatCard icon={Warehouse} label="Valeur du stock" value={show(totals.stockValueTnd)} />
         <StatCard
           icon={Scale}
-          label="Ventes − achats"
+          label="Ventes − achats − transport"
           value={show(totals.grossMarginTnd)}
-          secondary="Hors stock et charges"
+          secondary={`Dont transport ${show(totals.transportTnd)}`}
         />
       </div>
 

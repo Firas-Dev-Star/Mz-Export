@@ -413,7 +413,11 @@ export const ModelName = {
   Purchase: 'Purchase',
   PurchaseItem: 'PurchaseItem',
   PurchasePayment: 'PurchasePayment',
-  StockMovement: 'StockMovement'
+  Carrier: 'Carrier',
+  TransportInvoice: 'TransportInvoice',
+  TransportPayment: 'TransportPayment',
+  StockMovement: 'StockMovement',
+  Document: 'Document'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -429,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "company" | "currency" | "exchangeRate" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "stockMovement"
+    modelProps: "user" | "auditLog" | "company" | "currency" | "exchangeRate" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "carrier" | "transportInvoice" | "transportPayment" | "stockMovement" | "document"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1617,6 +1621,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Carrier: {
+      payload: Prisma.$CarrierPayload<ExtArgs>
+      fields: Prisma.CarrierFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CarrierFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CarrierFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        findFirst: {
+          args: Prisma.CarrierFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CarrierFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        findMany: {
+          args: Prisma.CarrierFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>[]
+        }
+        create: {
+          args: Prisma.CarrierCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        createMany: {
+          args: Prisma.CarrierCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CarrierCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>[]
+        }
+        delete: {
+          args: Prisma.CarrierDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        update: {
+          args: Prisma.CarrierUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        deleteMany: {
+          args: Prisma.CarrierDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CarrierUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CarrierUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>[]
+        }
+        upsert: {
+          args: Prisma.CarrierUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CarrierPayload>
+        }
+        aggregate: {
+          args: Prisma.CarrierAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCarrier>
+        }
+        groupBy: {
+          args: Prisma.CarrierGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CarrierGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CarrierCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CarrierCountAggregateOutputType> | number
+        }
+      }
+    }
+    TransportInvoice: {
+      payload: Prisma.$TransportInvoicePayload<ExtArgs>
+      fields: Prisma.TransportInvoiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TransportInvoiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TransportInvoiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        findFirst: {
+          args: Prisma.TransportInvoiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TransportInvoiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        findMany: {
+          args: Prisma.TransportInvoiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>[]
+        }
+        create: {
+          args: Prisma.TransportInvoiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        createMany: {
+          args: Prisma.TransportInvoiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TransportInvoiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>[]
+        }
+        delete: {
+          args: Prisma.TransportInvoiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        update: {
+          args: Prisma.TransportInvoiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        deleteMany: {
+          args: Prisma.TransportInvoiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TransportInvoiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TransportInvoiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>[]
+        }
+        upsert: {
+          args: Prisma.TransportInvoiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportInvoicePayload>
+        }
+        aggregate: {
+          args: Prisma.TransportInvoiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTransportInvoice>
+        }
+        groupBy: {
+          args: Prisma.TransportInvoiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TransportInvoiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TransportInvoiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TransportInvoiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    TransportPayment: {
+      payload: Prisma.$TransportPaymentPayload<ExtArgs>
+      fields: Prisma.TransportPaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TransportPaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TransportPaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.TransportPaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TransportPaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        findMany: {
+          args: Prisma.TransportPaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>[]
+        }
+        create: {
+          args: Prisma.TransportPaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        createMany: {
+          args: Prisma.TransportPaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TransportPaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.TransportPaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        update: {
+          args: Prisma.TransportPaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TransportPaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TransportPaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TransportPaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.TransportPaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TransportPaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.TransportPaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTransportPayment>
+        }
+        groupBy: {
+          args: Prisma.TransportPaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TransportPaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TransportPaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TransportPaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     StockMovement: {
       payload: Prisma.$StockMovementPayload<ExtArgs>
       fields: Prisma.StockMovementFieldRefs
@@ -1688,6 +1914,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.StockMovementCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.StockMovementCountAggregateOutputType> | number
+        }
+      }
+    }
+    Document: {
+      payload: Prisma.$DocumentPayload<ExtArgs>
+      fields: Prisma.DocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.DocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        findMany: {
+          args: Prisma.DocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+        }
+        create: {
+          args: Prisma.DocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        createMany: {
+          args: Prisma.DocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DocumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+        }
+        delete: {
+          args: Prisma.DocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        update: {
+          args: Prisma.DocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.DocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DocumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.DocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.DocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocument>
+        }
+        groupBy: {
+          args: Prisma.DocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentCountAggregateOutputType> | number
         }
       }
     }
@@ -1871,6 +2171,7 @@ export const CustomerScalarFieldEnum = {
   currencyCode: 'currencyCode',
   deliveryAddress: 'deliveryAddress',
   deliveryCountry: 'deliveryCountry',
+  defaultIncoterm: 'defaultIncoterm',
   notes: 'notes',
   isDemo: 'isDemo',
   isActive: 'isActive',
@@ -1944,6 +2245,7 @@ export const InvoiceScalarFieldEnum = {
   departurePort: 'departurePort',
   destination: 'destination',
   orderReference: 'orderReference',
+  domiciliationRef: 'domiciliationRef',
   goodsTotal: 'goodsTotal',
   discountTotal: 'discountTotal',
   feesIncluded: 'feesIncluded',
@@ -2036,6 +2338,7 @@ export const SupplierScalarFieldEnum = {
   tradeRegister: 'tradeRegister',
   paymentTerms: 'paymentTerms',
   currencyCode: 'currencyCode',
+  nature: 'nature',
   notes: 'notes',
   isDemo: 'isDemo',
   isActive: 'isActive',
@@ -2066,6 +2369,8 @@ export const PurchaseScalarFieldEnum = {
   vatRate: 'vatRate',
   stampDutyLabel: 'stampDutyLabel',
   stampDutyAmount: 'stampDutyAmount',
+  withholdingLabel: 'withholdingLabel',
+  withholdingAmount: 'withholdingAmount',
   totalHt: 'totalHt',
   vatAmount: 'vatAmount',
   totalTtc: 'totalTtc',
@@ -2123,6 +2428,93 @@ export const PurchasePaymentScalarFieldEnum = {
 export type PurchasePaymentScalarFieldEnum = (typeof PurchasePaymentScalarFieldEnum)[keyof typeof PurchasePaymentScalarFieldEnum]
 
 
+export const CarrierScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  companyName: 'companyName',
+  contactName: 'contactName',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  postalCode: 'postalCode',
+  city: 'city',
+  country: 'country',
+  phone: 'phone',
+  email: 'email',
+  taxId: 'taxId',
+  tradeRegister: 'tradeRegister',
+  paymentTerms: 'paymentTerms',
+  currencyCode: 'currencyCode',
+  notes: 'notes',
+  isDemo: 'isDemo',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CarrierScalarFieldEnum = (typeof CarrierScalarFieldEnum)[keyof typeof CarrierScalarFieldEnum]
+
+
+export const TransportInvoiceScalarFieldEnum = {
+  id: 'id',
+  number: 'number',
+  status: 'status',
+  carrierReference: 'carrierReference',
+  carrierId: 'carrierId',
+  date: 'date',
+  dueDate: 'dueDate',
+  shipmentRef: 'shipmentRef',
+  invoiceId: 'invoiceId',
+  currencyCode: 'currencyCode',
+  paymentTerms: 'paymentTerms',
+  transportLabel: 'transportLabel',
+  transportAmount: 'transportAmount',
+  transitLabel: 'transitLabel',
+  transitAmount: 'transitAmount',
+  otherFeesLabel: 'otherFeesLabel',
+  otherFeesAmount: 'otherFeesAmount',
+  vatMode: 'vatMode',
+  vatRate: 'vatRate',
+  stampDutyLabel: 'stampDutyLabel',
+  stampDutyAmount: 'stampDutyAmount',
+  totalHt: 'totalHt',
+  vatAmount: 'vatAmount',
+  totalTtc: 'totalTtc',
+  netToPay: 'netToPay',
+  paidAmount: 'paidAmount',
+  balanceDue: 'balanceDue',
+  exchangeRateTnd: 'exchangeRateTnd',
+  netToPayTnd: 'netToPayTnd',
+  paidAmountTnd: 'paidAmountTnd',
+  balanceDueTnd: 'balanceDueTnd',
+  notes: 'notes',
+  createdById: 'createdById',
+  confirmedAt: 'confirmedAt',
+  cancelledAt: 'cancelledAt',
+  isDemo: 'isDemo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransportInvoiceScalarFieldEnum = (typeof TransportInvoiceScalarFieldEnum)[keyof typeof TransportInvoiceScalarFieldEnum]
+
+
+export const TransportPaymentScalarFieldEnum = {
+  id: 'id',
+  transportInvoiceId: 'transportInvoiceId',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  date: 'date',
+  method: 'method',
+  reference: 'reference',
+  note: 'note',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransportPaymentScalarFieldEnum = (typeof TransportPaymentScalarFieldEnum)[keyof typeof TransportPaymentScalarFieldEnum]
+
+
 export const StockMovementScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -2139,6 +2531,25 @@ export const StockMovementScalarFieldEnum = {
 } as const
 
 export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
+export const DocumentScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  content: 'content',
+  reference: 'reference',
+  note: 'note',
+  purchaseId: 'purchaseId',
+  invoiceId: 'invoiceId',
+  transportInvoiceId: 'transportInvoiceId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2322,6 +2733,20 @@ export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'SupplierNature'
+ */
+export type EnumSupplierNatureFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupplierNature'>
+    
+
+
+/**
+ * Reference to a field of type 'SupplierNature[]'
+ */
+export type ListEnumSupplierNatureFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupplierNature[]'>
+    
+
+
+/**
  * Reference to a field of type 'StockMovementType'
  */
 export type EnumStockMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockMovementType'>
@@ -2346,6 +2771,34 @@ export type EnumStockReferenceTypeFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'StockReferenceType[]'
  */
 export type ListEnumStockReferenceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockReferenceType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DocumentKind'
+ */
+export type EnumDocumentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentKind'>
+    
+
+
+/**
+ * Reference to a field of type 'DocumentKind[]'
+ */
+export type ListEnumDocumentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentKind[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
     
 
 
@@ -2529,7 +2982,11 @@ export type GlobalOmitConfig = {
   purchase?: Prisma.PurchaseOmit
   purchaseItem?: Prisma.PurchaseItemOmit
   purchasePayment?: Prisma.PurchasePaymentOmit
+  carrier?: Prisma.CarrierOmit
+  transportInvoice?: Prisma.TransportInvoiceOmit
+  transportPayment?: Prisma.TransportPaymentOmit
   stockMovement?: Prisma.StockMovementOmit
+  document?: Prisma.DocumentOmit
 }
 
 /* Types for Logging */

@@ -26,9 +26,16 @@ export interface ConsolidatedTotals {
   outstandingTnd: string
   purchasesTnd: string
   purchasesOutstandingTnd: string
+  /** Cout d'acheminement : facture par les transporteurs, hors achats. */
+  transportTnd: string
+  transportOutstandingTnd: string
   /** Valeur du stock au prix d'achat (quantite x prix), en dinars. */
   stockValueTnd: string
-  /** Ventes converties - achats. Marge brute approximative, hors stock. */
+  /**
+   * Ventes converties - achats - transport. Marge brute approximative, hors
+   * stock. Le transport en est deduit : c'est une charge d'exploitation, pas
+   * une immobilisation, et l'oublier surevaluerait la marge.
+   */
   grossMarginTnd: string
   /** Devises reellement presentes dans les factures prises en compte. */
   currencies: string[]
@@ -96,6 +103,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     productCount,
     supplierCount,
     purchaseTotals,
+    transportTotals,
     stockProducts,
     monthlyRows,
     topCustomerRows,
@@ -129,6 +137,12 @@ export async function getDashboardData(): Promise<DashboardData> {
     prisma.product.count({ where: { isActive: true } }),
     prisma.supplier.count({ where: { isActive: true } }),
     prisma.purchase.groupBy({
+      by: ['currencyCode'],
+      where: { status: { notIn: ['DRAFT', 'CANCELLED'] } },
+      _sum: { netToPay: true, balanceDue: true, netToPayTnd: true, balanceDueTnd: true },
+      _count: { _all: true },
+    }),
+    prisma.transportInvoice.groupBy({
       by: ['currencyCode'],
       where: { status: { notIn: ['DRAFT', 'CANCELLED'] } },
       _sum: { netToPay: true, balanceDue: true, netToPayTnd: true, balanceDueTnd: true },
@@ -213,6 +227,8 @@ export async function getDashboardData(): Promise<DashboardData> {
   const outstandingTnd = sumTnd(byCurrency.map((r) => r._sum.balanceDueTnd))
   const purchasesTnd = sumTnd(purchaseTotals.map((r) => r._sum.netToPayTnd))
   const purchasesOutstandingTnd = sumTnd(purchaseTotals.map((r) => r._sum.balanceDueTnd))
+  const transportTnd = sumTnd(transportTotals.map((r) => r._sum.netToPayTnd))
+  const transportOutstandingTnd = sumTnd(transportTotals.map((r) => r._sum.balanceDueTnd))
 
   const consolidated: ConsolidatedTotals = {
     revenueTnd: revenueTnd.toFixed(BASE_DECIMALS),
@@ -220,8 +236,13 @@ export async function getDashboardData(): Promise<DashboardData> {
     outstandingTnd: outstandingTnd.toFixed(BASE_DECIMALS),
     purchasesTnd: purchasesTnd.toFixed(BASE_DECIMALS),
     purchasesOutstandingTnd: purchasesOutstandingTnd.toFixed(BASE_DECIMALS),
+    transportTnd: transportTnd.toFixed(BASE_DECIMALS),
+    transportOutstandingTnd: transportOutstandingTnd.toFixed(BASE_DECIMALS),
     stockValueTnd,
-    grossMarginTnd: round(sub(revenueTnd, purchasesTnd), BASE_DECIMALS).toFixed(BASE_DECIMALS),
+    grossMarginTnd: round(
+      sub(sub(revenueTnd, purchasesTnd), transportTnd),
+      BASE_DECIMALS,
+    ).toFixed(BASE_DECIMALS),
     currencies: byCurrency.map((r) => r.currencyCode).sort(),
     missingRateCount,
   }

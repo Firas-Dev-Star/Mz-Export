@@ -2,6 +2,7 @@ import 'dotenv/config'
 import bcrypt from 'bcryptjs'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../src/generated/prisma/client'
+import { CURRENCIES, COMPANY, SEQUENCES, adminAccount } from './seed-data.cjs'
 
 /**
  * Seed de la base MZ EXPORT.
@@ -30,26 +31,13 @@ const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) })
 
 async function main() {
   // --- Devises -------------------------------------------------------------
-  await prisma.currency.upsert({
-    where: { code: 'EUR' },
-    update: {},
-    create: { code: 'EUR', name: 'Euro', symbol: '€', decimals: 2 },
-  })
-  await prisma.currency.upsert({
-    where: { code: 'TND' },
-    update: {},
-    create: { code: 'TND', name: 'Dinar tunisien', symbol: 'DT', decimals: 3 },
-  })
-  await prisma.currency.upsert({
-    where: { code: 'USD' },
-    update: {},
-    create: { code: 'USD', name: 'Dollar americain', symbol: '$', decimals: 2 },
-  })
-  await prisma.currency.upsert({
-    where: { code: 'GBP' },
-    update: {},
-    create: { code: 'GBP', name: 'Livre sterling', symbol: '\u00a3', decimals: 2 },
-  })
+  for (const currency of CURRENCIES) {
+    await prisma.currency.upsert({
+      where: { code: currency.code },
+      update: {},
+      create: currency,
+    })
+  }
 
   // --- Taux de change ------------------------------------------------------
   // AUCUN taux n'est cree automatiquement : un taux invente produirait des
@@ -58,94 +46,33 @@ async function main() {
 
   // --- Parametres societe (donnees reelles) -------------------------------
   await prisma.company.upsert({
-    where: { id: 'company' },
+    where: { id: COMPANY.id },
     update: {},
-    create: {
-      id: 'company',
-      name: 'MZ EXPORT SARL',
-      legalForm: 'Société à Responsabilité Limitée',
-      capital: '5000',
-      capitalCurrency: 'TND',
-      taxId: '1767502K/A/M/000',
-      tradeRegister: '',
-      activity: 'Export',
-      addressLine1: 'Rue Jamel Abdenaceur',
-      addressLine2: 'Zeramdine',
-      postalCode: '5040',
-      city: 'Monastir',
-      country: 'Tunisie',
-      // Numeros releves sur la facture scannee - A VERIFIER dans Paramètres
-      phone: '+216 95 816 977',
-      phone2: '+216 97 219 556',
-      fax: '+216 73 504 003',
-      email: 'janvier95@yahoo.fr',
-      website: '',
-      bankName: 'ATB',
-      bankAgency: 'Monastir',
-      bankAccount: 'TN59 01501111110000734958',
-      iban: 'TN5901501111110000734958',
-      swift: 'ATBKTNTT',
-      logoPath: '',
-      defaultCurrency: 'EUR',
-      defaultVatMode: 'NONE',
-      defaultVatRate: '19',
-      defaultStampDuty: '0',
-      defaultStampLabel: 'Timbre fiscal',
-      defaultPaymentTerms: 'Virement 30 jours',
-      defaultIncoterm: 'DDP',
-      defaultOrigin: 'TUNISIE',
-      headerNote: '',
-      paymentNotice: 'Veuillez nous faire le règlement de cette facture sur notre compte suivant :',
-      legalMentions: '',
-      footerText: 'Siège social : Rue Jamel Abdenaceur - Zeramdine 5040 - Monastir / Tunisie',
-    },
+    create: COMPANY as never,
   })
 
   // --- Sequences de numerotation ------------------------------------------
-  // La derniere facture de vente papier de MZ EXPORT est la n 49 -> la suivante sera la 50.
-  // Le format (prefixe, longueur, annee) est modifiable dans Paramètres > Numérotation.
-  await prisma.invoiceSequence.upsert({
-    where: { key: 'SALE' },
-    update: {},
-    create: {
-      key: 'SALE',
-      label: 'Factures de vente',
-      prefix: '',
-      suffix: '',
-      padding: 1,
-      nextNumber: 50,
-      resetYearly: false,
-      includeYear: false,
-    },
-  })
-
-  await prisma.invoiceSequence.upsert({
-    where: { key: 'PURCHASE' },
-    update: {},
-    create: {
-      key: 'PURCHASE',
-      label: "Factures d'achat",
-      prefix: 'FAC-A-',
-      suffix: '',
-      padding: 4,
-      nextNumber: 1,
-      resetYearly: false,
-      includeYear: false,
-    },
-  })
+  for (const sequence of SEQUENCES) {
+    await prisma.invoiceSequence.upsert({
+      where: { key: sequence.key },
+      update: {},
+      create: sequence,
+    })
+  }
 
   // --- Compte administrateur ----------------------------------------------
-  const adminEmail = (process.env.SEED_ADMIN_EMAIL ?? 'admin@mzexport.tn').toLowerCase()
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMoi!2026'
+  const admin = adminAccount()
+  const adminEmail = admin.email
+  const adminPassword = admin.password
 
   await prisma.user.upsert({
     where: { email: adminEmail },
     update: {},
     create: {
       email: adminEmail,
-      name: 'Administrateur MZ EXPORT',
+      name: admin.name,
       passwordHash: await bcrypt.hash(adminPassword, 12),
-      role: 'ADMIN',
+      role: admin.role as never,
     },
   })
 

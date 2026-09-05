@@ -1,0 +1,56 @@
+﻿Facture;Client;Date;Pieces;Poids net kg;Poids brut kg;Colis;kg par piece;Pieces par colis;Remarque
+FAC 01-2026;WIDA;2026-01-08;3060;2000,000;2030,000;90;0,6536;34,00;
+FAC 02-2026;SEMI FERMETURE;2026-01-13;0;0,000;0,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 03-2026;SEMI FERMETURE;2026-01-13;0;0,000;0,000;220;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 04-2026;SEMI FERMETURE;2026-02-10;0;0,000;0,000;20;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 05-2026;WIDA;2026-02-12;13750;8600,000;8800,000;393;0,6255;34,99;
+FAC 06-2026;SEMI FERMETURE;2026-02-18;0;0,000;0,000;20;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 07-2026;WIDA;2026-02-26;4460;3500,000;3600,000;220;0,7848;20,27;Nettement au-dessus de la moyenne : format plus lourd ou poids a verifier
+FAC 08-2026;GR-GERALD;2026-03-03;1220;640,000;650,000;34;0,5246;35,88;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 09-2026;WIDA;2026-03-05;3675;2300,000;2350,000;105;0,6259;35,00;
+FAC 10-2026;SEMI FERMETURE;2026-03-10;0;0,000;0,000;900;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 11-2026;WIDA;2026-03-13;4050;2400,000;2470,000;110;0,5926;36,82;
+FAC 12-2026;WIDA;2026-03-23;5050;3150,000;3200,000;143;0,6238;35,31;
+FAC 13-2026;WIDA;2026-03-26;6600;4050,000;4150,000;190;0,6136;34,74;
+FAC 14-2026;MALISHOP;2026-03-27;820;415,000;420,000;20;0,5061;41,00;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 15-2026;WIDA;2026-04-02;4760;3000,000;3060,000;136;0,6303;35,00;
+FAC 16-2026;SEMI FERMETURE;2026-04-06;0;0,000;0,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 17-2026;WIDA;2026-04-10;3000;750,000;780,000;90;0,2500;33,33;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 18-2026;MALISHOP;2026-04-10;385;205,000;210,000;13;0,5325;29,62;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 19-2026;SEMI FERMETURE;2026-04-13;0;0,000;0,000;100;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 20-2026;WIDA;2026-04-16;4500;2900,000;2900,000;136;0,6444;33,09;
+FAC 21-2026;WIDA;2026-04-23;5800;3600,000;3700,000;166;0,6207;34,94;
+FAC 22-2026;WIDA;2026-04-30;3500;2200,000;2250,000;100;0,6286;35,00;
+FAC 23-2026;WIDA;2026-05-04;2770;1750,000;1800,000;80;0,6318;34,63;
+FAC 24-2026;WIDA;2026-05-07;4410;2750,000;2800,000;126;0,6236;35,00;
+FAC 25-2026;MALISHOP;2026-05-12;751;280,000;290,000;13;0,3728;57,77;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 26-2026;WIDA;2026-05-15;6545;4100,000;4200,000;187;0,6264;35,00;
+FAC 27-2026;WIDA;2026-05-21;10285;6000,000;6100,000;294;0,5834;34,98;
+FAC 28-2026;SEMI FERMETURE;2026-05-29;0;0,000;0,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 29-2026;WIDA;2026-06-01;2240;1400,000;1440,000;64;0,6250;35,00;
+FAC 30-2026;WIDA;2026-06-04;5950;3750,000;3820,000;170;0,6303;35,00;
+FAC 31-2026;TUNISIACORT;2026-06-04;244;200,000;210,000;46;0,8197;5,30;Nettement au-dessus de la moyenne : format plus lourd ou poids a verifier
+FAC 32-2026;MALISHOP;2026-06-05;400;160,000;165,000;7;0,4000;57,14;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 33-2026;WIDA;2026-06-11;9770;5900,000;6000,000;279;0,6039;35,02;
+FAC 34-2026;MALISHOP;2026-06-15;470;200,000;205,000;10;0,4255;47,00;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 35-2026;SARA;2026-06-15;360;135,000;140,000;6;0,3750;60,00;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 36-2026;SEMI FERMETURE;2026-06-17;0;0,000;0,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 37-2026;SEMI FERMETURE;2026-06-17;0;0,000;0,000;160;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 38-2026;SABRI;2026-06-17;2220;1392,000;1406,000;42;0,6270;52,86;
+FAC 39-2026;WIDA;2026-06-18;5950;3700,000;3800,000;170;0,6218;35,00;
+FAC 40-2026;WIDA;2026-06-25;7280;4500,000;4600,000;208;0,6181;35,00;
+FAC 41-2026;MALISHOP;2026-06-25;346;160,000;165,000;8;0,4624;43,25;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+FAC 42-2026;WIDA;2026-06-29;4500;3500,000;3600,000;163;0,7778;27,61;Nettement au-dessus de la moyenne : format plus lourd ou poids a verifier
+FAC 43-2026;SEMI FERMETURE;2026-06-30;0;75,000;80,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 44-2026;WIDA;2026-07-02;6160;3800,000;3900,000;176;0,6169;35,00;
+FAC 45-2026;WIDA;2026-07-09;4510;2850,000;2900,000;129;0,6319;34,96;
+FAC 46-2026;WIDA;2026-07-16;6450;4300,000;4330,000;193;0,6667;33,42;
+FAC 47-2026;SEMI FERMETURE;2026-07-20;0;0,000;0,000;4;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 48-2026;WIDA;2026-07-23;3780;2350,000;2400,000;108;0,6217;35,00;
+FAC 49-2026;WIDA;2026-07-30;6615;4100,000;4200,000;189;0,6198;35,00;
+FAC 50-2026;SEMI FERMETURE;2026-08-05;0;0,000;0,000;232;;;Quantite absente du classeur : poids unitaire indeterminable
+FAC 51-2026;WIDA;2026-08-06;4900;3000,000;3100,000;144;0,6122;34,03;
+FAC 52-2026;MALISHOP;2026-08-06;600;190,000;200,000;10;0,3167;60,00;Nettement sous la moyenne (0,618) : format plus leger ou poids a verifier
+
+ENSEMBLE;39 factures exploitables;;162136;100177,000;102341,000;4768;0,6179;34,01;Moyenne ponderee reelle
+;Fiche produit actuelle;;;;;;0,650;;Ecart : 5211 kg de trop dans le rapprochement

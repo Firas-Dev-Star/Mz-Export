@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { optionalEmail, optionalText, requiredText } from '@/validations/common'
+import { INCOTERM_CODES } from '@/lib/trade'
 
 export const customerSchema = z.object({
   code: optionalText(24),
@@ -22,6 +23,9 @@ export const customerSchema = z.object({
   paymentTerms: optionalText(120),
   currencyCode: z.string().trim().min(1, 'Devise obligatoire').default('EUR'),
   deliveryAddress: optionalText(400),
+  // Liste fermee, comme sur la facture : seules les valeurs de la liste
+  // deroulante sont acceptees, la chaine vide restant permise.
+  defaultIncoterm: z.enum(INCOTERM_CODES).or(z.literal('')).default(''),
   deliveryCountry: optionalText(90),
   notes: optionalText(2000),
   isActive: z.coerce.boolean().default(true),

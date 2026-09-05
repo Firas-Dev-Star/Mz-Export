@@ -5,6 +5,7 @@ import { type SequenceRow, formatSequenceNumber } from '@/lib/numbering-format'
 
 export const SALE_SEQUENCE_KEY = 'SALE'
 export const PURCHASE_SEQUENCE_KEY = 'PURCHASE'
+export const TRANSPORT_SEQUENCE_KEY = 'TRANSPORT'
 
 /**
  * Table dans laquelle verifier qu'un numero n'est pas deja pris.
@@ -14,6 +15,9 @@ export const PURCHASE_SEQUENCE_KEY = 'PURCHASE'
 async function numberExists(tx: Prisma.TransactionClient, key: string, number: string) {
   if (key === PURCHASE_SEQUENCE_KEY) {
     return Boolean(await tx.purchase.findUnique({ where: { number }, select: { id: true } }))
+  }
+  if (key === TRANSPORT_SEQUENCE_KEY) {
+    return Boolean(await tx.transportInvoice.findUnique({ where: { number }, select: { id: true } }))
   }
   return Boolean(await tx.invoice.findUnique({ where: { number }, select: { id: true } }))
 }

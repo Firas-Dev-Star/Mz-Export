@@ -46,27 +46,62 @@ enum VatMode {
   RATE
 }
 
+/// Nature de ce qu'un fournisseur facture. Sert a ventiler les achats dans le
+/// resultat sans avoir a classer chaque facture : un fournisseur ne melange pas
+/// les natures chez MZ EXPORT.
+enum SupplierNature {
+  /// Achat de marchandise : la fouta.
+  FOUTA
+  /// HERITAGE. Les societes de transport avaient ete saisies comme des
+  /// fournisseurs avant l'existence du module Transport (`Carrier` /
+  /// `TransportInvoice`). La valeur est conservee pour ne pas casser
+  /// d'historique, mais elle n'est plus proposee a la saisie.
+  TRANSPORT
+  /// Tout le reste : fournitures, services, frais divers.
+  DIVERS
+}
+
+/// Nature d'une piece jointe. MZ EXPORT est intermediaire : la plupart de ces
+/// documents sont RECUS de tiers (fournisseur, transporteur, banque) et non
+/// produits par l'application. Ce sont eux qui ont valeur probante.
+enum DocumentKind {
+  /// Facture d'achat scannee, telle qu'emise par le fournisseur.
+  SUPPLIER_INVOICE
+  /// Bon de livraison remis par la societe de transport.
+  DELIVERY_NOTE
+  /// Facture de la societe de transport.
+  TRANSPORT_INVOICE
+  /// Justificatif de reglement : cheque, avis de virement, recu.
+  PAYMENT_PROOF
+  /// Piece douaniere : declaration, certificat d'origine, EUR.1...
+  CUSTOMS
+  OTHER
+}
+
 // ---------------------------------------------------------------------------
 // Utilisateurs & securite
 // ---------------------------------------------------------------------------
 
 model User {
-  id           String     @id @default(cuid())
-  email        String     @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   name         String
   passwordHash String
-  role         Role       @default(USER)
-  isActive     Boolean    @default(true)
+  role         Role      @default(USER)
+  isActive     Boolean   @default(true)
   lastLoginAt  DateTime?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  invoices         Invoice[]         @relation("InvoiceCreatedBy")
-  payments         Payment[]         @relation("PaymentCreatedBy")
-  purchases        Purchase[]        @relation("PurchaseCreatedBy")
-  purchasePayments PurchasePayment[] @relation("PurchasePaymentCreatedBy")
-  stockMovements   StockMovement[]
-  auditLogs        AuditLog[]
+  invoices          Invoice[]          @relation("InvoiceCreatedBy")
+  payments          Payment[]          @relation("PaymentCreatedBy")
+  purchases         Purchase[]         @relation("PurchaseCreatedBy")
+  purchasePayments  PurchasePayment[]  @relation("PurchasePaymentCreatedBy")
+  transportInvoices TransportInvoice[] @relation("TransportInvoiceCreatedBy")
+  transportPayments TransportPayment[] @relation("TransportPaymentCreatedBy")
+  stockMovements    StockMovement[]
+  auditLogs         AuditLog[]
+  documents         Document[]         @relation("DocumentUploadedBy")
 
   @@map("users")
 }
@@ -136,10 +171,10 @@ model Company {
   defaultIncoterm     String  @default("")
   defaultOrigin       String  @default("")
 
-  headerNote     String @default("")
-  paymentNotice  String @default("")
-  legalMentions  String @default("")
-  footerText     String @default("")
+  headerNote    String @default("")
+  paymentNotice String @default("")
+  legalMentions String @default("")
+  footerText    String @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -152,19 +187,22 @@ model Company {
 // ---------------------------------------------------------------------------
 
 model Currency {
-  code      String @id // EUR, TND
-  name      String
-  symbol    String
-  decimals  Int    @default(2)
-  isActive  Boolean @default(true)
+  code     String  @id // EUR, TND
+  name     String
+  symbol   String
+  decimals Int     @default(2)
+  isActive Boolean @default(true)
 
-  customers        Customer[]
-  invoices         Invoice[]
-  payments         Payment[]
-  suppliers        Supplier[]
-  purchases        Purchase[]
-  purchasePayments PurchasePayment[]
-  exchangeRates    ExchangeRate[]
+  customers         Customer[]
+  invoices          Invoice[]
+  payments          Payment[]
+  suppliers         Supplier[]
+  purchases         Purchase[]
+  purchasePayments  PurchasePayment[]
+  carriers          Carrier[]
+  transportInvoices TransportInvoice[]
+  transportPayments TransportPayment[]
+  exchangeRates     ExchangeRate[]
 
   @@map("currencies")
 }
@@ -205,16 +243,16 @@ model ExchangeRate {
 // ---------------------------------------------------------------------------
 
 model InvoiceSequence {
-  id           String  @id @default(cuid())
-  key          String  @unique // "SALE"
-  label        String
-  prefix       String  @default("FAC-V-")
-  suffix       String  @default("")
-  padding      Int     @default(4)
-  nextNumber   Int     @default(1)
-  resetYearly  Boolean @default(false)
-  year         Int?
-  includeYear  Boolean @default(false)
+  id          String  @id @default(cuid())
+  key         String  @unique // "SALE"
+  label       String
+  prefix      String  @default("FAC-V-")
+  suffix      String  @default("")
+  padding     Int     @default(4)
+  nextNumber  Int     @default(1)
+  resetYearly Boolean @default(false)
+  year        Int?
+  includeYear Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -227,14 +265,14 @@ model InvoiceSequence {
 // ---------------------------------------------------------------------------
 
 model Customer {
-  id            String  @id @default(cuid())
-  code          String  @unique
-  companyName   String // Raison sociale
-  firstName     String  @default("")
-  lastName      String  @default("")
-  contactName   String  @default("")
-  contactPhone  String  @default("")
-  contactEmail  String  @default("")
+  id           String @id @default(cuid())
+  code         String @unique
+  companyName  String // Raison sociale
+  firstName    String @default("")
+  lastName     String @default("")
+  contactName  String @default("")
+  contactPhone String @default("")
+  contactEmail String @default("")
 
   addressLine1 String @default("")
   addressLine2 String @default("")
@@ -245,8 +283,8 @@ model Customer {
   phone String @default("")
   email String @default("")
 
-  taxId    String @default("") // Matricule fiscal
-  siret    String @default("")
+  taxId     String @default("") // Matricule fiscal
+  siret     String @default("")
   vatNumber String @default("") // TVA intracommunautaire
 
   paymentTerms String @default("")
@@ -255,6 +293,14 @@ model Customer {
   // Adresse de livraison par defaut (reprise sur la facture)
   deliveryAddress String @default("")
   deliveryCountry String @default("")
+
+  /// Incoterm habituel de ce client, repris sur ses nouvelles factures.
+  ///
+  /// Sert a inscrire une regle commerciale durable plutot qu'a la reprendre de
+  /// memoire a chaque facture. Un client en EXW enleve la marchandise lui-meme :
+  /// aucun transport n'est a notre charge, et l'absence de facture de
+  /// transporteur sur son expedition est NORMALE, pas un oubli.
+  defaultIncoterm String @default("")
 
   notes    String  @default("")
   isDemo   Boolean @default(false)
@@ -284,12 +330,12 @@ model Category {
 }
 
 model Product {
-  id          String  @id @default(cuid())
-  reference   String  @unique
-  sku         String  @default("")
+  id          String @id @default(cuid())
+  reference   String @unique
+  sku         String @default("")
   designation String
-  description String  @default("")
-  unit        String  @default("PCS")
+  description String @default("")
+  unit        String @default("PCS")
 
   categoryId String?
 
@@ -350,18 +396,22 @@ model Invoice {
   deliveryCountry String @default("")
 
   // Informations export
-  ngp              String  @default("")
-  originCountry    String  @default("")
-  packageCount     Int     @default(0)
-  packageType      String  @default("")
-  packageDimensions String @default("")
-  grossWeightKg    Decimal @default(0) @db.Decimal(12, 3)
-  netWeightKg      Decimal @default(0) @db.Decimal(12, 3)
-  incoterm         String  @default("")
-  transportMode    String  @default("")
-  departurePort    String  @default("")
-  destination      String  @default("")
-  orderReference   String  @default("")
+  ngp               String  @default("")
+  originCountry     String  @default("")
+  packageCount      Int     @default(0)
+  packageType       String  @default("")
+  packageDimensions String  @default("")
+  grossWeightKg     Decimal @default(0) @db.Decimal(12, 3)
+  netWeightKg       Decimal @default(0) @db.Decimal(12, 3)
+  incoterm          String  @default("")
+  transportMode     String  @default("")
+  departurePort     String  @default("")
+  destination       String  @default("")
+  orderReference    String  @default("")
+
+  /// Numero de domiciliation bancaire de l'operation d'export.
+  /// PAS unique : une meme domiciliation peut porter plusieurs factures.
+  domiciliationRef String @default("")
 
   // Montants (devise = currencyCode)
   goodsTotal    Decimal @default(0) @db.Decimal(18, 2)
@@ -374,13 +424,13 @@ model Invoice {
   /// false : les frais sont ajoutes au total marchandise.
   feesIncluded Boolean @default(true)
 
-  shippingLabel  String  @default("Transport")
-  shippingAmount Decimal @default(0) @db.Decimal(18, 2)
-  transitLabel   String  @default("Transit")
-  transitAmount  Decimal @default(0) @db.Decimal(18, 2)
-  insuranceLabel String  @default("Assurance")
+  shippingLabel   String  @default("Transport")
+  shippingAmount  Decimal @default(0) @db.Decimal(18, 2)
+  transitLabel    String  @default("Transit")
+  transitAmount   Decimal @default(0) @db.Decimal(18, 2)
+  insuranceLabel  String  @default("Assurance")
   insuranceAmount Decimal @default(0) @db.Decimal(18, 2)
-  otherFeesLabel String  @default("Autres frais")
+  otherFeesLabel  String  @default("Autres frais")
   otherFeesAmount Decimal @default(0) @db.Decimal(18, 2)
 
   vatMode VatMode @default(NONE)
@@ -403,13 +453,13 @@ model Invoice {
   exchangeRateTnd Decimal @default(1) @db.Decimal(18, 6)
   /// Contrevaleur en dinars, calculee une fois et stockee : le tableau de bord
   /// et les rapports agregent ces colonnes en SQL au lieu de convertir en JS.
-  netToPayTnd   Decimal @default(0) @db.Decimal(18, 3)
-  paidAmountTnd Decimal @default(0) @db.Decimal(18, 3)
-  balanceDueTnd Decimal @default(0) @db.Decimal(18, 3)
+  netToPayTnd     Decimal @default(0) @db.Decimal(18, 3)
+  paidAmountTnd   Decimal @default(0) @db.Decimal(18, 3)
+  balanceDueTnd   Decimal @default(0) @db.Decimal(18, 3)
 
-  amountInWords     String @default("")
+  amountInWords      String @default("")
   priceBreakdownNote String @default("")
-  notes             String @default("")
+  notes              String @default("")
 
   createdById String?
   confirmedAt DateTime?
@@ -420,30 +470,37 @@ model Invoice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  customer  Customer      @relation(fields: [customerId], references: [id], onDelete: Restrict)
-  currency  Currency      @relation(fields: [currencyCode], references: [code])
-  createdBy User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  items     InvoiceItem[]
-  payments  Payment[]
+  customer          Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  currency          Currency           @relation(fields: [currencyCode], references: [code])
+  createdBy         User?              @relation("InvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  items             InvoiceItem[]
+  payments          Payment[]
+  /// Pieces recues et rattachees a la vente : bon de livraison du transporteur,
+  /// facture de transport, pieces douanieres.
+  documents         Document[]
+  /// Factures de transport couvrant l'expedition de cette vente. Elles donnent
+  /// le cout reel d'acheminement, donc la marge nette de l'expedition.
+  transportInvoices TransportInvoice[]
 
   @@index([customerId])
   @@index([status])
   @@index([date])
   /// Requete "factures en retard" : filtre status + dueDate + balanceDue.
   @@index([status, dueDate])
+  @@index([domiciliationRef])
   @@map("invoices")
 }
 
 model InvoiceItem {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   invoiceId String
   productId String?
 
-  position    Int     @default(0)
-  reference   String  @default("")
+  position    Int    @default(0)
+  reference   String @default("")
   designation String
-  description String  @default("")
-  unit        String  @default("")
+  description String @default("")
+  unit        String @default("")
 
   quantity        Decimal @db.Decimal(18, 3)
   unitPrice       Decimal @db.Decimal(18, 4)
@@ -465,14 +522,14 @@ model InvoiceItem {
 // ---------------------------------------------------------------------------
 
 model Payment {
-  id        String        @id @default(cuid())
-  invoiceId String
-  amount    Decimal       @db.Decimal(18, 2)
-  currencyCode String     @default("EUR")
-  date      DateTime      @db.Date
-  method    PaymentMethod @default(BANK_TRANSFER)
-  reference String        @default("")
-  note      String        @default("")
+  id           String        @id @default(cuid())
+  invoiceId    String
+  amount       Decimal       @db.Decimal(18, 2)
+  currencyCode String        @default("EUR")
+  date         DateTime      @db.Date
+  method       PaymentMethod @default(BANK_TRANSFER)
+  reference    String        @default("")
+  note         String        @default("")
 
   createdById String?
   createdAt   DateTime @default(now())
@@ -512,6 +569,9 @@ model Supplier {
   paymentTerms String @default("")
   currencyCode String @default("TND")
 
+  /// Ventilation des achats dans le resultat. Reglee une fois sur la fiche.
+  nature SupplierNature @default(DIVERS)
+
   notes    String  @default("")
   isDemo   Boolean @default(false)
   isActive Boolean @default(true)
@@ -548,9 +608,9 @@ model Purchase {
   itemsTotal    Decimal @default(0) @db.Decimal(18, 3)
   discountTotal Decimal @default(0) @db.Decimal(18, 3)
 
-  shippingLabel  String  @default("Transport")
-  shippingAmount Decimal @default(0) @db.Decimal(18, 3)
-  otherFeesLabel String  @default("Autres frais")
+  shippingLabel   String  @default("Transport")
+  shippingAmount  Decimal @default(0) @db.Decimal(18, 3)
+  otherFeesLabel  String  @default("Autres frais")
   otherFeesAmount Decimal @default(0) @db.Decimal(18, 3)
 
   vatMode VatMode @default(RATE)
@@ -558,6 +618,15 @@ model Purchase {
 
   stampDutyLabel  String  @default("Timbre fiscal")
   stampDutyAmount Decimal @default(0) @db.Decimal(18, 3)
+
+  /// Retenue a la source prelevee sur le reglement du fournisseur.
+  ///
+  /// NE REDUIT PAS `netToPay` : la charge reste le montant facture. La retenue
+  /// est prelevee au moment du paiement — le fournisseur recoit
+  /// `netToPay - withholdingAmount`, le solde est reverse a l'administration.
+  /// C'est pourquoi elle vit a cote des totaux et n'entre pas dans leur calcul.
+  withholdingLabel  String  @default("Retenue à la source")
+  withholdingAmount Decimal @default(0) @db.Decimal(18, 3)
 
   totalHt   Decimal @default(0) @db.Decimal(18, 3)
   vatAmount Decimal @default(0) @db.Decimal(18, 3)
@@ -570,9 +639,9 @@ model Purchase {
   /// Achats normalement en TND (taux = 1), mais la colonne existe pour
   /// permettre un achat en devise sans changer le reste du code.
   exchangeRateTnd Decimal @default(1) @db.Decimal(18, 6)
-  netToPayTnd   Decimal @default(0) @db.Decimal(18, 3)
-  paidAmountTnd Decimal @default(0) @db.Decimal(18, 3)
-  balanceDueTnd Decimal @default(0) @db.Decimal(18, 3)
+  netToPayTnd     Decimal @default(0) @db.Decimal(18, 3)
+  paidAmountTnd   Decimal @default(0) @db.Decimal(18, 3)
+  balanceDueTnd   Decimal @default(0) @db.Decimal(18, 3)
 
   notes String @default("")
 
@@ -590,6 +659,9 @@ model Purchase {
   createdBy User?             @relation("PurchaseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   items     PurchaseItem[]
   payments  PurchasePayment[]
+  /// Pieces recues et rattachees a l'achat : facture fournisseur scannee
+  /// (le seul document ayant valeur probante), justificatifs de reglement.
+  documents Document[]
 
   @@index([supplierId])
   @@index([status])
@@ -644,6 +716,158 @@ model PurchasePayment {
 }
 
 // ---------------------------------------------------------------------------
+// Transport (TND)
+//
+// POURQUOI UN MODULE A PART. Une societe de transport n'est pas un
+// fournisseur : elle ne vend aucune marchandise, rien n'entre en stock, et sa
+// facture ne se comprend qu'attachee a une EXPEDITION — donc a une facture de
+// vente. La confondre avec un fournisseur de fouta melangeait deux metiers
+// dans une meme liste et faussait la ventilation du resultat.
+//
+// Ce module est volontairement plus simple que les achats : pas de lignes
+// d'articles, pas de mouvement de stock. Un transporteur, une expedition, un
+// montant, et la facture originale en piece jointe.
+// ---------------------------------------------------------------------------
+
+model Carrier {
+  id          String @id @default(cuid())
+  code        String @unique
+  companyName String
+  contactName String @default("")
+
+  addressLine1 String @default("")
+  addressLine2 String @default("")
+  postalCode   String @default("")
+  city         String @default("")
+  country      String @default("Tunisie")
+
+  phone String @default("")
+  email String @default("")
+
+  taxId         String @default("")
+  tradeRegister String @default("")
+
+  paymentTerms String @default("")
+  currencyCode String @default("TND")
+
+  notes    String  @default("")
+  isDemo   Boolean @default(false)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  currency Currency           @relation(fields: [currencyCode], references: [code])
+  invoices TransportInvoice[]
+
+  @@index([companyName])
+  @@map("carriers")
+}
+
+model TransportInvoice {
+  id     String        @id @default(cuid())
+  number String        @unique
+  status InvoiceStatus @default(DRAFT)
+
+  /// Numero de la facture emise par le transporteur.
+  carrierReference String @default("")
+
+  carrierId String
+  date      DateTime  @db.Date
+  dueDate   DateTime? @db.Date
+
+  /// Reference de l'expedition telle que le transporteur la designe
+  /// (« wida 21 », « SEMI 14 »). C'est la cle de rapprochement avec la vente.
+  shipmentRef String  @default("")
+  /// Facture de vente couverte, quand le rapprochement est etabli. Nullable :
+  /// une facture de transport peut arriver avant que la vente soit saisie.
+  invoiceId   String?
+
+  currencyCode String @default("TND")
+  paymentTerms String @default("")
+
+  /// Trois montants nommes plutot que des lignes d'articles : c'est ce que
+  /// portent reellement les factures de transport recues.
+  transportLabel  String  @default("Transport")
+  transportAmount Decimal @default(0) @db.Decimal(18, 3)
+  transitLabel    String  @default("Transit et douane")
+  transitAmount   Decimal @default(0) @db.Decimal(18, 3)
+  otherFeesLabel  String  @default("Autres frais")
+  otherFeesAmount Decimal @default(0) @db.Decimal(18, 3)
+
+  vatMode VatMode @default(NONE)
+  vatRate Decimal @default(19) @db.Decimal(6, 3)
+
+  stampDutyLabel  String  @default("Timbre fiscal")
+  stampDutyAmount Decimal @default(0) @db.Decimal(18, 3)
+
+  totalHt   Decimal @default(0) @db.Decimal(18, 3)
+  vatAmount Decimal @default(0) @db.Decimal(18, 3)
+  totalTtc  Decimal @default(0) @db.Decimal(18, 3)
+  netToPay  Decimal @default(0) @db.Decimal(18, 3)
+
+  paidAmount Decimal @default(0) @db.Decimal(18, 3)
+  balanceDue Decimal @default(0) @db.Decimal(18, 3)
+
+  /// Transport facture en dinars (taux = 1), mais la colonne existe pour
+  /// qu'un transporteur etranger n'oblige pas a rouvrir le modele.
+  exchangeRateTnd Decimal @default(1) @db.Decimal(18, 6)
+  netToPayTnd     Decimal @default(0) @db.Decimal(18, 3)
+  paidAmountTnd   Decimal @default(0) @db.Decimal(18, 3)
+  balanceDueTnd   Decimal @default(0) @db.Decimal(18, 3)
+
+  notes String @default("")
+
+  createdById String?
+  confirmedAt DateTime?
+  cancelledAt DateTime?
+
+  isDemo Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  carrier   Carrier            @relation(fields: [carrierId], references: [id], onDelete: Restrict)
+  invoice   Invoice?           @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  currency  Currency           @relation(fields: [currencyCode], references: [code])
+  createdBy User?              @relation("TransportInvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  payments  TransportPayment[]
+  /// Pieces recues : facture du transporteur, bon de livraison, justificatif
+  /// de reglement. Ce sont elles qui ont valeur probante.
+  documents Document[]
+
+  @@index([carrierId])
+  @@index([invoiceId])
+  @@index([status])
+  @@index([date])
+  @@index([shipmentRef])
+  @@map("transport_invoices")
+}
+
+model TransportPayment {
+  id                 String        @id @default(cuid())
+  transportInvoiceId String
+  amount             Decimal       @db.Decimal(18, 3)
+  currencyCode       String        @default("TND")
+  date               DateTime      @db.Date
+  method             PaymentMethod @default(BANK_TRANSFER)
+  reference          String        @default("")
+  note               String        @default("")
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transportInvoice TransportInvoice @relation(fields: [transportInvoiceId], references: [id], onDelete: Cascade)
+  currency         Currency         @relation(fields: [currencyCode], references: [code])
+  createdBy        User?            @relation("TransportPaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([transportInvoiceId])
+  @@index([date])
+  @@map("transport_payments")
+}
+
+// ---------------------------------------------------------------------------
 // Mouvements de stock
 // ---------------------------------------------------------------------------
 
@@ -666,13 +890,13 @@ enum StockReferenceType {
 }
 
 model StockMovement {
-  id        String            @id @default(cuid())
-  productId String
-  type      StockMovementType
+  id         String            @id @default(cuid())
+  productId  String
+  type       StockMovementType
   /// Toujours positif : le sens est porte par `type`.
-  quantity  Decimal           @db.Decimal(18, 3)
+  quantity   Decimal           @db.Decimal(18, 3)
   /// Stock du produit APRES application du mouvement (piste d'audit).
-  stockAfter Decimal          @db.Decimal(18, 3)
+  stockAfter Decimal           @db.Decimal(18, 3)
 
   referenceType StockReferenceType @default(MANUAL)
   referenceId   String?
@@ -692,4 +916,54 @@ model StockMovement {
   @@index([type])
   @@index([referenceType, referenceId])
   @@map("stock_movements")
+}
+
+// ---------------------------------------------------------------------------
+// Pieces jointes (documents recus de tiers)
+// ---------------------------------------------------------------------------
+
+/// Document original rattache a un achat OU a une vente.
+///
+/// REGLE : le contenu est stocke en base (`content`), pas sur le disque. A
+/// l'echelle de MZ EXPORT (quelques dizaines de pieces par an, ~500 Ko
+/// chacune) le surcout est negligeable, et un seul `pg_dump` sauvegarde
+/// l'integralite des justificatifs avec la comptabilite. Un dossier separe
+/// qu'on oublie de copier fait perdre les pieces en gardant les ecritures.
+///
+/// Exactement UN des deux rattachements (`purchaseId`, `invoiceId`) est
+/// renseigne. La contrainte est posee en SQL dans la migration, parce que
+/// Prisma ne sait pas l'exprimer.
+model Document {
+  id   String       @id @default(cuid())
+  kind DocumentKind @default(OTHER)
+
+  fileName  String
+  mimeType  String
+  sizeBytes Int
+  content   Bytes
+
+  /// Reference portee par le document lui-meme (n de BL, n de cheque...),
+  /// saisie a l'upload : c'est elle qui sert aux recherches.
+  reference String @default("")
+  note      String @default("")
+
+  /// Un document a EXACTEMENT un parent parmi les trois. La base le garantit
+  /// par une contrainte CHECK que Prisma ne sait pas exprimer.
+  purchaseId         String?
+  invoiceId          String?
+  transportInvoiceId String?
+
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  purchase         Purchase?         @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  invoice          Invoice?          @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  transportInvoice TransportInvoice? @relation(fields: [transportInvoiceId], references: [id], onDelete: Cascade)
+  uploadedBy       User?             @relation("DocumentUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([purchaseId])
+  @@index([invoiceId])
+  @@index([transportInvoiceId])
+  @@index([kind])
+  @@map("documents")
 }

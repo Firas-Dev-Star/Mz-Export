@@ -16,6 +16,8 @@ export const supplierSchema = z.object({
   tradeRegister: optionalText(60),
   paymentTerms: optionalText(120),
   currencyCode: z.string().trim().min(1, 'Devise obligatoire').default('TND'),
+  /// Ventilation des achats dans le resultat : reglee une fois par fournisseur.
+  nature: z.enum(['FOUTA', 'TRANSPORT', 'DIVERS']).default('DIVERS'),
   notes: optionalText(2000),
   isActive: z.coerce.boolean().default(true),
 })

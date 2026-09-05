@@ -8,6 +8,7 @@ import {
   DeletePurchasePaymentButton,
   PurchasePaymentDialog,
 } from '@/components/purchases/purchase-payment-dialog'
+import { DocumentPanel } from '@/components/documents/document-panel'
 import { DeleteButton } from '@/components/shared/delete-button'
 import { StatusBadge } from '@/components/shared/status-badge'
 import { Button } from '@/components/ui/button'
@@ -15,11 +16,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { EmptyState } from '@/components/ui/empty-state'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { can, requireUser } from '@/lib/auth'
+import { PURCHASE_DOCUMENT_KINDS } from '@/lib/document-file'
 import { MOVEMENT_LABELS } from '@/lib/stock-labels'
-import { PAYMENT_METHOD_LABELS, formatDate, formatDateTime, formatMoney, formatQuantity } from '@/lib/format'
-import { gt, round } from '@/lib/money'
+import { PAYMENT_METHOD_LABELS, formatDate, formatDateTime, formatMoney, formatQuantity, formatUnitPrice } from '@/lib/format'
+import { gt, round, sub } from '@/lib/money'
 import { previewNextNumber } from '@/lib/numbering'
 import { prisma } from '@/lib/prisma'
+import { listDocuments } from '@/services/document.service'
 import { getPurchase } from '@/services/purchase.service'
 
 export const dynamic = 'force-dynamic'
@@ -35,6 +38,8 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
   const isCancelled = purchase.status === 'CANCELLED'
   const remaining = round(purchase.balanceDue, 3).toFixed(3)
   const nextNumber = isDraft ? await previewNextNumber('PURCHASE') : ''
+
+  const documents = await listDocuments({ purchaseId: id })
 
   const movements = await prisma.stockMovement.findMany({
     where: { referenceType: 'PURCHASE', referenceId: id },
@@ -138,7 +143,7 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
                     {formatQuantity(item.quantity)} {item.unit}
                   </TableCell>
                   <TableCell className="tabular whitespace-nowrap text-right">
-                    {formatMoney(item.unitPrice, purchase.currencyCode)}
+                    {formatUnitPrice(item.unitPrice, purchase.currencyCode)}
                   </TableCell>
                   <TableCell className="tabular text-right">
                     {gt(item.discountPercent, 0) ? `${formatQuantity(item.discountPercent)} %` : '—'}
@@ -189,6 +194,27 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
                 <dt className="font-medium">Net à payer</dt>
                 <dd className="tabular font-semibold">{formatMoney(purchase.netToPay, purchase.currencyCode)}</dd>
               </div>
+              {/* La retenue ne diminue pas la charge : elle est prelevee sur le
+                  reglement et reversee a l'administration. */}
+              {gt(purchase.withholdingAmount, 0) ? (
+                <>
+                  <div className="flex justify-between py-1">
+                    <dt className="text-muted-foreground">{purchase.withholdingLabel}</dt>
+                    <dd className="tabular">
+                      − {formatMoney(purchase.withholdingAmount, purchase.currencyCode)}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-t border-border pt-1">
+                    <dt className="font-medium">Net versé au fournisseur</dt>
+                    <dd className="tabular font-semibold">
+                      {formatMoney(
+                        sub(purchase.netToPay, purchase.withholdingAmount),
+                        purchase.currencyCode,
+                      )}
+                    </dd>
+                  </div>
+                </>
+              ) : null}
             </dl>
           </div>
 
@@ -197,6 +223,17 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
           ) : null}
         </CardContent>
       </Card>
+
+      <div className="mt-4">
+        <DocumentPanel
+          purchaseId={purchase.id}
+          documents={documents}
+          kinds={PURCHASE_DOCUMENT_KINDS}
+          canWrite={can(session.role, 'purchase.write')}
+          title="Pièces justificatives"
+          description="La facture originale du fournisseur est le seul document ayant valeur probante. Le récapitulatif généré par l'application ne la remplace pas."
+        />
+      </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card>

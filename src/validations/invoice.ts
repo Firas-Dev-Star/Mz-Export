@@ -63,6 +63,9 @@ export const invoiceSchema = z
     departurePort: optionalText(90),
     destination: optionalText(120),
     orderReference: optionalText(90),
+    // Numero de domiciliation bancaire. Non unique : une meme domiciliation
+    // peut porter plusieurs factures du meme client.
+    domiciliationRef: optionalText(40),
 
     feesIncluded: z.coerce.boolean().default(true),
     shippingLabel: optionalText(60),
@@ -103,4 +106,37 @@ export const invoiceSchema = z
   )
 
 export type InvoiceInput = z.infer<typeof invoiceSchema>
+
+/**
+ * Informations d'EXPEDITION d'une facture, corrigeables meme apres validation.
+ *
+ * FRONTIERE VOLONTAIRE : aucun champ de ce schema n'entre dans le calcul des
+ * totaux ni dans l'etat des reglements. Ce sont des mentions declaratives —
+ * incoterm, colisage, poids, destination, domiciliation — qu'une facture
+ * validee doit pouvoir corriger sans que ses montants bougent d'un centime.
+ *
+ * Tout ce qui touche a l'argent (lignes, frais, TVA, timbre, dates, devise,
+ * taux, client) reste hors de portee : cela demande un brouillon.
+ */
+export const invoiceShippingSchema = z.object({
+  deliveryAddress: optionalText(500),
+  deliveryCountry: optionalText(90),
+
+  ngp: optionalText(40),
+  originCountry: optionalText(90),
+  packageCount: z.coerce.number().int().min(0, 'Valeur invalide').default(0),
+  packageType: optionalText(60),
+  packageDimensions: optionalText(80),
+  grossWeightKg: decimalString({ min: 0, label: 'Le poids brut' }),
+  netWeightKg: decimalString({ min: 0, label: 'Le poids net' }),
+
+  incoterm: z.enum(INCOTERM_CODES).or(z.literal('')).default(''),
+  transportMode: z.enum(TRANSPORT_MODE_CODES).or(z.literal('')).default(''),
+  departurePort: optionalText(90),
+  destination: optionalText(120),
+  orderReference: optionalText(90),
+  domiciliationRef: optionalText(40),
+})
+
+export type InvoiceShippingInput = z.infer<typeof invoiceShippingSchema>
 export type InvoiceItemInput = z.infer<typeof invoiceItemSchema>
