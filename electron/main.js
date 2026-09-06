@@ -1,11 +1,12 @@
 'use strict'
 
 const { app, BrowserWindow, Menu, Tray, dialog, shell, clipboard, nativeImage } = require('electron')
+const net = require('node:net')
 const os = require('node:os')
 const path = require('node:path')
 const fs = require('node:fs')
 
-const { readConfig, databaseUrl, dataDir, backupDir } = require('./config')
+const { readConfig, defaultConfig, databaseUrl, dataDir, backupDir } = require('./config')
 const { EmbeddedPostgres } = require('./postgres')
 const { applyMigrations } = require('./migrate')
 const { bootstrapIfNeeded } = require('./bootstrap')
@@ -377,9 +378,57 @@ async function runBackup() {
 // Demarrage
 // ---------------------------------------------------------------------------
 
+/** Quelque chose ecoute-t-il deja sur ce port local ? */
+function portOccupe(port, timeoutMs = 1_500) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket()
+    const fini = (v) => {
+      socket.destroy()
+      resolve(v)
+    }
+    socket.setTimeout(timeoutMs)
+    socket.once('connect', () => fini(true))
+    socket.once('timeout', () => fini(false))
+    socket.once('error', () => fini(false))
+    socket.connect(port, '127.0.0.1')
+  })
+}
+
 async function boot() {
   const userData = app.getPath('userData')
-  const config = readConfig(userData)
+
+  /**
+   * Lecture de la configuration, avec le garde-fou le plus important du
+   * fichier.
+   *
+   * LE DANGER : dans l'etat defaillant, ce processus voit son dossier de
+   * donnees comme VIDE — mesure plusieurs fois le 5 septembre, pendant qu'un
+   * autre processus lisait tout normalement. `config.json` paraissait donc
+   * absent, l'application en fabriquait une neuve, avec un NOUVEAU MOT DE
+   * PASSE, et se heurtait a « password authentication failed » sur sa propre
+   * base. Une premiere protection s'appuyait sur la presence de `pgdata` :
+   * inutile, puisque ce dossier est invisible au meme moment.
+   *
+   * LA PREUVE QUI TIENT : le PORT. Si un serveur repond sur 127.0.0.1, le
+   * poste est deja installe, quoi que le systeme de fichiers raconte. On
+   * refuse alors de creer quoi que ce soit et on relance le processus.
+   */
+  let config
+  try {
+    config = readConfig(userData)
+  } catch (error) {
+    if (!error.configAbsente) throw error
+
+    if (await portOccupe(defaultConfig().embedded.port)) {
+      log('Configuration introuvable alors que la base repond : lecture defaillante.')
+      error.dossierIndisponible = true
+      throw error
+    }
+
+    // Personne sur le port et pas de configuration : premiere installation.
+    log('Premiere installation : creation de la configuration du poste.')
+    config = readConfig(userData, { creerSiAbsent: true })
+  }
   const root = appRoot()
 
   log(`Donnees : ${userData}`)
@@ -408,6 +457,17 @@ async function boot() {
     }
 
     state.postgres = postgres
+
+    // AVANT TOUT LE RESTE. Juste apres un demarrage de Windows, le dossier de
+    // donnees peut rester illisible une minute ou plus. Sans cette attente,
+    // `isInitialised()` repondrait faux sur un cluster pourtant existant, et
+    // `initdb` serait lance sur un dossier deja peuple.
+    await postgres.waitForDataDir()
+
+    // Le journal n'a peut-etre pas pu etre ouvert au demarrage, pour la meme
+    // raison. Maintenant que le dossier repond, on retente.
+    if (!logStream) openLogFile()
+
     await postgres.initialise()
     await postgres.start()
     await postgres.ensureDatabase()
@@ -521,8 +581,80 @@ app.on('before-quit', (event) => {
   void shutdown(true)
 })
 
+/**
+ * Nombre de relances deja tentees, transporte d'un processus a l'autre.
+ *
+ * Il voyage par la ligne de commande : un processus relance ne partage rien
+ * d'autre avec son predecesseur.
+ */
+function nombreDeRelances() {
+  const arg = process.argv.find((a) => a.startsWith('--mz-relance='))
+  const n = arg ? Number.parseInt(arg.split('=')[1], 10) : 0
+  return Number.isInteger(n) && n >= 0 ? n : 0
+}
+
+// La fenetre a risque se compte en minutes, pas en secondes : 15 relances
+// espacees de 20 s couvrent cinq minutes apres l'ouverture de session.
+const RELANCES_MAX = 15
+const DELAI_RELANCE_MS = 20_000
+
+/**
+ * Relance l'application, seul remede connu au dossier illisible.
+ *
+ * POURQUOI RELANCER PLUTOT QU'ATTENDRE. Un processus demarre dans les
+ * premieres secondes suivant l'ouverture de session peut garder une vue
+ * perimee du dossier de donnees, et ne jamais en sortir : mesure le
+ * 5 septembre, une instance lancee 28 s apres le demarrage echouait encore
+ * trois minutes plus tard, alors qu'au meme instant un autre processus — y
+ * compris le binaire de l'application lui-meme — lisait le fichier sans
+ * difficulte. Relancee, elle demarrait en 2 secondes.
+ *
+ * Une boucle d'attente interne ne pouvait donc pas fonctionner : c'est le
+ * PROCESSUS qu'il faut renouveler, pas le fichier qu'il faut attendre.
+ */
+function relancerPourDossierIllisible() {
+  const suivante = nombreDeRelances() + 1
+
+  log(`Dossier de donnees illisible depuis ce processus : relance ${suivante}/${RELANCES_MAX}.`)
+  tellSplash('etape', `Preparation du poste, relance ${suivante}/${RELANCES_MAX}...`)
+
+  // On garde les arguments d'origine et on incremente le compteur.
+  const args = process.argv
+    .slice(1)
+    .filter((a) => !a.startsWith('--mz-relance='))
+    .concat(`--mz-relance=${suivante}`)
+
+  // Un repit fixe : la relance immediate retomberait dans la meme fenetre.
+  setTimeout(() => {
+    app.relaunch({ args })
+    app.exit(0)
+  }, DELAI_RELANCE_MS)
+}
+
 app.whenReady().then(async () => {
   app.setName(APP_NAME)
+
+  /**
+   * On quitte le repertoire de travail herite du lanceur.
+   *
+   * REPRODUCTION DU 5 SEPTEMBRE : lancee avec le repertoire de travail que
+   * pose le raccourci du bureau — le dossier d'installation — l'application
+   * echoue systematiquement, `pg_ctl` et `postgres` declarant `pg_control`
+   * introuvable. Lancee depuis n'importe quel autre dossier, avec le meme
+   * binaire, le meme utilisateur et le meme fichier, elle demarre en deux
+   * secondes. Constate trois fois de suite, dans les deux sens.
+   *
+   * Je n'explique pas ce que Windows fait de different dans ce cas. Mais le
+   * declencheur est identifie et se neutralise en une ligne : on se place dans
+   * le dossier de donnees, qui appartient a l'utilisateur et ne contient
+   * aucun binaire.
+   */
+  try {
+    process.chdir(app.getPath('userData'))
+  } catch {
+    /* repertoire indisponible : ce n'est pas une raison de ne pas demarrer */
+  }
+
   openLogFile()
   createTray()
   createWindow()
@@ -531,6 +663,13 @@ app.whenReady().then(async () => {
   try {
     await boot()
   } catch (error) {
+    // Dossier illisible depuis CE processus : on ne montre pas d'erreur, on
+    // relance. L'utilisateur voit seulement la preparation se poursuivre.
+    if (error.dossierIndisponible && nombreDeRelances() < RELANCES_MAX) {
+      relancerPourDossierIllisible()
+      return
+    }
+
     state.error = error
     log(`ECHEC : ${error.message}`)
     refreshTrayMenu()

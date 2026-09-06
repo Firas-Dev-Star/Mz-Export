@@ -73,10 +73,13 @@
 
       <p class="etape" id="etape"></p>
 
-      <p class="hint">
-        Démarrage de la base de données et du serveur.<br />
-        Le premier lancement est plus long : la base est créée.
-      </p>
+      <!--
+        Pas de « le premier lancement est plus long » ici : ce message
+        s'affichait à CHAQUE démarrage, y compris pendant une panne, et laissait
+        croire que la lenteur était normale. Quand la base est réellement créée,
+        electron/postgres.js l'annonce lui-même dans la ligne d'étape.
+      -->
+      <p class="hint">Démarrage de la base de données et du serveur.</p>
 
       <div class="erreur" id="erreur">
         <b>Le démarrage a échoué.</b>

@@ -2,6 +2,7 @@
 
 const { execFile, execFileSync, spawn } = require('node:child_process')
 const fs = require('node:fs')
+const net = require('node:net')
 const path = require('node:path')
 
 /**
@@ -124,6 +125,79 @@ class EmbeddedPostgres {
   /** Vrai si le cluster a deja ete initialise. */
   isInitialised() {
     return fs.existsSync(path.join(this.dataDir, 'PG_VERSION'))
+  }
+
+  /**
+   * Attend que le dossier de donnees redevienne LISIBLE.
+   *
+   * CE N'EST PAS UNE PRECAUTION : c'est la correction du seul mode de panne qui
+   * ait resiste. Dans la minute suivant un demarrage de Windows, l'ouverture de
+   * `global/pg_control` echoue en « No such file or directory » alors que le
+   * fichier est bien la et n'a pas bouge depuis des semaines. Le meme dossier
+   * redevient parfaitement lisible quelques minutes plus tard, sans que rien
+   * n'ait ete modifie. Mesure sur le poste : indisponible a 11:24 UTC, lisible
+   * a 11:27 UTC ; puis a nouveau indisponible juste apres le demarrage de
+   * 13:26, lisible a 13:28.
+   *
+   * L'application ne peut pas empecher ce blocage — elle peut seulement
+   * l'attendre — ET ATTENDRE NE SUFFIT PAS. Mesure du 5 septembre, decisive :
+   * l'instance lancee a 14:35:19, soit 28 secondes apres le demarrage de
+   * Windows, echouait encore a 14:38 apres trois minutes de tentatives ; au
+   * meme instant, un processus `node` ordinaire ET le binaire de
+   * l'application lui-meme lisaient le fichier sans difficulte. Relancee a
+   * 14:40, l'application demarrait en 2 secondes.
+   *
+   * CONCLUSION : un processus demarre trop tot apres l'ouverture de session
+   * garde une vue perimee du dossier, et n'en sort JAMAIS, quelle que soit la
+   * duree d'attente. Boucler a l'interieur de ce processus est donc inutile.
+   * Le seul remede est de relancer l'application — c'est ce que fait
+   * `main.js` quand cette methode signale `dossierIndisponible`.
+   *
+   * Le plafond est donc court : quelques secondes suffisent a distinguer un
+   * dossier reellement occupe d'un processus condamne.
+   *
+   * ON OUVRE REELLEMENT LE FICHIER. `existsSync` ne suffit pas : c'est
+   * l'OUVERTURE qui echoue, pas la presence.
+   */
+  async waitForDataDir({ timeoutMs = 8_000 } = {}) {
+    // Pas de dossier du tout : installation neuve, `initdb` va le creer.
+    if (!fs.existsSync(this.dataDir)) return true
+
+    const cible = path.join(this.dataDir, 'global', 'pg_control')
+    const debut = Date.now()
+    let signale = false
+
+    for (;;) {
+      try {
+        fs.closeSync(fs.openSync(cible, 'r'))
+        if (signale) {
+          this.onLog(`Dossier de donnees accessible apres ${Math.round((Date.now() - debut) / 1000)} s.`)
+        }
+        return true
+      } catch (error) {
+        const ecoule = Date.now() - debut
+
+        if (ecoule > timeoutMs) {
+          // ON NE BLOQUE PAS SUR CE CONTROLE. Il s'est revele moins fiable que
+          // l'operation qu'il pretend anticiper : le 5 septembre, il declarait
+          // le dossier illisible — declenchant une boucle de relance — alors
+          // que le fichier etait lisible depuis un autre processus et que
+          // PostgreSQL tournait sur ce meme dossier.
+          //
+          // Il reste utile comme INDICE dans le journal, jamais comme verdict.
+          // C'est `pg_ctl`, avec ses tentatives, qui decide.
+          this.onLog(`Controle du dossier de donnees non concluant (${error.code ?? 'erreur'}), on poursuit.`)
+          return false
+        }
+
+        if (!signale) {
+          this.onLog('Dossier de donnees pas encore lisible, verification...')
+          signale = true
+        }
+
+        await attendre(2_000)
+      }
+    }
   }
 
   /**
@@ -271,10 +345,17 @@ class EmbeddedPostgres {
      *
      * Un echec transitoire ne doit donc pas se solder par une panne definitive.
      */
-    const TENTATIVES = 4
+    // Budget de temps, pas un nombre de coups. Les mesures du 5 septembre
+    // donnent la bonne echelle : echec a 28 s et a 2 min apres le demarrage de
+    // Windows, succes a 6 min, deux fois de suite. Dix minutes couvrent
+    // largement, et l'attente est annoncee a l'ecran a chaque tentative.
+    const BUDGET_MS = 600_000
+    const debutBudget = Date.now()
+    let numero = 0
     let derniere = null
 
-    for (let numero = 1; numero <= TENTATIVES; numero += 1) {
+    for (;;) {
+      numero += 1
       // Position du journal avant la tentative : le diagnostic ne portera que
       // sur les lignes ecrites PAR CETTE TENTATIVE.
       const since = this.logSize()
@@ -293,18 +374,40 @@ class EmbeddedPostgres {
         // Le detenteur du verrou a pu mourir entre-temps.
         this.clearStalePidFile()
 
-        if (numero < TENTATIVES) {
-          const delai = 1000 * 2 ** (numero - 1) // 1 s, 2 s, 4 s
-          this.onLog(
-            `Demarrage refuse (tentative ${numero}/${TENTATIVES}), ` +
-              `nouvel essai dans ${delai / 1000} s...`,
-          )
-          await attendre(delai)
+        const ecoule = Date.now() - debutBudget
+        if (ecoule >= BUDGET_MS) break
+
+        // La base peut aussi avoir ete demarree entre-temps par un autre
+        // moyen : on interroge le port avant de reessayer.
+        if (await this.portRepond()) {
+          this.onLog(`Base de donnees en service (detectee sur le port ${this.settings.port}).`)
+          return
         }
+
+        // Court au debut, puis toutes les 15 s : la fenetre se compte en
+        // minutes, inutile de marteler.
+        const delai = numero <= 3 ? 2_000 : 15_000
+        const restant = Math.ceil((BUDGET_MS - ecoule) / 60_000)
+        this.onLog(
+          `Demarrage refuse (tentative ${numero}). ` +
+            `Le poste vient de demarrer, nouvel essai dans ${delai / 1000} s ` +
+            `— encore ${restant} min avant d'abandonner.`,
+        )
+        await attendre(delai)
       }
     }
 
-    throw new Error(this.explainStartFailure(derniere.error, derniere.since))
+    const echec = new Error(this.explainStartFailure(derniere.error, derniere.since))
+
+    // `pg_control` introuvable alors qu'il est bien la : c'est la panne qui ne
+    // se resout qu'en RELANCANT le processus (voir main.js). On ne la reconnait
+    // qu'ici, sur l'echec de l'operation reelle — jamais sur un controle
+    // prealable, qui s'est montre trompeur.
+    if (/pg_control/i.test(echec.message) && /No such file|ENOENT/i.test(echec.message)) {
+      echec.dossierIndisponible = true
+    }
+
+    throw echec
   }
 
   /**
@@ -393,14 +496,52 @@ class EmbeddedPostgres {
     }
   }
 
+  /**
+   * La base repond-elle ?
+   *
+   * ON DEMANDE D'ABORD AU SERVEUR LUI-MEME, pas a `pg_ctl`. Le 5 septembre,
+   * PostgreSQL ecoutait sur son port pendant que l'application enchainait
+   * quatre echecs de demarrage : `pg_ctl status`, lance depuis ce
+   * processus-la, n'arrivait pas a lire `pg_control` et repondait donc
+   * « arrete ». L'application tentait alors de demarrer un serveur DEJA EN
+   * SERVICE, et echouait.
+   *
+   * Une connexion TCP acceptee sur 127.0.0.1 est une preuve directe, qui ne
+   * depend d'aucun fichier ni d'aucun sous-processus. `pg_ctl` ne sert plus
+   * que de recours quand le port ne repond pas.
+   */
   async isRunning() {
-    if (!this.isInitialised()) return false
+    if (!this.isInitialised()) {
+      // Le dossier peut etre illisible depuis ce processus sans que la base
+      // soit arretee pour autant : on interroge quand meme le port.
+      if (await this.portRepond()) return true
+      return false
+    }
+
+    if (await this.portRepond()) return true
+
     try {
       await run(this.bin('pg_ctl'), ['status', '--pgdata', this.dataDir])
       return true
     } catch {
       return false
     }
+  }
+
+  /** Vrai si quelque chose accepte les connexions sur le port de la base. */
+  portRepond(timeoutMs = 1_500) {
+    return new Promise((resolve) => {
+      const socket = new net.Socket()
+      const fini = (valeur) => {
+        socket.destroy()
+        resolve(valeur)
+      }
+      socket.setTimeout(timeoutMs)
+      socket.once('connect', () => fini(true))
+      socket.once('timeout', () => fini(false))
+      socket.once('error', () => fini(false))
+      socket.connect(this.settings.port, '127.0.0.1')
+    })
   }
 
   /**
