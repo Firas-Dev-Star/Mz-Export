@@ -69,3 +69,21 @@ export const purchasePaymentSchema = z.object({
 })
 
 export type PurchasePaymentInput = z.infer<typeof purchasePaymentSchema>
+
+/**
+ * Correction des numéros d'une facture d'achat déjà validée.
+ *
+ * Schéma distinct de `purchaseSchema` à dessein : ces deux champs sont les
+ * seuls qu'on autorise à changer après validation. Les montants et les lignes
+ * restent figés — ils ont alimenté le stock et les règlements.
+ *
+ * `number` est obligatoire : une facture validée en porte toujours un, et le
+ * vider casserait la contrainte d'unicité en base comme les références du
+ * journal d'audit.
+ */
+export const purchaseNumbersSchema = z.object({
+  number: requiredText("Le numéro d'enregistrement", 60),
+  supplierReference: optionalText(60),
+})
+
+export type PurchaseNumbersInput = z.infer<typeof purchaseNumbersSchema>

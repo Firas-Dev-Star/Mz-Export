@@ -4,6 +4,7 @@ import { CreditCard, FileDown, Pencil } from 'lucide-react'
 import { deletePurchase } from '@/actions/purchase.actions'
 import { PageHeader } from '@/components/layout/page-header'
 import { CancelPurchaseButton, ConfirmPurchaseButton } from '@/components/purchases/purchase-actions'
+import { PurchaseNumbersDialog } from '@/components/purchases/purchase-numbers-dialog'
 import {
   DeletePurchasePaymentButton,
   PurchasePaymentDialog,
@@ -68,6 +69,15 @@ export default async function PurchaseDetailPage({ params }: { params: Promise<{
             ) : null}
             {isDraft && can(session.role, 'purchase.confirm') ? (
               <ConfirmPurchaseButton purchaseId={purchase.id} nextNumber={nextNumber} />
+            ) : null}
+            {/* Une facture validée est figée, sauf ses numéros : ce sont des
+                étiquettes, sans effet sur le stock ni sur les règlements. */}
+            {!isDraft && !isCancelled && can(session.role, 'purchase.write') ? (
+              <PurchaseNumbersDialog
+                purchaseId={purchase.id}
+                number={purchase.number}
+                supplierReference={purchase.supplierReference}
+              />
             ) : null}
             {!isDraft && !isCancelled && can(session.role, 'purchase.cancel') ? (
               <CancelPurchaseButton purchaseId={purchase.id} number={purchase.number} />

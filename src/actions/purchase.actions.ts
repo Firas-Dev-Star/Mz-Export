@@ -17,7 +17,9 @@ import {
 import type { ActionResult } from '@/validations/common'
 import {
   type PurchaseInput,
+  type PurchaseNumbersInput,
   type PurchasePaymentInput,
+  purchaseNumbersSchema,
   purchasePaymentSchema,
   purchaseSchema,
 } from '@/validations/purchase'
@@ -178,6 +180,86 @@ export async function updatePurchase(id: string, raw: PurchaseInput): Promise<Ac
 
     revalidate(id)
     return { ok: true, data: { id }, message: "Facture d'achat mise à jour." }
+  } catch (error) {
+    return handleError(error)
+  }
+}
+
+/**
+ * Corrige les numéros d'une facture d'achat, y compris déjà validée.
+ *
+ * POURQUOI CETTE EXCEPTION À `assertEditable`. Une facture validée est figée :
+ * elle a alimenté le stock et sert de base aux règlements. Ses numéros, eux, ne
+ * portent aucun de ces effets — ce sont des étiquettes. Les rendre corrigibles
+ * répond à deux besoins réels : aligner le numéro d'enregistrement sur la
+ * numérotation comptable de l'entreprise, et rattraper une faute de frappe sur
+ * la référence du fournisseur, qu'on ne découvre souvent qu'après coup.
+ *
+ * CE QUE ÇA COÛTE, ET QUI DOIT ÊTRE SU. La séquence `FAC-A` ne garantit plus
+ * une suite continue : un numéro corrigé à la main peut créer un trou, ou
+ * revenir en arrière. L'unicité, elle, reste garantie — par la contrainte en
+ * base et par le contrôle ci-dessous. Chaque correction laisse l'ancien et le
+ * nouveau numéro au journal d'audit.
+ */
+export async function updatePurchaseNumbers(
+  id: string,
+  raw: PurchaseNumbersInput,
+): Promise<ActionResult<{ id: string; number: string }>> {
+  try {
+    const session = await requirePermission('purchase.write')
+
+    const parsed = purchaseNumbersSchema.safeParse(raw)
+    if (!parsed.success) {
+      return { ok: false, error: 'Formulaire invalide', fieldErrors: parsed.error.flatten().fieldErrors }
+    }
+
+    const existing = await prisma.purchase.findUnique({
+      where: { id },
+      select: { id: true, number: true, supplierReference: true },
+    })
+    if (!existing) return fail('Facture d’achat introuvable.')
+
+    const number = parsed.data.number.trim()
+    const supplierReference = parsed.data.supplierReference.trim()
+
+    if (number === existing.number && supplierReference === existing.supplierReference) {
+      return { ok: true, data: { id, number }, message: 'Aucune modification.' }
+    }
+
+    // Contrôle explicite plutôt que d'attendre l'erreur de contrainte : le
+    // message doit nommer la facture en conflit, pas parler d'index unique.
+    if (number !== existing.number) {
+      const conflit = await prisma.purchase.findUnique({
+        where: { number },
+        select: { id: true, date: true },
+      })
+      if (conflit && conflit.id !== id) {
+        return fail(`Le numéro ${number} est déjà utilisé par une autre facture d'achat.`)
+      }
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.purchase.update({ where: { id }, data: { number, supplierReference } })
+      await recordAudit(
+        {
+          session,
+          action: 'UPDATE_PURCHASE_NUMBERS',
+          entity: 'Purchase',
+          entityId: id,
+          reference: number,
+          details: {
+            numeroAvant: existing.number,
+            numeroApres: number,
+            referenceFournisseurAvant: existing.supplierReference,
+            referenceFournisseurApres: supplierReference,
+          },
+        },
+        tx,
+      )
+    })
+
+    revalidate(id)
+    return { ok: true, data: { id, number }, message: 'Numéros mis à jour.' }
   } catch (error) {
     return handleError(error)
   }
