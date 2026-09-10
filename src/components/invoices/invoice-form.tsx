@@ -239,9 +239,15 @@ export function InvoiceForm({
           <Field label="Date de facture" htmlFor="date" required error={errors.date?.message}>
             <Input id="date" type="date" {...register('date')} />
           </Field>
-          <Field label="Date d'échéance" htmlFor="dueDate" error={errors.dueDate?.message}>
-            <Input id="dueDate" type="date" {...register('dueDate')} />
-          </Field>
+{/*
+            Pas de date d'echeance sur une facture de vente : l'entreprise n'en
+            porte qu'une seule, la date de la facture. Le delai de paiement,
+            quand il existe, est enonce dans les conditions de reglement
+            (« VIREMENT 30 JOURS ») plutot que dans une date calculee.
+
+            La colonne `dueDate` subsiste en base : elle porte l'historique des
+            factures deja emises et alimente le suivi des retards.
+          */}
           <Field label="Devise" htmlFor="currencyCode" required error={errors.currencyCode?.message}>
             <Select id="currencyCode" {...register('currencyCode')}>
               {currencies.map((c) => <option key={c.code} value={c.code}>{c.code} — {c.name}</option>)}

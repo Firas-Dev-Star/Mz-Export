@@ -1,0 +1,13 @@
+-- Numero EORI du client.
+--
+-- POURQUOI. L'EORI identifie un operateur economique aupres des douanes de
+-- l'Union europeenne. Il figure sur les factures adressees aux clients
+-- europeens — releve sur les factures MALSISHOP (FR89849317600017) et
+-- FOUTALIA (IT04009151202) — et son absence bloque le dedouanement.
+--
+-- Il ne se confond ni avec le SIRET (immatriculation nationale francaise) ni
+-- avec le numero de TVA intracommunautaire : un meme client peut porter les
+-- trois, et la facture doit pouvoir les afficher separement.
+--
+-- Colonne additive, valeur par defaut vide : aucune donnee existante touchee.
+ALTER TABLE "customers" ADD COLUMN "eori" TEXT NOT NULL DEFAULT '';

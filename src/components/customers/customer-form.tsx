@@ -35,6 +35,7 @@ const EMPTY: CustomerInput = {
   taxId: '',
   siret: '',
   vatNumber: '',
+  eori: '',
   paymentTerms: '',
   currencyCode: 'EUR',
   deliveryAddress: '',
@@ -193,7 +194,20 @@ export function CustomerForm({
           <Field label="Matricule fiscal" htmlFor="taxId" error={errors.taxId?.message}>
             <Input id="taxId" {...register('taxId')} />
           </Field>
-          <Field label="TVA intracommunautaire" htmlFor="vatNumber" error={errors.vatNumber?.message}>
+          <Field
+            label="EORI"
+            htmlFor="eori"
+            error={errors.eori?.message}
+            hint="Identifiant douanier UE, exige au dedouanement. Ex. FR89849317600017"
+          >
+            <Input id="eori" {...register('eori')} />
+          </Field>
+          <Field
+            label="TVA intracommunautaire"
+            htmlFor="vatNumber"
+            error={errors.vatNumber?.message}
+            hint="« C.F / P.IVA » sur les factures italiennes."
+          >
             <Input id="vatNumber" {...register('vatNumber')} />
           </Field>
         </CardContent>

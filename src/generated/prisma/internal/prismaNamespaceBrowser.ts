@@ -227,6 +227,7 @@ export const CustomerScalarFieldEnum = {
   taxId: 'taxId',
   siret: 'siret',
   vatNumber: 'vatNumber',
+  eori: 'eori',
   paymentTerms: 'paymentTerms',
   currencyCode: 'currencyCode',
   deliveryAddress: 'deliveryAddress',

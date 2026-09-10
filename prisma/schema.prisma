@@ -285,7 +285,12 @@ model Customer {
 
   taxId     String @default("") // Matricule fiscal
   siret     String @default("")
-  vatNumber String @default("") // TVA intracommunautaire
+  vatNumber String @default("") // TVA intracommunautaire — « C.F / P.IVA » chez les clients italiens
+
+  /// Numero EORI, identifiant douanier de l'operateur dans l'Union europeenne.
+  /// Distinct du SIRET et du numero de TVA : un client peut porter les trois.
+  /// Son absence sur la facture bloque le dedouanement a l'arrivee.
+  eori String @default("")
 
   paymentTerms String @default("")
   currencyCode String @default("EUR")

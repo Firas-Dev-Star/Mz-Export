@@ -28,14 +28,29 @@ const styles = StyleSheet.create({
   // --- En-tete ---
   header: { flexDirection: 'row', alignItems: 'stretch', marginBottom: 14 },
   logoBox: {
-    width: '42%',
+    // Case resserree et haute, taillee pour un logo CARRE. L'ancien logo etait
+    // un bandeau noir large, d'ou les 42 % d'origine ; celui de 2026 est carre,
+    // et une case large laissait deux bandes blanches sur les cotes.
+    width: '30%',
     borderWidth: 1,
     borderColor: BORDER,
-    padding: 8,
+    // Aucun rembourrage : le logo occupe toute la hauteur de la case.
+    padding: 0,
+    minHeight: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
-  logoImage: { maxHeight: 54, objectFit: 'contain' },
+  /**
+   * `contain`, jamais `cover` ni `fill`.
+   *
+   * `cover` remplirait la case mais RECADRERAIT le logo — sur celui de MZ
+   * EXPORT, la mention « BEYOND BORDERS » ou les bords de l'illustration
+   * seraient coupes. `fill` l'etirerait. `contain` garantit qu'il est montre
+   * entier et sans deformation ; c'est au fichier source d'etre recadre au plus
+   * pres de son dessin pour que la case paraisse pleine.
+   */
+  logoImage: { width: '100%', height: '100%', objectFit: 'contain' },
   logoText: { fontSize: 20, fontFamily: 'Helvetica-Bold', color: NAVY, letterSpacing: 2 },
   logoSub: { fontSize: 8, color: '#4b5563', letterSpacing: 3, marginTop: 2 },
   companyBox: {
@@ -129,14 +144,16 @@ const styles = StyleSheet.create({
   noteText: { fontSize: 8.5 },
   wordsBox: { borderWidth: 1, borderColor: BORDER, padding: 6, marginTop: 6 },
 
+  // Encadre, comme sur les factures Excel de l'entreprise.
   footer: {
     position: 'absolute',
     bottom: 16,
     left: 28,
     right: 28,
-    borderTopWidth: 1,
-    borderTopColor: BORDER,
-    paddingTop: 5,
+    borderWidth: 1,
+    borderColor: '#111827',
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   footerName: { textAlign: 'center', fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
   footerLine: { textAlign: 'center', fontSize: 7.5, color: '#374151', marginTop: 1.5 },
@@ -205,7 +222,6 @@ export function InvoicePdf({ data, logoDataUrl }: { data: InvoiceDocumentData; l
             </View>
             <Text style={styles.metaLine}>Facture N° : {invoice.number}</Text>
             <Text style={styles.metaLine}>Date : {invoice.date}</Text>
-            {invoice.dueDate ? <Text style={styles.metaLine}>Échéance : {invoice.dueDate}</Text> : null}
           </View>
 
           <View style={styles.clientBox}>
@@ -217,10 +233,14 @@ export function InvoicePdf({ data, logoDataUrl }: { data: InvoiceDocumentData; l
               .map((line, i) => (
                 <Text key={i} style={styles.clientLine}>{line}</Text>
               ))}
+            {customer.eori ? <Text style={styles.clientLine}>EORI : {customer.eori}</Text> : null}
             {customer.siret ? <Text style={styles.clientLine}>N° SIRET : {customer.siret}</Text> : null}
-            {customer.vatNumber ? <Text style={styles.clientLine}>TVA : {customer.vatNumber}</Text> : null}
+            {customer.vatNumber ? (
+              <Text style={styles.clientLine}>C.F / P.IVA : {customer.vatNumber}</Text>
+            ) : null}
             {customer.taxId ? <Text style={styles.clientLine}>MF : {customer.taxId}</Text> : null}
-            {customer.contactLine ? <Text style={styles.clientLine}>{customer.contactLine}</Text> : null}
+            {customer.phone ? <Text style={styles.clientLine}>GSM : {customer.phone}</Text> : null}
+            {customer.email ? <Text style={styles.clientLine}>{customer.email}</Text> : null}
           </View>
         </View>
 
@@ -298,16 +318,18 @@ export function InvoicePdf({ data, logoDataUrl }: { data: InvoiceDocumentData; l
                 <Text style={styles.totalLabel}>Total HTVA</Text>
                 <Text style={[styles.totalValue, styles.totalStrong]}>{totals.totalHt}</Text>
               </View>
-              <View style={styles.totalLine}>
-                <Text style={styles.totalLabel}>{totals.vatLabel}</Text>
-                <Text style={styles.totalValue}>{totals.showVat ? totals.vatAmount : '—'}</Text>
-              </View>
+              {/* Sans TVA, la ligne disparait : ni tiret, ni mention d'exoneration. */}
               {totals.showVat ? (
                 <View style={styles.totalLine}>
-                  <Text style={styles.totalLabel}>Montant TTC</Text>
-                  <Text style={styles.totalValue}>{totals.totalTtc}</Text>
+                  <Text style={styles.totalLabel}>{totals.vatLabel}</Text>
+                  <Text style={styles.totalValue}>{totals.vatAmount}</Text>
                 </View>
               ) : null}
+              {/* Toujours affichee, valeur vide en l'absence de TVA. */}
+              <View style={styles.totalLine}>
+                <Text style={styles.totalLabel}>Montant TTC</Text>
+                <Text style={styles.totalValue}>{totals.totalTtc}</Text>
+              </View>
               {totals.showStampDuty ? (
                 <View style={styles.totalLine}>
                   <Text style={styles.totalLabel}>{totals.stampDutyLabel}</Text>

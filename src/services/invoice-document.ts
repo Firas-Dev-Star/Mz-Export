@@ -57,6 +57,9 @@ export interface InvoiceDocumentData {
     siret: string
     taxId: string
     vatNumber: string
+    eori: string
+    email: string
+    phone: string
     contactLine: string
   }
   delivery: { address: string; country: string }
@@ -208,6 +211,9 @@ export async function buildInvoiceDocument(invoiceId: string): Promise<InvoiceDo
       siret: invoice.customer.siret,
       taxId: invoice.customer.taxId,
       vatNumber: invoice.customer.vatNumber,
+      eori: invoice.customer.eori,
+      email: invoice.customer.email || invoice.customer.contactEmail,
+      phone: invoice.customer.phone || invoice.customer.contactPhone,
       contactLine: [invoice.customer.contactName, invoice.customer.contactPhone]
         .filter(Boolean)
         .join(' — '),
@@ -234,14 +240,19 @@ export async function buildInvoiceDocument(invoiceId: string): Promise<InvoiceDo
       feesTotal: formatMoney(totals.feesTotal, currency),
       totalHt: formatMoney(totals.totalHt, currency),
       vatAmount: formatMoney(totals.vatAmount, currency),
+      /**
+       * Aucune mention « Exonere de TVA » sur la facture.
+       *
+       * Les factures export de MZ EXPORT portent trois lignes — Total HTVA,
+       * Montant TTC, Net a payer — et la case TTC reste VIDE quand il n'y a pas
+       * de TVA. C'est la presentation retenue par l'entreprise ; y ecrire un
+       * motif d'exoneration reviendrait a affirmer un regime fiscal a sa place.
+       * La ligne de TVA elle-meme disparait, plutot que d'afficher un tiret.
+       */
       vatLabel:
-        invoice.vatMode === 'RATE'
-          ? `TVA ${formatNumber(invoice.vatRate, 2)} %`
-          : invoice.vatMode === 'ZERO'
-            ? 'TVA 0 %'
-            : 'Exonéré de TVA (export)',
+        invoice.vatMode === 'RATE' ? `TVA ${formatNumber(invoice.vatRate, 2)} %` : 'TVA 0 %',
       showVat: invoice.vatMode !== 'NONE',
-      totalTtc: formatMoney(totals.totalTtc, currency),
+      totalTtc: invoice.vatMode === 'NONE' ? '' : formatMoney(totals.totalTtc, currency),
       stampDutyLabel: invoice.stampDutyLabel || 'Timbre fiscal',
       stampDutyAmount: formatMoney(totals.stampDutyAmount, currency),
       showStampDuty: totals.stampDutyAmount.greaterThan(0),

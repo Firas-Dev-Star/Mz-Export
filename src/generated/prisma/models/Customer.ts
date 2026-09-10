@@ -43,6 +43,7 @@ export type CustomerMinAggregateOutputType = {
   taxId: string | null
   siret: string | null
   vatNumber: string | null
+  eori: string | null
   paymentTerms: string | null
   currencyCode: string | null
   deliveryAddress: string | null
@@ -74,6 +75,7 @@ export type CustomerMaxAggregateOutputType = {
   taxId: string | null
   siret: string | null
   vatNumber: string | null
+  eori: string | null
   paymentTerms: string | null
   currencyCode: string | null
   deliveryAddress: string | null
@@ -105,6 +107,7 @@ export type CustomerCountAggregateOutputType = {
   taxId: number
   siret: number
   vatNumber: number
+  eori: number
   paymentTerms: number
   currencyCode: number
   deliveryAddress: number
@@ -138,6 +141,7 @@ export type CustomerMinAggregateInputType = {
   taxId?: true
   siret?: true
   vatNumber?: true
+  eori?: true
   paymentTerms?: true
   currencyCode?: true
   deliveryAddress?: true
@@ -169,6 +173,7 @@ export type CustomerMaxAggregateInputType = {
   taxId?: true
   siret?: true
   vatNumber?: true
+  eori?: true
   paymentTerms?: true
   currencyCode?: true
   deliveryAddress?: true
@@ -200,6 +205,7 @@ export type CustomerCountAggregateInputType = {
   taxId?: true
   siret?: true
   vatNumber?: true
+  eori?: true
   paymentTerms?: true
   currencyCode?: true
   deliveryAddress?: true
@@ -304,6 +310,7 @@ export type CustomerGroupByOutputType = {
   taxId: string
   siret: string
   vatNumber: string
+  eori: string
   paymentTerms: string
   currencyCode: string
   deliveryAddress: string
@@ -356,6 +363,7 @@ export type CustomerWhereInput = {
   taxId?: Prisma.StringFilter<"Customer"> | string
   siret?: Prisma.StringFilter<"Customer"> | string
   vatNumber?: Prisma.StringFilter<"Customer"> | string
+  eori?: Prisma.StringFilter<"Customer"> | string
   paymentTerms?: Prisma.StringFilter<"Customer"> | string
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
@@ -389,6 +397,7 @@ export type CustomerOrderByWithRelationInput = {
   taxId?: Prisma.SortOrder
   siret?: Prisma.SortOrder
   vatNumber?: Prisma.SortOrder
+  eori?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
@@ -425,6 +434,7 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   taxId?: Prisma.StringFilter<"Customer"> | string
   siret?: Prisma.StringFilter<"Customer"> | string
   vatNumber?: Prisma.StringFilter<"Customer"> | string
+  eori?: Prisma.StringFilter<"Customer"> | string
   paymentTerms?: Prisma.StringFilter<"Customer"> | string
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
@@ -458,6 +468,7 @@ export type CustomerOrderByWithAggregationInput = {
   taxId?: Prisma.SortOrder
   siret?: Prisma.SortOrder
   vatNumber?: Prisma.SortOrder
+  eori?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
@@ -495,6 +506,7 @@ export type CustomerScalarWhereWithAggregatesInput = {
   taxId?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   siret?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   vatNumber?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  eori?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   paymentTerms?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   currencyCode?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringWithAggregatesFilter<"Customer"> | string
@@ -526,6 +538,7 @@ export type CustomerCreateInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
@@ -558,6 +571,7 @@ export type CustomerUncheckedCreateInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   currencyCode?: string
   deliveryAddress?: string
@@ -590,6 +604,7 @@ export type CustomerUpdateInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -622,6 +637,7 @@ export type CustomerUncheckedUpdateInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
@@ -654,6 +670,7 @@ export type CustomerCreateManyInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   currencyCode?: string
   deliveryAddress?: string
@@ -685,6 +702,7 @@ export type CustomerUpdateManyMutationInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -715,6 +733,7 @@ export type CustomerUncheckedUpdateManyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
@@ -756,6 +775,7 @@ export type CustomerCountOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   siret?: Prisma.SortOrder
   vatNumber?: Prisma.SortOrder
+  eori?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
@@ -787,6 +807,7 @@ export type CustomerMaxOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   siret?: Prisma.SortOrder
   vatNumber?: Prisma.SortOrder
+  eori?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
@@ -818,6 +839,7 @@ export type CustomerMinOrderByAggregateInput = {
   taxId?: Prisma.SortOrder
   siret?: Prisma.SortOrder
   vatNumber?: Prisma.SortOrder
+  eori?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
@@ -910,6 +932,7 @@ export type CustomerCreateWithoutCurrencyInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
@@ -941,6 +964,7 @@ export type CustomerUncheckedCreateWithoutCurrencyInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
@@ -1001,6 +1025,7 @@ export type CustomerScalarWhereInput = {
   taxId?: Prisma.StringFilter<"Customer"> | string
   siret?: Prisma.StringFilter<"Customer"> | string
   vatNumber?: Prisma.StringFilter<"Customer"> | string
+  eori?: Prisma.StringFilter<"Customer"> | string
   paymentTerms?: Prisma.StringFilter<"Customer"> | string
   currencyCode?: Prisma.StringFilter<"Customer"> | string
   deliveryAddress?: Prisma.StringFilter<"Customer"> | string
@@ -1032,6 +1057,7 @@ export type CustomerCreateWithoutInvoicesInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
@@ -1063,6 +1089,7 @@ export type CustomerUncheckedCreateWithoutInvoicesInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   currencyCode?: string
   deliveryAddress?: string
@@ -1110,6 +1137,7 @@ export type CustomerUpdateWithoutInvoicesInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1141,6 +1169,7 @@ export type CustomerUncheckedUpdateWithoutInvoicesInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1172,6 +1201,7 @@ export type CustomerCreateManyCurrencyInput = {
   taxId?: string
   siret?: string
   vatNumber?: string
+  eori?: string
   paymentTerms?: string
   deliveryAddress?: string
   deliveryCountry?: string
@@ -1202,6 +1232,7 @@ export type CustomerUpdateWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1233,6 +1264,7 @@ export type CustomerUncheckedUpdateWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1264,6 +1296,7 @@ export type CustomerUncheckedUpdateManyWithoutCurrencyInput = {
   taxId?: Prisma.StringFieldUpdateOperationsInput | string
   siret?: Prisma.StringFieldUpdateOperationsInput | string
   vatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  eori?: Prisma.StringFieldUpdateOperationsInput | string
   paymentTerms?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryCountry?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1325,6 +1358,7 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   taxId?: boolean
   siret?: boolean
   vatNumber?: boolean
+  eori?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
   deliveryAddress?: boolean
@@ -1359,6 +1393,7 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   taxId?: boolean
   siret?: boolean
   vatNumber?: boolean
+  eori?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
   deliveryAddress?: boolean
@@ -1391,6 +1426,7 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   taxId?: boolean
   siret?: boolean
   vatNumber?: boolean
+  eori?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
   deliveryAddress?: boolean
@@ -1423,6 +1459,7 @@ export type CustomerSelectScalar = {
   taxId?: boolean
   siret?: boolean
   vatNumber?: boolean
+  eori?: boolean
   paymentTerms?: boolean
   currencyCode?: boolean
   deliveryAddress?: boolean
@@ -1435,7 +1472,7 @@ export type CustomerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "firstName" | "lastName" | "contactName" | "contactPhone" | "contactEmail" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "siret" | "vatNumber" | "paymentTerms" | "currencyCode" | "deliveryAddress" | "deliveryCountry" | "defaultIncoterm" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "companyName" | "firstName" | "lastName" | "contactName" | "contactPhone" | "contactEmail" | "addressLine1" | "addressLine2" | "postalCode" | "city" | "country" | "phone" | "email" | "taxId" | "siret" | "vatNumber" | "eori" | "paymentTerms" | "currencyCode" | "deliveryAddress" | "deliveryCountry" | "defaultIncoterm" | "notes" | "isDemo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   invoices?: boolean | Prisma.Customer$invoicesArgs<ExtArgs>
@@ -1473,6 +1510,12 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     taxId: string
     siret: string
     vatNumber: string
+    /**
+     * Numero EORI, identifiant douanier de l'operateur dans l'Union europeenne.
+     * Distinct du SIRET et du numero de TVA : un client peut porter les trois.
+     * Son absence sur la facture bloque le dedouanement a l'arrivee.
+     */
+    eori: string
     paymentTerms: string
     currencyCode: string
     deliveryAddress: string
@@ -1934,6 +1977,7 @@ export interface CustomerFieldRefs {
   readonly taxId: Prisma.FieldRef<"Customer", 'String'>
   readonly siret: Prisma.FieldRef<"Customer", 'String'>
   readonly vatNumber: Prisma.FieldRef<"Customer", 'String'>
+  readonly eori: Prisma.FieldRef<"Customer", 'String'>
   readonly paymentTerms: Prisma.FieldRef<"Customer", 'String'>
   readonly currencyCode: Prisma.FieldRef<"Customer", 'String'>
   readonly deliveryAddress: Prisma.FieldRef<"Customer", 'String'>

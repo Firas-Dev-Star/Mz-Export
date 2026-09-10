@@ -14,14 +14,15 @@ export function InvoicePrintView({ data }: { data: InvoiceDocumentData }) {
     <div className="mx-auto w-full max-w-[210mm] bg-white p-8 text-[11px] leading-snug text-slate-900 shadow-sm print:p-0 print:shadow-none">
       {/* En-tête */}
       <div className="flex items-stretch gap-2">
-        <div className="flex w-[42%] flex-col items-center justify-center border border-slate-800 p-3">
+        {/* Case resserree, taillee pour un logo carre — voir invoice-pdf.tsx. */}
+        <div className="flex w-[30%] flex-col items-center justify-center overflow-hidden border border-slate-800">
           {company.logoPath ? (
             <Image
               src={company.logoPath}
               alt={company.name}
               width={220}
-              height={70}
-              className="max-h-16 w-auto object-contain"
+              height={220}
+              className="h-[100px] w-full object-contain"
               unoptimized
             />
           ) : (
@@ -48,7 +49,6 @@ export function InvoicePrintView({ data }: { data: InvoiceDocumentData }) {
           </div>
           <p className="mt-2 font-bold">Facture N° : {invoice.number}</p>
           <p className="font-bold">Date : {invoice.date}</p>
-          {invoice.dueDate ? <p className="font-bold">Échéance : {invoice.dueDate}</p> : null}
         </div>
         <div className="flex-1 border border-slate-800 p-3">
           <p className="text-[10px] text-slate-600">Client :</p>
@@ -56,10 +56,12 @@ export function InvoicePrintView({ data }: { data: InvoiceDocumentData }) {
           {customer.addressBlock.split('\n').filter(Boolean).map((line, i) => (
             <p key={i}>{line}</p>
           ))}
+          {customer.eori ? <p>EORI : {customer.eori}</p> : null}
           {customer.siret ? <p>N° SIRET : {customer.siret}</p> : null}
-          {customer.vatNumber ? <p>TVA : {customer.vatNumber}</p> : null}
+          {customer.vatNumber ? <p>C.F / P.IVA : {customer.vatNumber}</p> : null}
           {customer.taxId ? <p>MF : {customer.taxId}</p> : null}
-          {customer.contactLine ? <p>{customer.contactLine}</p> : null}
+          {customer.phone ? <p>GSM : {customer.phone}</p> : null}
+          {customer.email ? <p>{customer.email}</p> : null}
         </div>
       </div>
 
@@ -135,18 +137,18 @@ export function InvoicePrintView({ data }: { data: InvoiceDocumentData }) {
                     <td className="border-b border-r border-slate-800 px-2 py-1">Total HTVA</td>
                     <td className="w-[38%] border-b border-slate-800 px-2 py-1 text-right font-bold tabular">{totals.totalHt}</td>
                   </tr>
-                  <tr>
-                    <td className="border-b border-r border-slate-800 px-2 py-1">{totals.vatLabel}</td>
-                    <td className="border-b border-slate-800 px-2 py-1 text-right tabular">
-                      {totals.showVat ? totals.vatAmount : '—'}
-                    </td>
-                  </tr>
+                  {/* Sans TVA : ligne absente, aucune mention d'exoneration. */}
                   {totals.showVat ? (
                     <tr>
-                      <td className="border-b border-r border-slate-800 px-2 py-1">Montant TTC</td>
-                      <td className="border-b border-slate-800 px-2 py-1 text-right tabular">{totals.totalTtc}</td>
+                      <td className="border-b border-r border-slate-800 px-2 py-1">{totals.vatLabel}</td>
+                      <td className="border-b border-slate-800 px-2 py-1 text-right tabular">{totals.vatAmount}</td>
                     </tr>
                   ) : null}
+                  {/* Toujours affichee, valeur vide en l'absence de TVA. */}
+                  <tr>
+                    <td className="border-b border-r border-slate-800 px-2 py-1">Montant TTC</td>
+                    <td className="border-b border-slate-800 px-2 py-1 text-right tabular">{totals.totalTtc}</td>
+                  </tr>
                   {totals.showStampDuty ? (
                     <tr>
                       <td className="border-b border-r border-slate-800 px-2 py-1">{totals.stampDutyLabel}</td>

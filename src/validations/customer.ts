@@ -20,6 +20,7 @@ export const customerSchema = z.object({
   taxId: optionalText(60),
   siret: optionalText(30),
   vatNumber: optionalText(30),
+  eori: optionalText(30),
   paymentTerms: optionalText(120),
   currencyCode: z.string().trim().min(1, 'Devise obligatoire').default('EUR'),
   deliveryAddress: optionalText(400),
