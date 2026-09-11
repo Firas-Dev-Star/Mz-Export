@@ -540,6 +540,11 @@ model Payment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  /// Mouvement bancaire dont cet encaissement est issu, quand il vient du
+  /// rapprochement plutot que d'une saisie manuelle.
+  bankMovementId String?
+  bankMovement   BankMovement? @relation(fields: [bankMovementId], references: [id], onDelete: SetNull)
+
   invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   currency  Currency @relation(fields: [currencyCode], references: [code])
   createdBy User?    @relation("PaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
@@ -711,6 +716,11 @@ model PurchasePayment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  /// Mouvement bancaire dont ce reglement est issu, quand il vient du
+  /// rapprochement plutot que d'une saisie manuelle.
+  bankMovementId String?
+  bankMovement   BankMovement? @relation(fields: [bankMovementId], references: [id], onDelete: SetNull)
+
   purchase  Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   currency  Currency @relation(fields: [currencyCode], references: [code])
   createdBy User?    @relation("PurchasePaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
@@ -863,6 +873,9 @@ model TransportPayment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  bankMovementId String?
+  bankMovement   BankMovement? @relation(fields: [bankMovementId], references: [id], onDelete: SetNull)
+
   transportInvoice TransportInvoice @relation(fields: [transportInvoiceId], references: [id], onDelete: Cascade)
   currency         Currency         @relation(fields: [currencyCode], references: [code])
   createdBy        User?            @relation("TransportPaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
@@ -971,4 +984,59 @@ model Document {
   @@index([transportInvoiceId])
   @@index([kind])
   @@map("documents")
+}
+
+/// Mouvement releve sur un compte bancaire, importe depuis un fichier de la
+/// banque.
+///
+/// POURQUOI CETTE TABLE. Les fournisseurs sont regles par ACOMPTES sur compte
+/// courant : 96 % des virements sont des montants ronds qui ne correspondent a
+/// aucune facture precise. Rapprocher demande donc un geste humain — c'est
+/// l'objet de l'ecran de rapprochement. Sans cette table, ce travail se refait
+/// entierement a chaque fois, de memoire et sur des relevés papier.
+model BankMovement {
+  id String @id @default(cuid())
+
+  /// Compte d'origine : « ATB », « ZITOUNA ».
+  bank         String
+  date         DateTime  @db.Date
+  valueDate    DateTime? @db.Date
+  label        String
+  reference    String    @default("")
+  /// Negatif pour un debit, positif pour un credit.
+  amount       Decimal   @db.Decimal(18, 3)
+  currencyCode String    @default("TND")
+
+  /// Empreinte du mouvement (banque + date + montant + reference + libelle).
+  /// Unique : reimporter le meme releve n'introduit aucun doublon.
+  fingerprint String @unique
+
+  status BankMovementStatus @default(PENDING)
+
+  /// Renseigne quand le mouvement n'est pas un reglement fournisseur :
+  /// « salaire », « transfert interne », « frais bancaires », « impots »...
+  category String @default("")
+  note     String @default("")
+
+  importedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  payments          Payment[]
+  purchasePayments  PurchasePayment[]
+  transportPayments TransportPayment[]
+
+  @@index([status])
+  @@index([date])
+  @@index([bank])
+  @@map("bank_movements")
+}
+
+enum BankMovementStatus {
+  /// A traiter.
+  PENDING
+  /// Rattache a un ou plusieurs reglements.
+  ATTRIBUTED
+  /// Classe volontairement : ne concerne pas les fournisseurs.
+  IGNORED
 }
