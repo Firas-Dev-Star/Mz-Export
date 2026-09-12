@@ -473,7 +473,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Créée par {invoice.createdBy?.name ?? '—'} le {formatDateTime(invoice.createdAt)}
+        Créée le {formatDateTime(invoice.createdAt)}
         {invoice.confirmedAt ? ` · confirmée le ${formatDateTime(invoice.confirmedAt)}` : ''}
         {invoice.cancelledAt ? ` · annulée le ${formatDateTime(invoice.cancelledAt)}` : ''}
       </p>

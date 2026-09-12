@@ -105,15 +105,19 @@ export async function listInvoices(params: InvoiceListParams) {
 }
 
 export async function getInvoice(id: string) {
-  return prisma.invoice.findUnique({
-    where: { id },
-    include: {
-      customer: true,
-      items: { orderBy: { position: 'asc' } },
-      payments: { orderBy: { date: 'desc' } },
-      createdBy: { select: { name: true } },
-    },
-  })
+  try {
+    return await prisma.invoice.findUnique({
+      where: { id },
+      include: {
+        customer: true,
+        items: { orderBy: { position: 'asc' } },
+        payments: { orderBy: { date: 'desc' } },
+      },
+    })
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    return null
+  }
 }
 
 export type InvoiceWithRelations = NonNullable<Awaited<ReturnType<typeof getInvoice>>>
