@@ -111,7 +111,7 @@ export async function getInvoice(id: string) {
       customer: true,
       items: { orderBy: { position: 'asc' } },
       payments: { orderBy: { date: 'desc' } },
-      createdBy: { select: { name: true, email: true } },
+      createdBy: { select: { name: true } },
     },
   })
 }
