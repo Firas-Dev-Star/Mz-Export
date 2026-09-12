@@ -46,6 +46,7 @@ export type PurchasePaymentMinAggregateOutputType = {
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  bankMovementId: string | null
 }
 
 export type PurchasePaymentMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type PurchasePaymentMaxAggregateOutputType = {
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  bankMovementId: string | null
 }
 
 export type PurchasePaymentCountAggregateOutputType = {
@@ -74,6 +76,7 @@ export type PurchasePaymentCountAggregateOutputType = {
   createdById: number
   createdAt: number
   updatedAt: number
+  bankMovementId: number
   _all: number
 }
 
@@ -98,6 +101,7 @@ export type PurchasePaymentMinAggregateInputType = {
   createdById?: true
   createdAt?: true
   updatedAt?: true
+  bankMovementId?: true
 }
 
 export type PurchasePaymentMaxAggregateInputType = {
@@ -112,6 +116,7 @@ export type PurchasePaymentMaxAggregateInputType = {
   createdById?: true
   createdAt?: true
   updatedAt?: true
+  bankMovementId?: true
 }
 
 export type PurchasePaymentCountAggregateInputType = {
@@ -126,6 +131,7 @@ export type PurchasePaymentCountAggregateInputType = {
   createdById?: true
   createdAt?: true
   updatedAt?: true
+  bankMovementId?: true
   _all?: true
 }
 
@@ -227,6 +233,7 @@ export type PurchasePaymentGroupByOutputType = {
   createdById: string | null
   createdAt: Date
   updatedAt: Date
+  bankMovementId: string | null
   _count: PurchasePaymentCountAggregateOutputType | null
   _avg: PurchasePaymentAvgAggregateOutputType | null
   _sum: PurchasePaymentSumAggregateOutputType | null
@@ -264,6 +271,8 @@ export type PurchasePaymentWhereInput = {
   createdById?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
+  bankMovementId?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
+  bankMovement?: Prisma.XOR<Prisma.BankMovementNullableScalarRelationFilter, Prisma.BankMovementWhereInput> | null
   purchase?: Prisma.XOR<Prisma.PurchaseScalarRelationFilter, Prisma.PurchaseWhereInput>
   currency?: Prisma.XOR<Prisma.CurrencyScalarRelationFilter, Prisma.CurrencyWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -281,6 +290,8 @@ export type PurchasePaymentOrderByWithRelationInput = {
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankMovementId?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankMovement?: Prisma.BankMovementOrderByWithRelationInput
   purchase?: Prisma.PurchaseOrderByWithRelationInput
   currency?: Prisma.CurrencyOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
@@ -301,6 +312,8 @@ export type PurchasePaymentWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
+  bankMovementId?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
+  bankMovement?: Prisma.XOR<Prisma.BankMovementNullableScalarRelationFilter, Prisma.BankMovementWhereInput> | null
   purchase?: Prisma.XOR<Prisma.PurchaseScalarRelationFilter, Prisma.PurchaseWhereInput>
   currency?: Prisma.XOR<Prisma.CurrencyScalarRelationFilter, Prisma.CurrencyWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -318,6 +331,7 @@ export type PurchasePaymentOrderByWithAggregationInput = {
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankMovementId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PurchasePaymentCountOrderByAggregateInput
   _avg?: Prisma.PurchasePaymentAvgOrderByAggregateInput
   _max?: Prisma.PurchasePaymentMaxOrderByAggregateInput
@@ -340,6 +354,7 @@ export type PurchasePaymentScalarWhereWithAggregatesInput = {
   createdById?: Prisma.StringNullableWithAggregatesFilter<"PurchasePayment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PurchasePayment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PurchasePayment"> | Date | string
+  bankMovementId?: Prisma.StringNullableWithAggregatesFilter<"PurchasePayment"> | string | null
 }
 
 export type PurchasePaymentCreateInput = {
@@ -351,6 +366,7 @@ export type PurchasePaymentCreateInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovement?: Prisma.BankMovementCreateNestedOneWithoutPurchasePaymentsInput
   purchase: Prisma.PurchaseCreateNestedOneWithoutPaymentsInput
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasePaymentsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasePaymentsInput
@@ -368,6 +384,7 @@ export type PurchasePaymentUncheckedCreateInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentUpdateInput = {
@@ -379,6 +396,7 @@ export type PurchasePaymentUpdateInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovement?: Prisma.BankMovementUpdateOneWithoutPurchasePaymentsNestedInput
   purchase?: Prisma.PurchaseUpdateOneRequiredWithoutPaymentsNestedInput
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasePaymentsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutPurchasePaymentsNestedInput
@@ -396,6 +414,7 @@ export type PurchasePaymentUncheckedUpdateInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentCreateManyInput = {
@@ -410,6 +429,7 @@ export type PurchasePaymentCreateManyInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentUpdateManyMutationInput = {
@@ -435,6 +455,7 @@ export type PurchasePaymentUncheckedUpdateManyInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentListRelationFilter = {
@@ -459,6 +480,7 @@ export type PurchasePaymentCountOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankMovementId?: Prisma.SortOrder
 }
 
 export type PurchasePaymentAvgOrderByAggregateInput = {
@@ -477,6 +499,7 @@ export type PurchasePaymentMaxOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankMovementId?: Prisma.SortOrder
 }
 
 export type PurchasePaymentMinOrderByAggregateInput = {
@@ -491,6 +514,7 @@ export type PurchasePaymentMinOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankMovementId?: Prisma.SortOrder
 }
 
 export type PurchasePaymentSumOrderByAggregateInput = {
@@ -623,6 +647,48 @@ export type PurchasePaymentUncheckedUpdateManyWithoutPurchaseNestedInput = {
   deleteMany?: Prisma.PurchasePaymentScalarWhereInput | Prisma.PurchasePaymentScalarWhereInput[]
 }
 
+export type PurchasePaymentCreateNestedManyWithoutBankMovementInput = {
+  create?: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput> | Prisma.PurchasePaymentCreateWithoutBankMovementInput[] | Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput[]
+  connectOrCreate?: Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput | Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput[]
+  createMany?: Prisma.PurchasePaymentCreateManyBankMovementInputEnvelope
+  connect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+}
+
+export type PurchasePaymentUncheckedCreateNestedManyWithoutBankMovementInput = {
+  create?: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput> | Prisma.PurchasePaymentCreateWithoutBankMovementInput[] | Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput[]
+  connectOrCreate?: Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput | Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput[]
+  createMany?: Prisma.PurchasePaymentCreateManyBankMovementInputEnvelope
+  connect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+}
+
+export type PurchasePaymentUpdateManyWithoutBankMovementNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput> | Prisma.PurchasePaymentCreateWithoutBankMovementInput[] | Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput[]
+  connectOrCreate?: Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput | Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput[]
+  upsert?: Prisma.PurchasePaymentUpsertWithWhereUniqueWithoutBankMovementInput | Prisma.PurchasePaymentUpsertWithWhereUniqueWithoutBankMovementInput[]
+  createMany?: Prisma.PurchasePaymentCreateManyBankMovementInputEnvelope
+  set?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  disconnect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  delete?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  connect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  update?: Prisma.PurchasePaymentUpdateWithWhereUniqueWithoutBankMovementInput | Prisma.PurchasePaymentUpdateWithWhereUniqueWithoutBankMovementInput[]
+  updateMany?: Prisma.PurchasePaymentUpdateManyWithWhereWithoutBankMovementInput | Prisma.PurchasePaymentUpdateManyWithWhereWithoutBankMovementInput[]
+  deleteMany?: Prisma.PurchasePaymentScalarWhereInput | Prisma.PurchasePaymentScalarWhereInput[]
+}
+
+export type PurchasePaymentUncheckedUpdateManyWithoutBankMovementNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput> | Prisma.PurchasePaymentCreateWithoutBankMovementInput[] | Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput[]
+  connectOrCreate?: Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput | Prisma.PurchasePaymentCreateOrConnectWithoutBankMovementInput[]
+  upsert?: Prisma.PurchasePaymentUpsertWithWhereUniqueWithoutBankMovementInput | Prisma.PurchasePaymentUpsertWithWhereUniqueWithoutBankMovementInput[]
+  createMany?: Prisma.PurchasePaymentCreateManyBankMovementInputEnvelope
+  set?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  disconnect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  delete?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  connect?: Prisma.PurchasePaymentWhereUniqueInput | Prisma.PurchasePaymentWhereUniqueInput[]
+  update?: Prisma.PurchasePaymentUpdateWithWhereUniqueWithoutBankMovementInput | Prisma.PurchasePaymentUpdateWithWhereUniqueWithoutBankMovementInput[]
+  updateMany?: Prisma.PurchasePaymentUpdateManyWithWhereWithoutBankMovementInput | Prisma.PurchasePaymentUpdateManyWithWhereWithoutBankMovementInput[]
+  deleteMany?: Prisma.PurchasePaymentScalarWhereInput | Prisma.PurchasePaymentScalarWhereInput[]
+}
+
 export type PurchasePaymentCreateWithoutCreatedByInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -632,6 +698,7 @@ export type PurchasePaymentCreateWithoutCreatedByInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovement?: Prisma.BankMovementCreateNestedOneWithoutPurchasePaymentsInput
   purchase: Prisma.PurchaseCreateNestedOneWithoutPaymentsInput
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasePaymentsInput
 }
@@ -647,6 +714,7 @@ export type PurchasePaymentUncheckedCreateWithoutCreatedByInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentCreateOrConnectWithoutCreatedByInput = {
@@ -690,6 +758,7 @@ export type PurchasePaymentScalarWhereInput = {
   createdById?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PurchasePayment"> | Date | string
+  bankMovementId?: Prisma.StringNullableFilter<"PurchasePayment"> | string | null
 }
 
 export type PurchasePaymentCreateWithoutCurrencyInput = {
@@ -701,6 +770,7 @@ export type PurchasePaymentCreateWithoutCurrencyInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovement?: Prisma.BankMovementCreateNestedOneWithoutPurchasePaymentsInput
   purchase: Prisma.PurchaseCreateNestedOneWithoutPaymentsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasePaymentsInput
 }
@@ -716,6 +786,7 @@ export type PurchasePaymentUncheckedCreateWithoutCurrencyInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentCreateOrConnectWithoutCurrencyInput = {
@@ -753,6 +824,7 @@ export type PurchasePaymentCreateWithoutPurchaseInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovement?: Prisma.BankMovementCreateNestedOneWithoutPurchasePaymentsInput
   currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasePaymentsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutPurchasePaymentsInput
 }
@@ -768,6 +840,7 @@ export type PurchasePaymentUncheckedCreateWithoutPurchaseInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentCreateOrConnectWithoutPurchaseInput = {
@@ -796,6 +869,60 @@ export type PurchasePaymentUpdateManyWithWhereWithoutPurchaseInput = {
   data: Prisma.XOR<Prisma.PurchasePaymentUpdateManyMutationInput, Prisma.PurchasePaymentUncheckedUpdateManyWithoutPurchaseInput>
 }
 
+export type PurchasePaymentCreateWithoutBankMovementInput = {
+  id?: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  date: Date | string
+  method?: $Enums.PaymentMethod
+  reference?: string
+  note?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchase: Prisma.PurchaseCreateNestedOneWithoutPaymentsInput
+  currency?: Prisma.CurrencyCreateNestedOneWithoutPurchasePaymentsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutPurchasePaymentsInput
+}
+
+export type PurchasePaymentUncheckedCreateWithoutBankMovementInput = {
+  id?: string
+  purchaseId: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCode?: string
+  date: Date | string
+  method?: $Enums.PaymentMethod
+  reference?: string
+  note?: string
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PurchasePaymentCreateOrConnectWithoutBankMovementInput = {
+  where: Prisma.PurchasePaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput>
+}
+
+export type PurchasePaymentCreateManyBankMovementInputEnvelope = {
+  data: Prisma.PurchasePaymentCreateManyBankMovementInput | Prisma.PurchasePaymentCreateManyBankMovementInput[]
+  skipDuplicates?: boolean
+}
+
+export type PurchasePaymentUpsertWithWhereUniqueWithoutBankMovementInput = {
+  where: Prisma.PurchasePaymentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PurchasePaymentUpdateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedUpdateWithoutBankMovementInput>
+  create: Prisma.XOR<Prisma.PurchasePaymentCreateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedCreateWithoutBankMovementInput>
+}
+
+export type PurchasePaymentUpdateWithWhereUniqueWithoutBankMovementInput = {
+  where: Prisma.PurchasePaymentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PurchasePaymentUpdateWithoutBankMovementInput, Prisma.PurchasePaymentUncheckedUpdateWithoutBankMovementInput>
+}
+
+export type PurchasePaymentUpdateManyWithWhereWithoutBankMovementInput = {
+  where: Prisma.PurchasePaymentScalarWhereInput
+  data: Prisma.XOR<Prisma.PurchasePaymentUpdateManyMutationInput, Prisma.PurchasePaymentUncheckedUpdateManyWithoutBankMovementInput>
+}
+
 export type PurchasePaymentCreateManyCreatedByInput = {
   id?: string
   purchaseId: string
@@ -807,6 +934,7 @@ export type PurchasePaymentCreateManyCreatedByInput = {
   note?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentUpdateWithoutCreatedByInput = {
@@ -818,6 +946,7 @@ export type PurchasePaymentUpdateWithoutCreatedByInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovement?: Prisma.BankMovementUpdateOneWithoutPurchasePaymentsNestedInput
   purchase?: Prisma.PurchaseUpdateOneRequiredWithoutPaymentsNestedInput
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasePaymentsNestedInput
 }
@@ -833,6 +962,7 @@ export type PurchasePaymentUncheckedUpdateWithoutCreatedByInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentUncheckedUpdateManyWithoutCreatedByInput = {
@@ -846,6 +976,7 @@ export type PurchasePaymentUncheckedUpdateManyWithoutCreatedByInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentCreateManyCurrencyInput = {
@@ -859,6 +990,7 @@ export type PurchasePaymentCreateManyCurrencyInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentUpdateWithoutCurrencyInput = {
@@ -870,6 +1002,7 @@ export type PurchasePaymentUpdateWithoutCurrencyInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovement?: Prisma.BankMovementUpdateOneWithoutPurchasePaymentsNestedInput
   purchase?: Prisma.PurchaseUpdateOneRequiredWithoutPaymentsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutPurchasePaymentsNestedInput
 }
@@ -885,6 +1018,7 @@ export type PurchasePaymentUncheckedUpdateWithoutCurrencyInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentUncheckedUpdateManyWithoutCurrencyInput = {
@@ -898,6 +1032,7 @@ export type PurchasePaymentUncheckedUpdateManyWithoutCurrencyInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentCreateManyPurchaseInput = {
@@ -911,6 +1046,7 @@ export type PurchasePaymentCreateManyPurchaseInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankMovementId?: string | null
 }
 
 export type PurchasePaymentUpdateWithoutPurchaseInput = {
@@ -922,6 +1058,7 @@ export type PurchasePaymentUpdateWithoutPurchaseInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovement?: Prisma.BankMovementUpdateOneWithoutPurchasePaymentsNestedInput
   currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasePaymentsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutPurchasePaymentsNestedInput
 }
@@ -937,10 +1074,68 @@ export type PurchasePaymentUncheckedUpdateWithoutPurchaseInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PurchasePaymentUncheckedUpdateManyWithoutPurchaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  method?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankMovementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type PurchasePaymentCreateManyBankMovementInput = {
+  id?: string
+  purchaseId: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCode?: string
+  date: Date | string
+  method?: $Enums.PaymentMethod
+  reference?: string
+  note?: string
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PurchasePaymentUpdateWithoutBankMovementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  method?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchase?: Prisma.PurchaseUpdateOneRequiredWithoutPaymentsNestedInput
+  currency?: Prisma.CurrencyUpdateOneRequiredWithoutPurchasePaymentsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutPurchasePaymentsNestedInput
+}
+
+export type PurchasePaymentUncheckedUpdateWithoutBankMovementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  method?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PurchasePaymentUncheckedUpdateManyWithoutBankMovementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -966,6 +1161,8 @@ export type PurchasePaymentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankMovementId?: boolean
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
@@ -983,6 +1180,8 @@ export type PurchasePaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankMovementId?: boolean
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
@@ -1000,6 +1199,8 @@ export type PurchasePaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankMovementId?: boolean
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
@@ -1017,20 +1218,24 @@ export type PurchasePaymentSelectScalar = {
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankMovementId?: boolean
 }
 
-export type PurchasePaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "purchaseId" | "amount" | "currencyCode" | "date" | "method" | "reference" | "note" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["purchasePayment"]>
+export type PurchasePaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "purchaseId" | "amount" | "currencyCode" | "date" | "method" | "reference" | "note" | "createdById" | "createdAt" | "updatedAt" | "bankMovementId", ExtArgs["result"]["purchasePayment"]>
 export type PurchasePaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
 }
 export type PurchasePaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
 }
 export type PurchasePaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankMovement?: boolean | Prisma.PurchasePayment$bankMovementArgs<ExtArgs>
   purchase?: boolean | Prisma.PurchaseDefaultArgs<ExtArgs>
   currency?: boolean | Prisma.CurrencyDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.PurchasePayment$createdByArgs<ExtArgs>
@@ -1039,6 +1244,7 @@ export type PurchasePaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Ty
 export type $PurchasePaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PurchasePayment"
   objects: {
+    bankMovement: Prisma.$BankMovementPayload<ExtArgs> | null
     purchase: Prisma.$PurchasePayload<ExtArgs>
     currency: Prisma.$CurrencyPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs> | null
@@ -1055,6 +1261,11 @@ export type $PurchasePaymentPayload<ExtArgs extends runtime.Types.Extensions.Int
     createdById: string | null
     createdAt: Date
     updatedAt: Date
+    /**
+     * Mouvement bancaire dont ce reglement est issu, quand il vient du
+     * rapprochement plutot que d'une saisie manuelle.
+     */
+    bankMovementId: string | null
   }, ExtArgs["result"]["purchasePayment"]>
   composites: {}
 }
@@ -1449,6 +1660,7 @@ readonly fields: PurchasePaymentFieldRefs;
  */
 export interface Prisma__PurchasePaymentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bankMovement<T extends Prisma.PurchasePayment$bankMovementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchasePayment$bankMovementArgs<ExtArgs>>): Prisma.Prisma__BankMovementClient<runtime.Types.Result.GetResult<Prisma.$BankMovementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   purchase<T extends Prisma.PurchaseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchaseDefaultArgs<ExtArgs>>): Prisma.Prisma__PurchaseClient<runtime.Types.Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   currency<T extends Prisma.CurrencyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CurrencyDefaultArgs<ExtArgs>>): Prisma.Prisma__CurrencyClient<runtime.Types.Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.PurchasePayment$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchasePayment$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -1492,6 +1704,7 @@ export interface PurchasePaymentFieldRefs {
   readonly createdById: Prisma.FieldRef<"PurchasePayment", 'String'>
   readonly createdAt: Prisma.FieldRef<"PurchasePayment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PurchasePayment", 'DateTime'>
+  readonly bankMovementId: Prisma.FieldRef<"PurchasePayment", 'String'>
 }
     
 
@@ -1890,6 +2103,25 @@ export type PurchasePaymentDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many PurchasePayments to delete.
    */
   limit?: number
+}
+
+/**
+ * PurchasePayment.bankMovement
+ */
+export type PurchasePayment$bankMovementArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankMovement
+   */
+  select?: Prisma.BankMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankMovement
+   */
+  omit?: Prisma.BankMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankMovementInclude<ExtArgs> | null
+  where?: Prisma.BankMovementWhereInput
 }
 
 /**

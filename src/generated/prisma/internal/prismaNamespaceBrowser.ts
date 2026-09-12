@@ -71,7 +71,8 @@ export const ModelName = {
   TransportInvoice: 'TransportInvoice',
   TransportPayment: 'TransportPayment',
   StockMovement: 'StockMovement',
-  Document: 'Document'
+  Document: 'Document',
+  BankMovement: 'BankMovement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -377,7 +378,8 @@ export const PaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -483,7 +485,8 @@ export const PurchasePaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type PurchasePaymentScalarFieldEnum = (typeof PurchasePaymentScalarFieldEnum)[keyof typeof PurchasePaymentScalarFieldEnum]
@@ -570,7 +573,8 @@ export const TransportPaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type TransportPaymentScalarFieldEnum = (typeof TransportPaymentScalarFieldEnum)[keyof typeof TransportPaymentScalarFieldEnum]
@@ -611,6 +615,27 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const BankMovementScalarFieldEnum = {
+  id: 'id',
+  bank: 'bank',
+  date: 'date',
+  valueDate: 'valueDate',
+  label: 'label',
+  reference: 'reference',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  fingerprint: 'fingerprint',
+  status: 'status',
+  category: 'category',
+  note: 'note',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankMovementScalarFieldEnum = (typeof BankMovementScalarFieldEnum)[keyof typeof BankMovementScalarFieldEnum]
 
 
 export const SortOrder = {

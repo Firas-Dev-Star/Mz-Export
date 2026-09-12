@@ -138,3 +138,15 @@ export type StockMovement = Prisma.StockMovementModel
  * Prisma ne sait pas l'exprimer.
  */
 export type Document = Prisma.DocumentModel
+/**
+ * Model BankMovement
+ * Mouvement releve sur un compte bancaire, importe depuis un fichier de la
+ * banque.
+ * 
+ * POURQUOI CETTE TABLE. Les fournisseurs sont regles par ACOMPTES sur compte
+ * courant : 96 % des virements sont des montants ronds qui ne correspondent a
+ * aucune facture precise. Rapprocher demande donc un geste humain — c'est
+ * l'objet de l'ecran de rapprochement. Sans cette table, ce travail se refait
+ * entierement a chaque fois, de memoire et sur des relevés papier.
+ */
+export type BankMovement = Prisma.BankMovementModel

@@ -433,6 +433,23 @@ export type BytesWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBytesFilter<$PrismaModel>
 }
 
+export type EnumBankMovementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BankMovementStatus | Prisma.EnumBankMovementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel> | $Enums.BankMovementStatus
+}
+
+export type EnumBankMovementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BankMovementStatus | Prisma.EnumBankMovementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBankMovementStatusWithAggregatesFilter<$PrismaModel> | $Enums.BankMovementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -836,6 +853,23 @@ export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBytesFilter<$PrismaModel>
   _max?: Prisma.NestedBytesFilter<$PrismaModel>
+}
+
+export type NestedEnumBankMovementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BankMovementStatus | Prisma.EnumBankMovementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel> | $Enums.BankMovementStatus
+}
+
+export type NestedEnumBankMovementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BankMovementStatus | Prisma.EnumBankMovementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BankMovementStatus[] | Prisma.ListEnumBankMovementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBankMovementStatusWithAggregatesFilter<$PrismaModel> | $Enums.BankMovementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBankMovementStatusFilter<$PrismaModel>
 }
 
 

@@ -38,31 +38,13 @@ export const dynamic = 'force-dynamic'
 export default async function DashboardPage() {
   await requireUser()
   // Trois requetes independantes : lancees en parallele plutot qu'en cascade.
-  const [data, currentRates, currencies, arsenay] = await Promise.all([
+  const [data, currentRates, currencies] = await Promise.all([
     getDashboardData(),
     getCurrentRates(),
     prisma.currency.findMany({
       where: { isActive: true, code: { not: 'TND' } },
       orderBy: { code: 'asc' },
       select: { code: true, name: true },
-    }),
-    // Données ARSENAY
-    prisma.supplier.findFirst({
-      where: { companyName: { contains: 'ARSENAY' } },
-      select: {
-        id: true,
-        companyName: true,
-        purchases: {
-          where: { status: { notIn: ['DRAFT', 'CANCELLED'] } },
-          select: {
-            id: true,
-            number: true,
-            totalTtc: true,
-            paidAmount: true,
-            balanceDue: true,
-          },
-        },
-      },
     }),
   ])
 
@@ -161,42 +143,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {arsenay && (
-        <>
-          <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            🏭 Fournisseur principal — {arsenay.companyName}
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6 rounded-lg bg-amber-50 p-6 border border-amber-200">
-            <div>
-              <p className="text-sm text-muted-foreground">Factures en portefeuille</p>
-              <p className="text-2xl font-bold text-amber-900">{arsenay.purchases.length}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Montant total dû</p>
-              <p className="text-2xl font-bold text-amber-700">
-                {formatMoney(arsenay.purchases.reduce((s, p) => s + Number(p.balanceDue), 0).toString(), 'TND')}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Montant total payé</p>
-              <p className="text-2xl font-bold text-emerald-700">
-                {formatMoney(arsenay.purchases.reduce((s, p) => s + Number(p.paidAmount), 0).toString(), 'TND')}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Taux de paiement</p>
-              <p className="text-2xl font-bold text-blue-700">
-                {arsenay.purchases.length > 0
-                  ? ((arsenay.purchases.reduce((s, p) => s + Number(p.paidAmount), 0) /
-                      arsenay.purchases.reduce((s, p) => s + Number(p.totalTtc), 0)) *
-                      100).toFixed(1)
-                  : 0}
-                %
-              </p>
-            </div>
-          </div>
-        </>
-      )}
+      {/* Section ARSENAY - à réactiver après fix */}
 
       <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         Référentiel

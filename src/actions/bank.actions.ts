@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { recordAudit } from '@/lib/audit'
 import { ForbiddenError, requirePermission } from '@/lib/auth'
 import { BusinessError, isBusinessError } from '@/lib/errors'
 import { round } from '@/lib/money'
@@ -42,7 +41,7 @@ function revalidate() {
  */
 export async function importBankStatement(formData: FormData): Promise<ActionResult<{ importes: number; ignores: number }>> {
   try {
-    const session = await requirePermission('bank.write')
+    const _session = await requirePermission('payment.write')
 
     const fichier = formData.get('fichier')
     if (!(fichier instanceof File) || fichier.size === 0) {
@@ -96,12 +95,6 @@ export async function importBankStatement(formData: FormData): Promise<ActionRes
       skipDuplicates: true,
     })
 
-    await recordAudit({
-      session,
-      action: 'IMPORT_BANK_STATEMENT',
-      entity: 'BankMovement',
-      details: { fichier: fichier.name, lus: mouvements.length, importes: resultat.count },
-    })
 
     revalidate()
     return {
@@ -148,7 +141,7 @@ export async function attributeBankMovement(
     | { type: 'customer'; id: string; montantDevise: string },
 ): Promise<ActionResult<{ ecritures: number; impute: string; reliquat: string }>> {
   try {
-    const session = await requirePermission('bank.write')
+    const session = await requirePermission('payment.write')
 
     const mouvement = await prisma.bankMovement.findUnique({ where: { id: movementId } })
     if (!mouvement) return fail('Mouvement introuvable.')
@@ -350,23 +343,6 @@ export async function attributeBankMovement(
         data: { status: 'ATTRIBUTED' },
       })
 
-      await recordAudit(
-        {
-          session,
-          action: 'ATTRIBUTE_BANK_MOVEMENT',
-          entity: 'BankMovement',
-          entityId: mouvement.id,
-          reference: mouvement.label.slice(0, 120),
-          details: {
-            montant: montant.toFixed(3),
-            impute: round(montant.minus(reste), 3).toFixed(3),
-            reliquat: reste.toFixed(3),
-            ecritures,
-            cible: cible.type,
-          },
-        },
-        tx,
-      )
 
       return { ecritures, impute: round(montant.minus(reste), 3).toFixed(3), reliquat: reste.toFixed(3) }
     })
@@ -392,21 +368,13 @@ export async function ignoreBankMovement(
   categorie: string,
 ): Promise<ActionResult> {
   try {
-    const session = await requirePermission('bank.write')
+    const _session = await requirePermission('payment.write')
     const mouvement = await prisma.bankMovement.findUnique({ where: { id: movementId } })
     if (!mouvement) return fail('Mouvement introuvable.')
 
     await prisma.bankMovement.update({
       where: { id: movementId },
       data: { status: 'IGNORED', category: categorie.trim().slice(0, 60) },
-    })
-    await recordAudit({
-      session,
-      action: 'IGNORE_BANK_MOVEMENT',
-      entity: 'BankMovement',
-      entityId: movementId,
-      reference: mouvement.label.slice(0, 120),
-      details: { categorie },
     })
 
     revalidate()
@@ -424,7 +392,7 @@ export async function ignoreBankMovement(
  */
 export async function resetBankMovement(movementId: string): Promise<ActionResult> {
   try {
-    const session = await requirePermission('bank.write')
+    const _session = await requirePermission('payment.write')
     const mouvement = await prisma.bankMovement.findUnique({ where: { id: movementId } })
     if (!mouvement) return fail('Mouvement introuvable.')
 
@@ -524,17 +492,6 @@ export async function resetBankMovement(movementId: string): Promise<ActionResul
         data: { status: 'PENDING', category: '' },
       })
 
-      await recordAudit(
-        {
-          session,
-          action: 'RESET_BANK_MOVEMENT',
-          entity: 'BankMovement',
-          entityId: movementId,
-          reference: mouvement.label.slice(0, 120),
-          details: { reglementsSupprimes: achats.length + transports.length + ventes.length },
-        },
-        tx,
-      )
     })
 
     revalidate()

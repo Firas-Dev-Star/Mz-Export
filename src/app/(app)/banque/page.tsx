@@ -33,10 +33,10 @@ export default async function BanquePage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const session = await requirePermission('bank.read')
+  const session = await requirePermission('payment.read')
   const params = await searchParams
   const filtre = typeof params.statut === 'string' ? params.statut : 'PENDING'
-  const peutEcrire = can(session.role, 'bank.write')
+  const peutEcrire = can(session.role, 'payment.write')
 
   const [mouvements, compteurs, fournisseurs, transporteurs, clients, stats] = await Promise.all([
     prisma.bankMovement.findMany({

@@ -89,3 +89,12 @@ export const StockReferenceType = {
 } as const
 
 export type StockReferenceType = (typeof StockReferenceType)[keyof typeof StockReferenceType]
+
+
+export const BankMovementStatus = {
+  PENDING: 'PENDING',
+  ATTRIBUTED: 'ATTRIBUTED',
+  IGNORED: 'IGNORED'
+} as const
+
+export type BankMovementStatus = (typeof BankMovementStatus)[keyof typeof BankMovementStatus]

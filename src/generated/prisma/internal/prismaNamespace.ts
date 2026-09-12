@@ -417,7 +417,8 @@ export const ModelName = {
   TransportInvoice: 'TransportInvoice',
   TransportPayment: 'TransportPayment',
   StockMovement: 'StockMovement',
-  Document: 'Document'
+  Document: 'Document',
+  BankMovement: 'BankMovement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -433,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "company" | "currency" | "exchangeRate" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "carrier" | "transportInvoice" | "transportPayment" | "stockMovement" | "document"
+    modelProps: "user" | "auditLog" | "company" | "currency" | "exchangeRate" | "invoiceSequence" | "customer" | "category" | "product" | "invoice" | "invoiceItem" | "payment" | "supplier" | "purchase" | "purchaseItem" | "purchasePayment" | "carrier" | "transportInvoice" | "transportPayment" | "stockMovement" | "document" | "bankMovement"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1991,6 +1992,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BankMovement: {
+      payload: Prisma.$BankMovementPayload<ExtArgs>
+      fields: Prisma.BankMovementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BankMovementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BankMovementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        findFirst: {
+          args: Prisma.BankMovementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BankMovementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        findMany: {
+          args: Prisma.BankMovementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>[]
+        }
+        create: {
+          args: Prisma.BankMovementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        createMany: {
+          args: Prisma.BankMovementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BankMovementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>[]
+        }
+        delete: {
+          args: Prisma.BankMovementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        update: {
+          args: Prisma.BankMovementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        deleteMany: {
+          args: Prisma.BankMovementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BankMovementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BankMovementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>[]
+        }
+        upsert: {
+          args: Prisma.BankMovementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankMovementPayload>
+        }
+        aggregate: {
+          args: Prisma.BankMovementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBankMovement>
+        }
+        groupBy: {
+          args: Prisma.BankMovementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankMovementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BankMovementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankMovementCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2317,7 +2392,8 @@ export const PaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -2423,7 +2499,8 @@ export const PurchasePaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type PurchasePaymentScalarFieldEnum = (typeof PurchasePaymentScalarFieldEnum)[keyof typeof PurchasePaymentScalarFieldEnum]
@@ -2510,7 +2587,8 @@ export const TransportPaymentScalarFieldEnum = {
   note: 'note',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  bankMovementId: 'bankMovementId'
 } as const
 
 export type TransportPaymentScalarFieldEnum = (typeof TransportPaymentScalarFieldEnum)[keyof typeof TransportPaymentScalarFieldEnum]
@@ -2551,6 +2629,27 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const BankMovementScalarFieldEnum = {
+  id: 'id',
+  bank: 'bank',
+  date: 'date',
+  valueDate: 'valueDate',
+  label: 'label',
+  reference: 'reference',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  fingerprint: 'fingerprint',
+  status: 'status',
+  category: 'category',
+  note: 'note',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankMovementScalarFieldEnum = (typeof BankMovementScalarFieldEnum)[keyof typeof BankMovementScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2804,6 +2903,20 @@ export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'BankMovementStatus'
+ */
+export type EnumBankMovementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BankMovementStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BankMovementStatus[]'
+ */
+export type ListEnumBankMovementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BankMovementStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -2988,6 +3101,7 @@ export type GlobalOmitConfig = {
   transportPayment?: Prisma.TransportPaymentOmit
   stockMovement?: Prisma.StockMovementOmit
   document?: Prisma.DocumentOmit
+  bankMovement?: Prisma.BankMovementOmit
 }
 
 /* Types for Logging */
